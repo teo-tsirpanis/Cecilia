@@ -14,5 +14,6 @@ TestResults
 project.lock.json
 .vs/
 .idea/
+.ionide/
 packages/*
 nuget.exe
