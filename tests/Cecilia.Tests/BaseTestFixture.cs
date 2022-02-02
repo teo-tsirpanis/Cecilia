@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using Cecilia.Cil;
 using NUnit.Framework;
 
@@ -28,49 +28,49 @@ namespace Cecilia.Tests {
 				Assert.Ignore ();
 		}
 
-		public static string GetResourcePath (string name, string sourceFilePath)
+		public static string GetResourcePath (string name)
 		{
-			return Path.Combine (FindResourcesDirectory (sourceFilePath), name);
+			return Path.Combine (ResourcesDirectory, name);
 		}
 
-		public static string GetAssemblyResourcePath (string name, [CallerFilePath] string sourceFilePath = "")
+		public static string GetAssemblyResourcePath (string name)
 		{
-			return GetResourcePath (Path.Combine ("assemblies", name), sourceFilePath);
+			return GetResourcePath (Path.Combine ("assemblies", name));
 		}
 
-		public static string GetCSharpResourcePath (string name, [CallerFilePath] string sourceFilePath = "")
+		public static string GetCSharpResourcePath (string name)
 		{
-			return GetResourcePath (Path.Combine ("cs", name), sourceFilePath);
+			return GetResourcePath (Path.Combine ("cs", name));
 		}
 
-		public static string GetILResourcePath (string name, [CallerFilePath] string sourceFilePath = "")
+		public static string GetILResourcePath (string name)
 		{
-			return GetResourcePath (Path.Combine ("il", name), sourceFilePath);
+			return GetResourcePath (Path.Combine ("il", name));
 		}
 
-		public ModuleDefinition GetResourceModule (string name, [CallerFilePath] string sourceFilePath = "")
+		public ModuleDefinition GetResourceModule (string name)
 		{
-			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name, sourceFilePath));
+			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name));
 		}
 
-		public ModuleDefinition GetResourceModule (string name, ReaderParameters parameters, [CallerFilePath] string sourceFilePath = "")
+		public ModuleDefinition GetResourceModule (string name, ReaderParameters parameters)
 		{
-			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name, sourceFilePath), parameters);
+			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name), parameters);
 		}
 
-		public ModuleDefinition GetResourceModule (string name, ReadingMode mode, [CallerFilePath] string sourceFilePath = "")
+		public ModuleDefinition GetResourceModule (string name, ReadingMode mode)
 		{
-			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name, sourceFilePath), new ReaderParameters (mode));
+			return ModuleDefinition.ReadModule (GetAssemblyResourcePath (name), new ReaderParameters (mode));
 		}
 
-		public Stream GetResourceStream (string name, [CallerFilePath] string sourceFilePath = "")
+		public Stream GetResourceStream (string name)
 		{
-			return new FileStream (GetAssemblyResourcePath (name, sourceFilePath), FileMode.Open, FileAccess.Read);
+			return new FileStream (GetAssemblyResourcePath (name), FileMode.Open, FileAccess.Read);
 		}
 
-		internal Image GetResourceImage (string name, [CallerFilePath] string sourceFilePath = "")
+		internal Image GetResourceImage (string name)
 		{
-			var file = new FileStream (GetAssemblyResourcePath (name, sourceFilePath), FileMode.Open, FileAccess.Read);
+			var file = new FileStream (GetAssemblyResourcePath (name), FileMode.Open, FileAccess.Read);
 			return ImageReader.ReadImage (Disposable.Owned (file as Stream), file.Name);
 		}
 
@@ -84,17 +84,8 @@ namespace Cecilia.Tests {
 			return ModuleDefinition.ReadModule (GetType ().Module.FullyQualifiedName, parameters);
 		}
 
-		public static string FindResourcesDirectory (string sourceFilePath)
-		{
-			var path = Path.GetDirectoryName (sourceFilePath);
-			while (!Directory.Exists (Path.Combine (path, "Resources"))) {
-				var old = path;
-				path = Path.GetDirectoryName (path);
-				Assert.AreNotEqual (old, path);
-			}
-
-			return Path.Combine (path, "Resources");
-		}
+		public static readonly string ResourcesDirectory =
+			Path.Combine (Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
 
 		public static void AssertCode (string expected, MethodDefinition method)
 		{
@@ -109,19 +100,19 @@ namespace Cecilia.Tests {
 			return str.Trim ().Replace ("\r\n", "\n");
 		}
 
-		public static void TestModule (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false, [CallerFilePath] string sourceFilePath = "")
+		public static void TestModule (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false)
 		{
-			Run (new ModuleTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath));
+			Run (new ModuleTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections));
 		}
 
-		public static void TestCSharp (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false, [CallerFilePath] string sourceFilePath = "")
+		public static void TestCSharp (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false)
 		{
-			Run (new CSharpTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath));
+			Run (new CSharpTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections));
 		}
 
-		public static void TestIL (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false, [CallerFilePath] string sourceFilePath = "")
+		public static void TestIL (string file, Action<ModuleDefinition> test, bool verify = true, bool readOnly = false, Type symbolReaderProvider = null, Type symbolWriterProvider = null, IAssemblyResolver assemblyResolver = null, bool applyWindowsRuntimeProjections = false)
 		{
-			Run (new ILTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath));
+			Run (new ILTestCase (file, test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections));
 		}
 
 		static void Run (TestCase testCase)
@@ -152,11 +143,10 @@ namespace Cecilia.Tests {
 		public readonly IAssemblyResolver AssemblyResolver;
 		public readonly Action<ModuleDefinition> Test;
 		public readonly bool ApplyWindowsRuntimeProjections;
-		public readonly string SourceFilePath;
 
 		public abstract string ModuleLocation { get; }
 
-		protected TestCase (Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections, string sourceFilePath = "")
+		protected TestCase (Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
 		{
 			Test = test;
 			Verify = verify;
@@ -165,7 +155,6 @@ namespace Cecilia.Tests {
 			SymbolWriterProvider = symbolWriterProvider;
 			AssemblyResolver = assemblyResolver;
 			ApplyWindowsRuntimeProjections = applyWindowsRuntimeProjections;
-			SourceFilePath = sourceFilePath;
 		}
 	}
 
@@ -173,15 +162,15 @@ namespace Cecilia.Tests {
 
 		public readonly string Module;
 
-		public ModuleTestCase (string module, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections, string sourceFilePath = "")
-			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath)
+		public ModuleTestCase (string module, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
+			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections)
 		{
 			Module = module;
 		}
 
 		public override string ModuleLocation
 		{
-			get { return BaseTestFixture.GetAssemblyResourcePath (Module, SourceFilePath); }
+			get { return BaseTestFixture.GetAssemblyResourcePath (Module); }
 		}
 	}
 
@@ -189,8 +178,8 @@ namespace Cecilia.Tests {
 
 		public readonly string File;
 
-		public CSharpTestCase (string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections, string sourceFilePath = "")
-			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath)
+		public CSharpTestCase (string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
+			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections)
 		{
 			File = file;
 		}
@@ -199,7 +188,7 @@ namespace Cecilia.Tests {
 		{
 			get
 			{
-				return CompilationService.CompileResource (BaseTestFixture.GetCSharpResourcePath (File, SourceFilePath));
+				return CompilationService.CompileResource (BaseTestFixture.GetCSharpResourcePath (File));
 			}
 		}
 	}
@@ -208,8 +197,8 @@ namespace Cecilia.Tests {
 
 		public readonly string File;
 
-		public ILTestCase (string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections, string sourceFilePath = "")
-			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections, sourceFilePath)
+		public ILTestCase (string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
+			: base (test, verify, readOnly, symbolReaderProvider, symbolWriterProvider, assemblyResolver, applyWindowsRuntimeProjections)
 		{
 			File = file;
 		}
@@ -218,7 +207,7 @@ namespace Cecilia.Tests {
 		{
 			get
 			{
-				return CompilationService.CompileResource (BaseTestFixture.GetILResourcePath (File, SourceFilePath)); ;
+				return CompilationService.CompileResource (BaseTestFixture.GetILResourcePath (File)); ;
 			}
 		}
 	}
