@@ -11,7 +11,7 @@
 using System.Threading;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class EventDefinition : EventReference, IMemberDefinition {
 

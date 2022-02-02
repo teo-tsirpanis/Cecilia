@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono.Cecil.Metadata {
+namespace Cecilia.Metadata {
 
 	sealed class BlobHeap : Heap {
 

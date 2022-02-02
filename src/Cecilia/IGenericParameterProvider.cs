@@ -11,7 +11,7 @@
 using System.Threading;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public interface IGenericParameterProvider : IMetadataTokenProvider {
 

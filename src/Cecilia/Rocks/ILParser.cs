@@ -10,10 +10,10 @@
 
 using System;
 
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil.Rocks {
+namespace Cecilia.Rocks {
 
 #if INSIDE_ROCKS
 	public

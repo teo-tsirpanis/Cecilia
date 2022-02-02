@@ -10,9 +10,9 @@
 
 using System;
 
-using MD = Mono.Cecil.Metadata;
+using MD = Cecilia.Metadata;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class ByReferenceType : TypeSpecification {
 

@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using SR = System.Reflection;
 
-using Mono.Cecil;
+using Cecilia;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	public static class Extensions {
 

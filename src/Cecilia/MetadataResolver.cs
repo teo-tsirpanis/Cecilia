@@ -12,7 +12,7 @@ using System;
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public interface IAssemblyResolver : IDisposable {
 		AssemblyDefinition Resolve (AssemblyNameReference name);

@@ -14,11 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Mono.Cecil.Cil;
-using Mono.Cecil.PE;
+using Cecilia.Cil;
+using Cecilia.PE;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil.Pdb {
+namespace Cecilia.Pdb {
 
 	public class NativePdbWriter : ISymbolWriter {
 

@@ -16,10 +16,10 @@ using System.Threading;
 using SR = System.Reflection;
 
 using Mono.Collections.Generic;
-using Mono.Cecil.Cil;
-using Mono.Cecil.PE;
+using Cecilia.Cil;
+using Cecilia.PE;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	[StructLayout (LayoutKind.Sequential)]
 	public struct ImageDebugDirectory {
@@ -1094,7 +1094,7 @@ namespace Mono.Cecil.Cil {
 
 		static string GetSymbolTypeName (SymbolKind kind, string name)
 		{
-			return "Mono.Cecil" + "." + GetSymbolNamespace (kind) + "." + kind + name;
+			return "Cecilia" + "." + GetSymbolNamespace (kind) + "." + kind + name;
 		}
 
 		static string GetSymbolNamespace (SymbolKind kind)
@@ -1145,7 +1145,7 @@ namespace Mono.Cecil.Cil {
 	}
 }
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	static partial class Mixin {
 

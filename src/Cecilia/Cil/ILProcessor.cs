@@ -12,7 +12,7 @@ using System;
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	public sealed class ILProcessor {
 

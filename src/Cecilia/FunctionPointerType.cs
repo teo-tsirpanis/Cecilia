@@ -11,9 +11,9 @@
 using System;
 using System.Text;
 using Mono.Collections.Generic;
-using MD = Mono.Cecil.Metadata;
+using MD = Cecilia.Metadata;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class FunctionPointerType : TypeSpecification, IMethodSignature {
 

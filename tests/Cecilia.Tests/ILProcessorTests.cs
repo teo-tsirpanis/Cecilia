@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Mdb;
-using Mono.Cecil.Pdb;
+using Cecilia;
+using Cecilia.Cil;
+using Cecilia.Mdb;
+using Cecilia.Pdb;
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class ILProcessorTests : BaseTestFixture {

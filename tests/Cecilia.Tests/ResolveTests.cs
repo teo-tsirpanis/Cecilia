@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Mono.Cecil;
-using Mono.Cecil.Cil;
+using Cecilia;
+using Cecilia.Cil;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class ResolveTests : BaseTestFixture {
@@ -88,7 +88,7 @@ namespace Mono.Cecil.Tests {
 					return d.TryGetValue (s, out type);
 				});
 
-			Assert.AreEqual ("System.Boolean System.Collections.Generic.Dictionary`2<System.String,Mono.Cecil.TypeDefinition>::TryGetValue(!0,!1&)",
+			Assert.AreEqual ("System.Boolean System.Collections.Generic.Dictionary`2<System.String,Cecilia.TypeDefinition>::TryGetValue(!0,!1&)",
 				try_get_value.FullName);
 
 			var definition = try_get_value.Resolve ();

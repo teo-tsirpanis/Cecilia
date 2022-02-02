@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public abstract class MemberReference : IMetadataTokenProvider {
 

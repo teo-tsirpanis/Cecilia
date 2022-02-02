@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	sealed class TypeDefinitionProjection {
 

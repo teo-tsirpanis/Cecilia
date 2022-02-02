@@ -10,7 +10,7 @@
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class ParameterDefinition : ParameterReference, ICustomAttributeProvider, IConstantProvider, IMarshalInfoProvider {
 

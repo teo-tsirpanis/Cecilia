@@ -12,7 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using Mono.Cecil;
+using Cecilia;
 
 namespace Mono.Collections.Generic {
 

@@ -12,9 +12,9 @@ using System;
 using System.Text;
 using System.Threading;
 using Mono.Collections.Generic;
-using MD = Mono.Cecil.Metadata;
+using MD = Cecilia.Metadata;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public struct ArrayDimension {
 

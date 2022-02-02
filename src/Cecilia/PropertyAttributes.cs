@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	[Flags]
 	public enum PropertyAttributes : ushort {

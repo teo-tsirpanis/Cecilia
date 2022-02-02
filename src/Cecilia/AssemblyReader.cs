@@ -15,13 +15,13 @@ using System.IO.Compression;
 using System.Text;
 
 using Mono.Collections.Generic;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Metadata;
-using Mono.Cecil.PE;
+using Cecilia.Cil;
+using Cecilia.Metadata;
+using Cecilia.PE;
 
 using RVA = System.UInt32;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	abstract class ModuleReader {
 

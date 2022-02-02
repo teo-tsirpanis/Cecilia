@@ -4,9 +4,9 @@ using System.Security.Permissions;
 
 using NUnit.Framework;
 
-using Mono.Cecil.Rocks;
+using Cecilia.Rocks;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class SecurityDeclarationRocksTests : BaseTestFixture {

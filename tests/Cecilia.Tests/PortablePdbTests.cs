@@ -6,11 +6,11 @@ using System.Security.Cryptography;
 using System.Text;
 using NUnit.Framework;
 
-using Mono.Cecil.Cil;
-using Mono.Cecil.Pdb;
-using Mono.Cecil.PE;
+using Cecilia.Cil;
+using Cecilia.Pdb;
+using Cecilia.PE;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class PortablePdbTests : BaseTestFixture {

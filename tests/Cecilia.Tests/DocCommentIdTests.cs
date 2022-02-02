@@ -4,7 +4,7 @@ using System.Linq;
 
 using NUnit.Framework;
 
-using Mono.Cecil.Rocks;
+using Cecilia.Rocks;
 
 namespace N {
 
@@ -183,7 +183,7 @@ namespace N {
 	}
 }
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class DocCommentIdTests {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 	internal sealed class TypeReferenceEqualityComparer : EqualityComparer<TypeReference> {
 		public override bool Equals (TypeReference x, TypeReference y)
 		{

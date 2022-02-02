@@ -9,7 +9,7 @@ obj
 *.nupkg
 **/test-results/*
 *Resharper*
-Mono.Cecil.sln.ide*
+Cecilia.sln.ide*
 TestResults
 project.lock.json
 .vs/

@@ -12,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Metadata;
+using Cecilia.Cil;
+using Cecilia.Metadata;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	struct Range {
 		public uint Start;

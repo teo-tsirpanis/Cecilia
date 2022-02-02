@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 
-using Mono.Cecil;
-using Mono.Cecil.Metadata;
+using Cecilia;
+using Cecilia.Metadata;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class MethodTests : BaseTestFixture {

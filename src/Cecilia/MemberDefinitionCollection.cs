@@ -12,7 +12,7 @@ using System;
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition {
 

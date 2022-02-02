@@ -10,10 +10,10 @@
 
 using System;
 using System.Threading;
-using Mono.Cecil.Metadata;
+using Cecilia.Metadata;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public enum MetadataType : byte {
 		Void = ElementType.Void,

@@ -13,7 +13,7 @@ using System.Threading;
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	public sealed class MethodBody {
 

@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 
-using Mono.Cecil.PE;
+using Cecilia.PE;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class FieldTests : BaseTestFixture {

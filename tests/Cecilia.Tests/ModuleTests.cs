@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-using Mono.Cecil;
+using Cecilia;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class ModuleTests : BaseTestFixture {

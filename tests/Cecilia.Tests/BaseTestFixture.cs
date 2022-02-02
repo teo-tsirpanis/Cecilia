@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 using NUnit.Framework;
 
-using Mono.Cecil.PE;
+using Cecilia.PE;
 
 #if !NET_CORE
 namespace System.Runtime.CompilerServices {
@@ -19,7 +19,7 @@ namespace System.Runtime.CompilerServices {
 }
 #endif
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	public abstract class BaseTestFixture {
 

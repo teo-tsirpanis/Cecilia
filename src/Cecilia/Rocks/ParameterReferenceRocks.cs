@@ -1,5 +1,5 @@
 
-namespace Mono.Cecil.Rocks {
+namespace Cecilia.Rocks {
 
 	public static class ParameterReferenceRocks {
 

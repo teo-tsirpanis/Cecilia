@@ -11,13 +11,13 @@
 using System;
 using System.IO;
 
-using Mono.Cecil.Cil;
-using Mono.Cecil.Metadata;
+using Cecilia.Cil;
+using Cecilia.Metadata;
 using Mono.Collections.Generic;
 
 using RVA = System.UInt32;
 
-namespace Mono.Cecil.PE {
+namespace Cecilia.PE {
 
 	sealed class Image : IDisposable {
 

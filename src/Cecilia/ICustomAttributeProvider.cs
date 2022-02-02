@@ -12,7 +12,7 @@ using System;
 using System.Threading;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public interface ICustomAttributeProvider : IMetadataTokenProvider {
 
