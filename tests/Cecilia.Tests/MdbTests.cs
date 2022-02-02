@@ -48,7 +48,7 @@ namespace Cecilia.Tests {
 		[Test]
 		public void RoundTripCoreLib ()
 		{
-			TestModule ("mscorlib.dll", module => {
+			TestModule ("_mscorlib.dll", module => {
 				var type = module.GetType ("System.IO.__Error");
 				var method = type.GetMethod ("WinIOError");
 
