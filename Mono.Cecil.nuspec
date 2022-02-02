@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <id>Mono.Cecil</id>
+    <id>Cecilia</id>
     <version>0.11.4.0</version>
-    <title>Mono.Cecil</title>
+    <title>Cecilia</title>
     <authors>Jb Evain</authors>
     <owners>Jb Evain</owners>
     <license type="expression">MIT</license>
@@ -19,24 +19,24 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net40\Mono.Cecil.dll" target="lib/net40" />
-    <file src="bin\Release\net40\Mono.Cecil.pdb" target="lib/net40" />
-    <file src="bin\Release\netstandard2.0\Mono.Cecil.dll" target="lib/netstandard2.0" />
-    <file src="bin\Release\netstandard2.0\Mono.Cecil.pdb" target="lib/netstandard2.0" />
+    <file src="bin\Release\net40\Cecilia.dll" target="lib/net40" />
+    <file src="bin\Release\net40\Cecilia.pdb" target="lib/net40" />
+    <file src="bin\Release\netstandard2.0\Cecilia.dll" target="lib/netstandard2.0" />
+    <file src="bin\Release\netstandard2.0\Cecilia.pdb" target="lib/netstandard2.0" />
 
-    <file src="rocks\bin\Release\net40\Mono.Cecil.Rocks.dll" target="lib/net40" />
-    <file src="rocks\bin\Release\net40\Mono.Cecil.Rocks.pdb" target="lib/net40" />
-    <file src="rocks\bin\Release\netstandard2.0\Mono.Cecil.Rocks.dll" target="lib/netstandard2.0" />
-    <file src="rocks\bin\Release\netstandard2.0\Mono.Cecil.Rocks.pdb" target="lib/netstandard2.0" />
+    <file src="rocks\bin\Release\net40\Cecilia.Rocks.dll" target="lib/net40" />
+    <file src="rocks\bin\Release\net40\Cecilia.Rocks.pdb" target="lib/net40" />
+    <file src="rocks\bin\Release\netstandard2.0\Cecilia.Rocks.dll" target="lib/netstandard2.0" />
+    <file src="rocks\bin\Release\netstandard2.0\Cecilia.Rocks.pdb" target="lib/netstandard2.0" />
 
-    <file src="symbols\mdb\bin\Release\net40\Mono.Cecil.Mdb.dll" target="lib/net40" />
-    <file src="symbols\mdb\bin\Release\net40\Mono.Cecil.Mdb.pdb" target="lib/net40" />
-    <file src="symbols\mdb\bin\Release\netstandard2.0\Mono.Cecil.Mdb.dll" target="lib/netstandard2.0" />
-    <file src="symbols\mdb\bin\Release\netstandard2.0\Mono.Cecil.Mdb.pdb" target="lib/netstandard2.0" />
+    <file src="symbols\mdb\bin\Release\net40\Cecilia.Mdb.dll" target="lib/net40" />
+    <file src="symbols\mdb\bin\Release\net40\Cecilia.Mdb.pdb" target="lib/net40" />
+    <file src="symbols\mdb\bin\Release\netstandard2.0\Cecilia.Mdb.dll" target="lib/netstandard2.0" />
+    <file src="symbols\mdb\bin\Release\netstandard2.0\Cecilia.Mdb.pdb" target="lib/netstandard2.0" />
 
-    <file src="symbols\pdb\bin\Release\net40\Mono.Cecil.Pdb.dll" target="lib/net40" />
-    <file src="symbols\pdb\bin\Release\net40\Mono.Cecil.Pdb.pdb" target="lib/net40" />
-    <file src="symbols\pdb\bin\Release\netstandard2.0\Mono.Cecil.Pdb.dll" target="lib/netstandard2.0" />
-    <file src="symbols\pdb\bin\Release\netstandard2.0\Mono.Cecil.Pdb.pdb" target="lib/netstandard2.0" />
+    <file src="symbols\pdb\bin\Release\net40\Cecilia.Pdb.dll" target="lib/net40" />
+    <file src="symbols\pdb\bin\Release\net40\Cecilia.Pdb.pdb" target="lib/net40" />
+    <file src="symbols\pdb\bin\Release\netstandard2.0\Cecilia.Pdb.dll" target="lib/netstandard2.0" />
+    <file src="symbols\pdb\bin\Release\netstandard2.0\Cecilia.Pdb.pdb" target="lib/netstandard2.0" />
   </files>
 </package>

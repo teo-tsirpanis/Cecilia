@@ -10,12 +10,12 @@
 
 using System;
 using System.Threading;
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 using Mono.Collections.Generic;
 
 using RVA = System.UInt32;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class MethodDefinition : MethodReference, IMemberDefinition, ISecurityDeclarationProvider, ICustomDebugInformationProvider {
 

@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono {
+namespace Cecilia {
 
 	static class Disposable {
 

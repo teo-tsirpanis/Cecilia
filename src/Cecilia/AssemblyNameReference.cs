@@ -14,7 +14,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public class AssemblyNameReference : IMetadataScope {
 

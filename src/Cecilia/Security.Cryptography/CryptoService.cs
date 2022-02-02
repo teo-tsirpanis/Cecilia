@@ -16,9 +16,9 @@ using System.Runtime.Serialization;
 
 using Mono.Security.Cryptography;
 
-using Mono.Cecil.PE;
+using Cecilia.PE;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	// Most of this code has been adapted
 	// from Jeroen Frijters' fantastic work

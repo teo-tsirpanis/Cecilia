@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Mono.Cecil.Rocks {
+namespace Cecilia.Rocks {
 
 	public class DocCommentId {
 		IMemberDefinition commentMember;

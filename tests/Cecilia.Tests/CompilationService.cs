@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Emit;
 using CS = Microsoft.CodeAnalysis.CSharp;
 #endif
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	struct CompilationResult {
 		internal DateTime source_write_time;

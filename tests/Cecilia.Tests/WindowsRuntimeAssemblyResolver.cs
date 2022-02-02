@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 	public class WindowsRuntimeAssemblyResolver : DefaultAssemblyResolver {
 
 		readonly Dictionary<string, AssemblyDefinition> assemblies = new Dictionary<string, AssemblyDefinition> ();

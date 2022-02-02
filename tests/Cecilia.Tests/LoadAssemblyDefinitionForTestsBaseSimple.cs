@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	public class LoadAssemblyDefinitionForTestsBaseSimple {
 

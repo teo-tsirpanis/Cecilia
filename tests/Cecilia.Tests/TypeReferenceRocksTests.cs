@@ -1,10 +1,10 @@
 using System;
 
-using Mono.Cecil.Rocks;
+using Cecilia.Rocks;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class TypeReferenceRocksTests {

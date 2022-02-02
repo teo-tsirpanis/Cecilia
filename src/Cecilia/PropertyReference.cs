@@ -12,7 +12,7 @@ using System;
 
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public abstract class PropertyReference : MemberReference {
 

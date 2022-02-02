@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Mono.Cecil;
-using Mono.Cecil.Metadata;
-using Mono.Cecil.PE;
+using Cecilia;
+using Cecilia.Metadata;
+using Cecilia.PE;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class CustomAttributesTests : BaseTestFixture {

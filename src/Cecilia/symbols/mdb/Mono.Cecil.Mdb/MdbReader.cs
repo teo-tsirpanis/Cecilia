@@ -12,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 using Mono.Collections.Generic;
 using Mono.CompilerServices.SymbolWriter;
 
-namespace Mono.Cecil.Mdb {
+namespace Cecilia.Mdb {
 
 	public sealed class MdbReaderProvider : ISymbolReaderProvider {
 

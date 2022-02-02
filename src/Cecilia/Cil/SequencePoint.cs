@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	public sealed class SequencePoint {
 

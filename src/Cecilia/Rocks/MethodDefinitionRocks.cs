@@ -10,7 +10,7 @@
 
 using System;
 
-namespace Mono.Cecil.Rocks {
+namespace Cecilia.Rocks {
 
 #if INSIDE_ROCKS
 	public

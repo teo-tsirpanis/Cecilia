@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public static class TypeDefinitionUtils {
 

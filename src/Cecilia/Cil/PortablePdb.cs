@@ -13,10 +13,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
-using Mono.Cecil.Metadata;
-using Mono.Cecil.PE;
+using Cecilia.Metadata;
+using Cecilia.PE;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	public sealed class PortablePdbReaderProvider : ISymbolReaderProvider {
 

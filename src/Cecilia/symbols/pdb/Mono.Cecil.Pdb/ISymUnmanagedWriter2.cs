@@ -11,9 +11,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 
-namespace Mono.Cecil.Pdb {
+namespace Cecilia.Pdb {
 
 	[Guid ("0B97726E-9E6D-4f05-9A26-424022093CAA")]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]

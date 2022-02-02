@@ -12,9 +12,9 @@ using System;
 using System.Threading;
 using Mono.Collections.Generic;
 
-using Mono.Cecil.Metadata;
+using Cecilia.Metadata;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public sealed class GenericParameter : TypeReference, ICustomAttributeProvider {
 

@@ -1,7 +1,7 @@
-﻿using Mono.Cecil.Cil;
+﻿using Cecilia.Cil;
 using System;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 	internal sealed class GenericParameterResolver {
 		internal static TypeReference ResolveReturnTypeIfNeeded (MethodReference methodReference)
 		{

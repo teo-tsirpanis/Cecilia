@@ -11,7 +11,7 @@
 using System;
 using Mono.Collections.Generic;
 
-namespace Mono {
+namespace Cecilia {
 
 	static class Empty<T> {
 
@@ -27,7 +27,7 @@ namespace Mono {
 	}
 }
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	static partial class Mixin {
 

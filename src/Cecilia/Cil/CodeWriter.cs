@@ -13,12 +13,12 @@ using System.Collections.Generic;
 
 using Mono.Collections.Generic;
 
-using Mono.Cecil.Metadata;
-using Mono.Cecil.PE;
+using Cecilia.Metadata;
+using Cecilia.PE;
 
 using RVA = System.UInt32;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	sealed class CodeWriter : ByteBuffer {
 

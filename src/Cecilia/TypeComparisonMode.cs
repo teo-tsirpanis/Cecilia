@@ -1,4 +1,4 @@
-namespace Mono.Cecil
+namespace Cecilia
 {
     internal enum TypeComparisonMode {
         Exact,

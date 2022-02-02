@@ -10,12 +10,12 @@
 
 using System;
 
-using Mono.Cecil.PE;
+using Cecilia.PE;
 using Mono.Collections.Generic;
 
 using RVA = System.UInt32;
 
-namespace Mono.Cecil.Cil {
+namespace Cecilia.Cil {
 
 	sealed class CodeReader : BinaryStreamReader {
 

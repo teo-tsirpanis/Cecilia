@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mono.Cecil.Rocks;
+using Cecilia.Rocks;
 
 using NUnit.Framework;
 
-namespace Mono.Cecil.Tests {
+namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class TypeDefinitionRocksTests {
@@ -40,9 +40,9 @@ namespace Mono.Cecil.Tests {
 			var ctors = foo.GetConstructors ().Select (ctor => ctor.FullName);
 
 			var expected = new [] {
-				"System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::.cctor()",
-				"System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32)",
-				"System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32,System.String)",
+				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()",
+				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32)",
+				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32,System.String)",
 			};
 
 			AssertSet (expected, ctors);
@@ -61,7 +61,7 @@ namespace Mono.Cecil.Tests {
 			var cctor = foo.GetStaticConstructor ();
 
 			Assert.IsNotNull (cctor);
-			Assert.AreEqual ("System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::.cctor()", cctor.FullName);
+			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()", cctor.FullName);
 		}
 
 		[Test]
@@ -71,8 +71,8 @@ namespace Mono.Cecil.Tests {
 			var methods = foo.GetMethods ().ToArray ();
 
 			Assert.AreEqual (2, methods.Length);
-			Assert.AreEqual ("System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::Bar()", methods [0].FullName);
-			Assert.AreEqual ("System.Void Mono.Cecil.Tests.TypeDefinitionRocksTests/Foo::Baz()", methods [1].FullName);
+			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Bar()", methods [0].FullName);
+			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Baz()", methods [1].FullName);
 		}
 
 		enum Pan : byte {

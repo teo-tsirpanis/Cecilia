@@ -10,10 +10,10 @@
 using System;
 using System.Runtime.InteropServices;
 
-using Mono.Cecil.Cil;
+using Cecilia.Cil;
 using Mono.Collections.Generic;
 
-namespace Mono.Cecil.Pdb
+namespace Cecilia.Pdb
 {
 	internal class SymWriter
 	{

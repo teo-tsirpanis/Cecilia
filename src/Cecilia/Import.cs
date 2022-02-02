@@ -13,9 +13,9 @@ using System.Collections.Generic;
 using Mono.Collections.Generic;
 using SR = System.Reflection;
 
-using Mono.Cecil.Metadata;
+using Cecilia.Metadata;
 
-namespace Mono.Cecil {
+namespace Cecilia {
 
 	public interface IMetadataImporterProvider {
 		IMetadataImporter GetMetadataImporter (ModuleDefinition module);
