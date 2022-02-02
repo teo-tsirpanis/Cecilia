@@ -2,6 +2,7 @@
   <Import Project="..\..\Cecilia.Tests.props" />
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
