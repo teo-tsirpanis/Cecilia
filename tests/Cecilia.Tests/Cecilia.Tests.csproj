@@ -4,9 +4,13 @@
     <TargetFrameworks>net6.0;net48</TargetFrameworks>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+      <Version>4.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\**\*" LinkBase="Resources\" CopyToOutputDirectory="PreserveNewest" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
     <ProjectReference Include="..\..\src\Cecilia\Cecilia.csproj" />
   </ItemGroup>
 </Project>
