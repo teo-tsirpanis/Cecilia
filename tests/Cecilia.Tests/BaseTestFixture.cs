@@ -6,19 +6,6 @@ using NUnit.Framework;
 
 using Cecilia.PE;
 
-#if !NET_CORE
-namespace System.Runtime.CompilerServices {
-
-	[AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
-	public sealed class CallerFilePathAttribute : Attribute {
-	}
-
-	[AttributeUsage (AttributeTargets.Parameter, Inherited = false)]
-	public sealed class CallerMemberNameAttribute : Attribute {
-	}
-}
-#endif
-
 namespace Cecilia.Tests {
 
 	public abstract class BaseTestFixture {
