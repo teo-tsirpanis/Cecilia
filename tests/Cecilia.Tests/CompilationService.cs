@@ -1,16 +1,16 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Reflection;
 using NUnit.Framework;
 
-#if NET_CORE
+#if NET
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 using CS = Microsoft.CodeAnalysis.CSharp;
+#else
+using System.CodeDom.Compiler;
 #endif
 
 namespace Cecilia.Tests {
@@ -97,7 +97,7 @@ namespace Cecilia.Tests {
 				return IlasmCompilationService.Instance.Compile (name);
 
 			if (extension == ".cs")
-#if NET_CORE
+#if NET
 				return RoslynCompilationService.Instance.Compile (name);
 #else
 				return CodeDomCompilationService.Instance.Compile (name);
@@ -145,7 +145,7 @@ namespace Cecilia.Tests {
 		}
 	}
 
-#if NET_CORE
+#if NET
 
 	class RoslynCompilationService : CompilationService {
 
