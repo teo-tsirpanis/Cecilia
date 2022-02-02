@@ -332,7 +332,7 @@ namespace Cecilia.PE {
 		void ReadDebugHeader ()
 		{
 			if (image.Debug.IsZero) {
-				image.DebugHeader = new ImageDebugHeader (Empty<ImageDebugHeaderEntry>.Array);
+				image.DebugHeader = new ImageDebugHeader (Array.Empty<ImageDebugHeaderEntry>());
 				return;
 			}
 
@@ -353,7 +353,7 @@ namespace Cecilia.PE {
 				};
 
 				if (directory.PointerToRawData == 0 || directory.SizeOfData < 0) {
-					entries [i] = new ImageDebugHeaderEntry (directory, Empty<byte>.Array);
+					entries [i] = new ImageDebugHeaderEntry (directory, Array.Empty<byte>());
 					continue;
 				}
 

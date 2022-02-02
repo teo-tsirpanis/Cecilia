@@ -2414,7 +2414,7 @@ namespace Cecilia {
 				return;
 			}
 
-			var content = embedded_source.content ?? Empty<byte>.Array;
+			var content = embedded_source.content ?? Array.Empty<byte>();
 			if (embedded_source.compress) {
 				signature.WriteInt32 (content.Length);
 

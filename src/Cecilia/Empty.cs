@@ -12,12 +12,6 @@ using System;
 using Mono.Collections.Generic;
 
 namespace Cecilia {
-
-	static class Empty<T> {
-
-		public static readonly T [] Array = new T [0];
-	}
-
 	class ArgumentNullOrEmptyException : ArgumentException {
 
 		public ArgumentNullOrEmptyException (string paramName)

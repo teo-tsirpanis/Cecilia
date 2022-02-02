@@ -489,7 +489,7 @@ namespace Cecilia {
 			var blob_heap = image.BlobHeap;
 			if (blob_heap == null) {
 				position += 2;
-				return Empty<byte>.Array;
+				return Array.Empty<byte>();
 			}
 
 			return blob_heap.Read (ReadBlobIndex ());
@@ -499,7 +499,7 @@ namespace Cecilia {
 		{
 			var blob_heap = image.BlobHeap;
 			if (blob_heap == null)
-				return Empty<byte>.Array;
+				return Array.Empty<byte>();
 
 			return blob_heap.Read (signature);
 		}
@@ -778,7 +778,7 @@ namespace Cecilia {
 			return image.GetReaderAt (image.Resources.VirtualAddress, offset, (o, reader) => {
 				reader.Advance ((int) o);
 				return reader.ReadBytes (reader.ReadInt32 ());
-			}) ?? Empty<byte>.Array;
+			}) ?? Array.Empty<byte>();
 		}
 
 		void PopulateVersionAndFlags (AssemblyNameReference name)
@@ -1352,7 +1352,7 @@ namespace Cecilia {
 
 		byte [] GetFieldInitializeValue (int size, RVA rva)
 		{
-			return image.GetReaderAt (rva, size, (s, reader) => reader.ReadBytes (s)) ?? Empty<byte>.Array;
+			return image.GetReaderAt (rva, size, (s, reader) => reader.ReadBytes (s)) ?? Array.Empty<byte>();
 		}
 
 		static int GetFieldTypeSize (TypeReference type)
@@ -3572,7 +3572,7 @@ namespace Cecilia {
 				return new CustomAttributeArgument (type, null);
 
 			if (length == 0)
-				return new CustomAttributeArgument (type, Empty<CustomAttributeArgument>.Array);
+				return new CustomAttributeArgument (type, Array.Empty<CustomAttributeArgument>());
 
 			var arguments = new CustomAttributeArgument [length];
 			var element_type = type.ElementType;

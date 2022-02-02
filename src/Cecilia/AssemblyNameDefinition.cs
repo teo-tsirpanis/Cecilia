@@ -15,7 +15,7 @@ namespace Cecilia {
 	public sealed class AssemblyNameDefinition : AssemblyNameReference {
 
 		public override byte [] Hash {
-			get { return Empty<byte>.Array; }
+			get { return Array.Empty<byte>(); }
 		}
 
 		internal AssemblyNameDefinition ()

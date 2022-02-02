@@ -25,7 +25,7 @@ namespace Cecilia.Rocks {
 				throw new ArgumentNullException ("self");
 
 			if (!self.HasMethods)
-				return Empty<MethodDefinition>.Array;
+				return Array.Empty<MethodDefinition>();
 
 			return self.Methods.Where (method => method.IsConstructor);
 		}
@@ -47,7 +47,7 @@ namespace Cecilia.Rocks {
 				throw new ArgumentNullException ("self");
 
 			if (!self.HasMethods)
-				return Empty<MethodDefinition>.Array;
+				return Array.Empty<MethodDefinition>();
 
 			return self.Methods.Where (method => !method.IsConstructor);
 		}

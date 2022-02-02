@@ -115,8 +115,8 @@ namespace Cecilia.Cil {
 		public Document (string url)
 		{
 			this.url = url;
-			this.hash = Empty<byte>.Array;
-			this.embedded_source = Empty<byte>.Array;
+			this.hash = Array.Empty<byte>();
+			this.embedded_source = Array.Empty<byte>();
 			this.token = new MetadataToken (TokenType.Document);
 		}
 	}

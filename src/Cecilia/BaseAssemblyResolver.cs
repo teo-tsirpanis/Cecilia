@@ -117,7 +117,7 @@ namespace Cecilia {
 			if (name.IsRetargetable) {
 				// if the reference is retargetable, zero it
 				name = new AssemblyNameReference (name.Name, Mixin.ZeroVersion) {
-					PublicKeyToken = Empty<byte>.Array,
+					PublicKeyToken = Array.Empty<byte>(),
 				};
 			}
 

@@ -81,7 +81,7 @@ namespace Cecilia {
 		}
 
 		public byte [] PublicKey {
-			get { return public_key ?? Empty<byte>.Array; }
+			get { return public_key ?? Array.Empty<byte>(); }
 			set {
 				public_key = value;
 				HasPublicKey = !public_key.IsNullOrEmpty ();
@@ -100,7 +100,7 @@ namespace Cecilia {
 					Array.Reverse (local_public_key_token, 0, 8);
 					Interlocked.CompareExchange (ref public_key_token, local_public_key_token, null); // publish only once finished (required for thread-safety)
 				}
-				return public_key_token ?? Empty<byte>.Array;
+				return public_key_token ?? Array.Empty<byte>();
 			}
 			set {
 				public_key_token = value;

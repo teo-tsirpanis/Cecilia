@@ -121,7 +121,7 @@ namespace Cecilia {
 		public static byte [] ComputeHash (string file)
 		{
 			if (!File.Exists (file))
-				return Empty<byte>.Array;
+				return Array.Empty<byte>();
 
 			using (var stream = new FileStream (file, FileMode.Open, FileAccess.Read, FileShare.Read))
 				return ComputeHash (stream);

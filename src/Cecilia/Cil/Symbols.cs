@@ -56,11 +56,11 @@ namespace Cecilia.Cil {
 
 		public ImageDebugHeader (ImageDebugHeaderEntry [] entries)
 		{
-			this.entries = entries ?? Empty<ImageDebugHeaderEntry>.Array;
+			this.entries = entries ?? Array.Empty<ImageDebugHeaderEntry>();
 		}
 
 		public ImageDebugHeader ()
-			: this (Empty<ImageDebugHeaderEntry>.Array)
+			: this (Array.Empty<ImageDebugHeaderEntry>())
 		{
 		}
 
@@ -87,7 +87,7 @@ namespace Cecilia.Cil {
 		public ImageDebugHeaderEntry (ImageDebugDirectory directory, byte [] data)
 		{
 			this.directory = directory;
-			this.data = data ?? Empty<byte>.Array;
+			this.data = data ?? Array.Empty<byte>();
 		}
 	}
 
@@ -802,7 +802,7 @@ namespace Cecilia.Cil {
 		public IEnumerable<ScopeDebugInformation> GetScopes ()
 		{
 			if (scope == null)
-				return Empty<ScopeDebugInformation>.Array;
+				return Array.Empty<ScopeDebugInformation>();
 
 			return GetScopes (new[] { scope });
 		}
@@ -1133,7 +1133,7 @@ namespace Cecilia {
 
 		public static ImageDebugHeader AddDeterministicEntry (this ImageDebugHeader header)
 		{
-			var entry = new ImageDebugHeaderEntry (new ImageDebugDirectory { Type = ImageDebugType.Deterministic }, Empty<byte>.Array);
+			var entry = new ImageDebugHeaderEntry (new ImageDebugDirectory { Type = ImageDebugType.Deterministic }, Array.Empty<byte>());
 			if (header == null)
 				return new ImageDebugHeader (entry);
 

@@ -546,7 +546,7 @@ namespace Cecilia {
 
 			var pk_token = !name.PublicKeyToken.IsNullOrEmpty ()
 				? new byte [name.PublicKeyToken.Length]
-				: Empty<byte>.Array;
+				: Array.Empty<byte>();
 
 			if (pk_token.Length > 0)
 				Buffer.BlockCopy (name.PublicKeyToken, 0, pk_token, 0, pk_token.Length);

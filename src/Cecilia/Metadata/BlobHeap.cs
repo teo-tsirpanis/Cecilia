@@ -22,13 +22,13 @@ namespace Cecilia.Metadata {
 		public byte [] Read (uint index)
 		{
 			if (index == 0 || index > this.data.Length - 1)
-				return Empty<byte>.Array;
+				return Array.Empty<byte>();
 
 			int position = (int) index;
 			int length = (int) data.ReadCompressedUInt32 (ref position);
 
 			if (length > data.Length - position)
-				return Empty<byte>.Array;
+				return Array.Empty<byte>();
 
 			var buffer = new byte [length];
 

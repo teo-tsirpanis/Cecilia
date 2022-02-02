@@ -20,7 +20,7 @@ namespace Cecilia.PE {
 
 		public ByteBuffer ()
 		{
-			this.buffer = Empty<byte>.Array;
+			this.buffer = Array.Empty<byte>();
 		}
 
 		public ByteBuffer (int length)
@@ -30,7 +30,7 @@ namespace Cecilia.PE {
 
 		public ByteBuffer (byte [] buffer)
 		{
-			this.buffer = buffer ?? Empty<byte>.Array;
+			this.buffer = buffer ?? Array.Empty<byte>();
 			this.length = this.buffer.Length;
 		}
 

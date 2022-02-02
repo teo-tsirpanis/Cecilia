@@ -96,7 +96,7 @@ namespace Mono.Collections.Generic {
 
 		public Collection ()
 		{
-			items = Empty<T>.Array;
+			items = Array.Empty<T>();
 		}
 
 		public Collection (int capacity)
@@ -105,7 +105,7 @@ namespace Mono.Collections.Generic {
 				throw new ArgumentOutOfRangeException ();
 
 			items = capacity == 0 
-				? Empty<T>.Array
+				? Array.Empty<T>()
 				: new T [capacity];
 		}
 

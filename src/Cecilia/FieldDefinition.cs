@@ -107,7 +107,7 @@ namespace Cecilia {
 				ResolveRVA ();
 
 				if (initial_value == null)
-					initial_value = Empty<byte>.Array;
+					initial_value = Array.Empty<byte>();
 
 				return initial_value;
 			}

@@ -648,7 +648,7 @@ namespace Cecilia {
 		public IEnumerable<TypeReference> GetTypeReferences ()
 		{
 			if (!HasImage)
-				return Empty<TypeReference>.Array;
+				return Array.Empty<TypeReference>();
 
 			return Read (this, (_, reader) => reader.GetTypeReferences ());
 		}
@@ -656,7 +656,7 @@ namespace Cecilia {
 		public IEnumerable<MemberReference> GetMemberReferences ()
 		{
 			if (!HasImage)
-				return Empty<MemberReference>.Array;
+				return Array.Empty<MemberReference>();
 
 			return Read (this, (_, reader) => reader.GetMemberReferences ());
 		}
@@ -664,7 +664,7 @@ namespace Cecilia {
 		public IEnumerable<CustomAttribute> GetCustomAttributes ()
 		{
 			if (!HasImage)
-				return Empty<CustomAttribute>.Array;
+				return Array.Empty<CustomAttribute>();
 
 			return Read (this, (_, reader) => reader.GetCustomAttributes ());
 		}

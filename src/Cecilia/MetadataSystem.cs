@@ -154,8 +154,8 @@ namespace Cecilia {
 			if (GenericParameters != null) GenericParameters = new Dictionary<MetadataToken, Range []> (capacity: 0);
 			if (GenericConstraints != null) GenericConstraints = new Dictionary<uint, Collection<Row<uint, MetadataToken>>> (capacity: 0);
 
-			Documents = Empty<Document>.Array;
-			ImportScopes = Empty<ImportDebugInformation>.Array;
+			Documents = Array.Empty<Document>();
+			ImportScopes = Array.Empty<ImportDebugInformation>();
 			if (LocalScopes != null) LocalScopes = new Dictionary<uint, Collection<Row<uint, Range, Range, uint, uint, uint>>> (capacity: 0);
 			if (StateMachineMethods != null) StateMachineMethods = new Dictionary<uint, uint> (capacity: 0);
 		}
