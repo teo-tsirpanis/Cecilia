@@ -1,9 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
-    <EnableDefaultItems>true</EnableDefaultItems>
     <DefineConstants>$(DefineConstants);INSIDE_ROCKS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>0.0.1</Version>
+    <Description>Cecilia is a fork of Mono.Cecil maintained by Theodore Tsirpanis to generate and inspect programs and libraries in the ECMA CIL format. It has full support for generics, and support some debugging symbol format. In simple English, with Cecilia, you can load existing managed assemblies, browse all the contained types, modify them on the fly and save back to the disk the modified assembly.</Description>
+    <Authors>Theodore Tsirpanis</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/teo-tsirpanis/Cecilia</PackageProjectUrl>
+    <PackageTags>assembly;assemblies;module;modules;il;cil;msil;bytecode;reflection;injection;cecil;mono;aop</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../ProjectInfo.cs" />
