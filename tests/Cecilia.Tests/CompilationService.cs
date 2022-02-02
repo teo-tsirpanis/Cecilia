@@ -54,7 +54,6 @@ namespace Cecilia.Tests {
 	}
 
 	abstract class CompilationService {
-
 		Dictionary<string, CompilationResult> files = new Dictionary<string, CompilationResult> ();
 
 		bool TryGetResult (string name, out string file_result)
@@ -111,7 +110,7 @@ namespace Cecilia.Tests {
 
 		public static void Verify (string name)
 		{
-#if !NET_CORE
+#if !NET
 			var output = Platform.OnMono ? ShellService.PEDump (name) : ShellService.PEVerify (name);
 			if (output.ExitCode != 0)
 				Assert.Fail (output.ToString ());
@@ -120,7 +119,6 @@ namespace Cecilia.Tests {
 	}
 
 	class IlasmCompilationService : CompilationService {
-
 		public static readonly IlasmCompilationService Instance = new IlasmCompilationService ();
 
 		protected override string CompileFile (string name)
@@ -274,7 +272,7 @@ namespace Cecilia.Tests {
 
 		static string NetFrameworkTool (string tool)
 		{
-#if NET_CORE
+#if NET
 			return Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Windows), "Microsoft.NET", "Framework", "v4.0.30319", tool + ".exe");
 #else
 			return Path.Combine (
@@ -300,14 +298,14 @@ namespace Cecilia.Tests {
 
 			foreach (var sdk in sdks) {
 				var pgf = IntPtr.Size == 8
-					? Environment.GetEnvironmentVariable("ProgramFiles(x86)")
-					: Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+					? Environment.GetEnvironmentVariable ("ProgramFiles(x86)")
+					: Environment.GetFolderPath (Environment.SpecialFolder.ProgramFiles);
 
 				var exe = Path.Combine (
 					Path.Combine (pgf, sdk),
 					tool + ".exe");
 
-				if (File.Exists(exe))
+				if (File.Exists (exe))
 					return exe;
 			}
 

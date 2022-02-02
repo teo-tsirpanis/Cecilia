@@ -1,4 +1,4 @@
-﻿#if !NET_CORE
+﻿#if !NET
 
 using System;
 using System.Collections.Generic;

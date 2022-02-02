@@ -178,7 +178,7 @@ namespace Cecilia.Tests {
 			}, verify: false);
 		}
 
-#if !NET_CORE
+#if !NET
 		[Test]
 		public void WindowsRuntimeComponentAssembly ()
 		{

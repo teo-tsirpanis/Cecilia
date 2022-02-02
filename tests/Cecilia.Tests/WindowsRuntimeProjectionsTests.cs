@@ -1,4 +1,4 @@
-﻿#if !NET_CORE
+﻿#if !NET
 
 using NUnit.Framework;
 using System;
