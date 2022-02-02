@@ -4,7 +4,6 @@ using System.IO;
 using NUnit.Framework;
 
 using Cecilia.Cil;
-using Cecilia.Mdb;
 using Cecilia.Pdb;
 
 namespace Cecilia.Tests {
@@ -19,15 +18,6 @@ namespace Cecilia.Tests {
 				Assert.IsTrue (module.HasSymbols);
 				Assert.AreEqual (typeof (NativePdbReader), module.SymbolReader.GetType ());
 			}, readOnly: !Platform.HasNativePdbSupport, symbolReaderProvider: typeof (DefaultSymbolReaderProvider), symbolWriterProvider: typeof (DefaultSymbolWriterProvider));
-		}
-
-		[Test]
-		public void DefaultMdb ()
-		{
-			TestModule ("libmdb.dll", module => {
-				Assert.IsTrue (module.HasSymbols);
-				Assert.AreEqual (typeof (MdbReader), module.SymbolReader.GetType ());
-			}, symbolReaderProvider: typeof (DefaultSymbolReaderProvider), symbolWriterProvider: typeof (DefaultSymbolWriterProvider));
 		}
 
 		[Test]
@@ -46,21 +36,6 @@ namespace Cecilia.Tests {
 				Assert.IsTrue (module.HasSymbols);
 				Assert.AreEqual (typeof (PortablePdbReader), module.SymbolReader.GetType ());
 			}, symbolReaderProvider: typeof (DefaultSymbolReaderProvider), symbolWriterProvider: typeof (DefaultSymbolWriterProvider), verify: !Platform.OnMono);
-		}
-
-		[Test]
-		public void MdbMismatch ()
-		{
-			Assert.Throws<SymbolsNotMatchingException> (() => GetResourceModule ("mdb-mismatch.dll", new ReaderParameters { SymbolReaderProvider = new MdbReaderProvider () }));
-		}
-
-		[Test]
-		public void MdbIgnoreMismatch()
-		{
-			using (var module = GetResourceModule ("mdb-mismatch.dll", new ReaderParameters { SymbolReaderProvider = new MdbReaderProvider (), ThrowIfSymbolsAreNotMatching = false })) {
-				Assert.IsNull (module.SymbolReader);
-				Assert.IsFalse (module.HasSymbols);
-			}
 		}
 
 		[Test]
@@ -108,23 +83,6 @@ namespace Cecilia.Tests {
 					Assert.IsNotNull (module.SymbolReader);
 					Assert.IsTrue (module.HasSymbols);
 					Assert.AreEqual (typeof (NativePdbReader), module.SymbolReader.GetType ());
-				}
-			}
-		}
-
-		[Test]
-		public void DefaultMdbStream ()
-		{
-			using (var symbolStream = GetResourceStream ("libmdb.dll.mdb")) {
-				var parameters = new ReaderParameters {
-					SymbolReaderProvider = new MdbReaderProvider (),
-					SymbolStream = symbolStream,
-				};
-
-				using (var module = GetResourceModule ("libmdb.dll", parameters)) {
-					Assert.IsNotNull (module.SymbolReader);
-					Assert.IsTrue (module.HasSymbols);
-					Assert.AreEqual (typeof (MdbReader), module.SymbolReader.GetType ());
 				}
 			}
 		}

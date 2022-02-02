@@ -5,7 +5,6 @@ using System.Linq;
 
 using Cecilia;
 using Cecilia.Cil;
-using Cecilia.Mdb;
 using Cecilia.Pdb;
 using NUnit.Framework;
 
@@ -39,67 +38,6 @@ namespace Cecilia.Tests {
 				il.Create (OpCodes.Ldloc_1));
 
 			AssertOpCodeSequence (new [] { OpCodes.Ldloc_0, OpCodes.Ldloc_1, OpCodes.Ldloc_2, OpCodes.Ldloc_3 }, method);
-		}
-
-		[Test]
-		public void InsertBeforeIssue697 ()
-		{
-			var parameters = new ReaderParameters { SymbolReaderProvider = new MdbReaderProvider () };
-			using (var module = GetResourceModule ("Issue697.dll", parameters))
-			{
-				var pathGetterDef = module.GetTypes ()
-					.SelectMany (t => t.Methods)
-					.First (m => m.Name.Equals ("get_Defer"));
-
-				var body = pathGetterDef.Body;
-				var worker = body.GetILProcessor ();
-				var initialBody = body.Instructions.ToList ();
-				var head = initialBody.First ();
-				var opcode = worker.Create (OpCodes.Ldc_I4_1);
-				worker.InsertBefore (head, opcode);
-				worker.InsertBefore (head, worker.Create (OpCodes.Ret));
-				initialBody.ForEach (worker.Remove);
-				AssertOpCodeSequence (new [] { OpCodes.Ldc_I4_1, OpCodes.Ret }, pathGetterDef.body);	
-			}
-		}
-
-		[Test]
-		public void InsertBeforeIssue697bis ()
-		{
-			var parameters = new ReaderParameters { SymbolReaderProvider = new MdbReaderProvider () };
-			using (var module = GetResourceModule ("Issue697.dll", parameters)) {
-				var pathGetterDef = module.GetTypes ()
-					.SelectMany (t => t.Methods)
-					.First (m => m.Name.Equals ("get_Defer"));
-
-				var body = pathGetterDef.Body;
-				var worker = body.GetILProcessor ();
-				var initialBody = body.Instructions.ToList ();
-				Console.WriteLine (initialBody.Sum (i => i.GetSize ()));
-
-				var head = initialBody.First ();
-				var opcode = worker.Create (OpCodes.Ldc_I4_1);
-				worker.InsertBefore (head, opcode);
-
-				Assert.That (pathGetterDef.DebugInformation.Scope.Start.IsEndOfMethod, Is.False);
-				foreach (var subscope in pathGetterDef.DebugInformation.Scope.Scopes)
-					Assert.That (subscope.Start.IsEndOfMethod, Is.False);
-
-				// big test -- we can write w/o crashing
-				var unique = Guid.NewGuid ().ToString ();
-				var output = Path.GetTempFileName ();
-				var outputdll = output + ".dll";
-
-				var writer = new WriterParameters () {
-					SymbolWriterProvider = new MdbWriterProvider (),
-					WriteSymbols = true
-				};
-				using (var sink = File.Open (outputdll, FileMode.Create, FileAccess.ReadWrite)) {
-					module.Write (sink, writer);
-				}
-
-				Assert.Pass ();
-			}
 		}
 
 		[Test]
