@@ -1105,9 +1105,6 @@ namespace Cecilia {
 				if (module.IsMain)
 					continue;
 
-#if NET_CORE
-				throw new NotSupportedException ();
-#else
 				var parameters = new WriterParameters {
 					SymbolWriterProvider = symbol_writer_provider,
 				};
@@ -1121,11 +1118,9 @@ namespace Cecilia {
 					FileAttributes.ContainsMetaData,
 					GetStringIndex (module.Name),
 					GetBlobIndex (hash)));
-#endif
 			}
 		}
 
-#if !NET_CORE
 		string GetModuleFileName (string name)
 		{
 			if (string.IsNullOrEmpty (name))
@@ -1134,7 +1129,6 @@ namespace Cecilia {
 			var path = Path.GetDirectoryName (fq_name);
 			return Path.Combine (path, name);
 		}
-#endif
 
 		void AddAssemblyReferences ()
 		{

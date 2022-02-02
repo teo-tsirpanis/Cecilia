@@ -1013,19 +1013,15 @@ namespace Cecilia.Cil {
 
 			var suffix = GetSymbolNamespace (kind);
 
-			var cecil_name = typeof (SymbolProvider).Assembly.GetName ();
+			var cecilia_name = typeof (SymbolProvider).Assembly.GetName ();
 
 			var name = new SR.AssemblyName {
-				Name = cecil_name.Name + "." + suffix,
-				Version = cecil_name.Version,
-#if NET_CORE
-				CultureName = cecil_name.CultureName,
-#else
-				CultureInfo = cecil_name.CultureInfo,
-#endif
+				Name = cecilia_name.Name + "." + suffix,
+				Version = cecilia_name.Version,
+				CultureInfo = cecilia_name.CultureInfo
 			};
 
-			name.SetPublicKeyToken (cecil_name.GetPublicKeyToken ());
+			name.SetPublicKeyToken (cecilia_name.GetPublicKeyToken ());
 
 			return name;
 		}

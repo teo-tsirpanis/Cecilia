@@ -62,11 +62,10 @@ namespace Cecilia {
 
 		readonly Collection<string> directories;
 
-#if NET_CORE
 		// Maps file names of available trusted platform assemblies to their full paths.
 		// Internal for testing.
 		internal static readonly Lazy<Dictionary<string, string>> TrustedPlatformAssemblies = new Lazy<Dictionary<string, string>> (CreateTrustedPlatformAssemblyMap);
-#endif
+
 		Collection<string> gac_paths;
 
 		public void AddSearchDirectory (string directory)
@@ -122,14 +121,12 @@ namespace Cecilia {
 				};
 			}
 
-#if NET_CORE
 			if (on_coreclr) {
 				assembly = SearchTrustedPlatformAssemblies (name, parameters);
 				if (assembly != null)
 					return assembly;
-			} else
-#endif
-			{
+			}
+			else {
 				var framework_dir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
 				var framework_dirs = on_mono
 					? new [] { framework_dir, Path.Combine (framework_dir, "Facades") }
@@ -165,7 +162,6 @@ namespace Cecilia {
 			throw new AssemblyResolutionException (name);
 		}
 
-#if NET_CORE
 		AssemblyDefinition SearchTrustedPlatformAssemblies (AssemblyNameReference name, ReaderParameters parameters)
 		{
 			if (name.IsWindowsRuntime)
@@ -198,7 +194,6 @@ namespace Cecilia {
 
 			return result;
 		}
-#endif
 
 		protected virtual AssemblyDefinition SearchDirectory (AssemblyNameReference name, IEnumerable<string> directories, ReaderParameters parameters)
 		{
