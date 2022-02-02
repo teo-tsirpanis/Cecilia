@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <Import Project="..\Mono.Cecil.Tests.props" />
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
@@ -9,15 +9,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mono.Cecil.csproj">
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\symbols\mdb\Mono.Cecil.Mdb.csproj">
-      <Name>Mono.Cecil.Mdb</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\symbols\pdb\Mono.Cecil.Pdb.csproj">
-      <Name>Mono.Cecil.Pdb</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\src\Cecilia\Cecilia.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ProjectInfo.cs" />
