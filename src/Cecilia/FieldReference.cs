@@ -37,7 +37,7 @@ namespace Cecilia {
 		public FieldReference (string name, TypeReference fieldType)
 			: base (name)
 		{
-			Mixin.CheckType (fieldType, Mixin.Argument.fieldType);
+			Mixin.CheckNotNull (fieldType);
 
 			this.field_type = fieldType;
 			this.token = new MetadataToken (TokenType.MemberRef);
@@ -46,7 +46,7 @@ namespace Cecilia {
 		public FieldReference (string name, TypeReference fieldType, TypeReference declaringType)
 			: this (name, fieldType)
 		{
-			Mixin.CheckType (declaringType, Mixin.Argument.declaringType);
+			Mixin.CheckNotNull (declaringType);
 
 			this.DeclaringType = declaringType;
 		}

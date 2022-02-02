@@ -30,7 +30,7 @@ namespace Cecilia {
 		internal PropertyReference (string name, TypeReference propertyType)
 			: base (name)
 		{
-			Mixin.CheckType (propertyType, Mixin.Argument.propertyType);
+			Mixin.CheckNotNull (propertyType);
 
 			property_type = propertyType;
 		}

@@ -24,7 +24,7 @@ namespace Cecilia {
 
 		public override AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNull (name);
 
 			AssemblyDefinition assembly;
 			if (cache.TryGetValue (name.FullName, out assembly))

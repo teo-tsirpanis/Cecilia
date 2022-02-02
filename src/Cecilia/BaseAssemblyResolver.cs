@@ -107,8 +107,8 @@ namespace Cecilia {
 
 		public virtual AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
 		{
-			Mixin.CheckName (name);
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNull (name);
+			Mixin.CheckNotNull (parameters);
 
 			var assembly = SearchDirectory (name, directories, parameters);
 			if (assembly != null)

@@ -70,7 +70,7 @@ namespace Cecilia {
 
 		internal MethodSpecification (MethodReference method)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 
 			this.method = method;
 			this.token = new MetadataToken (TokenType.MethodSpec);

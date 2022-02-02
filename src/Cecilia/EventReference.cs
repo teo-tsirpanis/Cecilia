@@ -28,7 +28,7 @@ namespace Cecilia {
 		protected EventReference (string name, TypeReference eventType)
 			: base (name)
 		{
-			Mixin.CheckType (eventType, Mixin.Argument.eventType);
+			Mixin.CheckNotNull (eventType);
 			event_type = eventType;
 		}
 

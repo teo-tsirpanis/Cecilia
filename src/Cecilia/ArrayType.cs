@@ -124,14 +124,14 @@ namespace Cecilia {
 		public ArrayType (TypeReference type)
 			: base (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.etype = MD.ElementType.Array;
 		}
 
 		public ArrayType (TypeReference type, int rank)
 			: this (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 
 			if (rank == 1)
 				return;

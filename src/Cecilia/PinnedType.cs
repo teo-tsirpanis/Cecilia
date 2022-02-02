@@ -28,7 +28,7 @@ namespace Cecilia {
 		public PinnedType (TypeReference type)
 			: base (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.etype = MD.ElementType.Pinned;
 		}
 	}

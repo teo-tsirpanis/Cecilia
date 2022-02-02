@@ -234,7 +234,7 @@ namespace Cecilia {
 
 		public AssemblyNameReference (string name, Version version)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNullOrEmpty (name);
 
 			this.name = name;
 			this.version = Mixin.CheckVersion (version);

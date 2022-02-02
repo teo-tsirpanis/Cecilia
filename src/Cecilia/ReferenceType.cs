@@ -36,7 +36,7 @@ namespace Cecilia {
 		public ByReferenceType (TypeReference type)
 			: base (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.etype = MD.ElementType.ByRef;
 		}
 	}

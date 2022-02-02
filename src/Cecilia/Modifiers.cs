@@ -56,9 +56,8 @@ namespace Cecilia {
 		public OptionalModifierType (TypeReference modifierType, TypeReference type)
 			: base (type)
 		{
-			if (modifierType == null)
-				throw new ArgumentNullException (Mixin.Argument.modifierType.ToString ());
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (modifierType);
+			Mixin.CheckNotNull (type);
 			this.modifier_type = modifierType;
 			this.etype = MD.ElementType.CModOpt;
 		}
@@ -101,9 +100,8 @@ namespace Cecilia {
 		public RequiredModifierType (TypeReference modifierType, TypeReference type)
 			: base (type)
 		{
-			if (modifierType == null)
-				throw new ArgumentNullException (Mixin.Argument.modifierType.ToString ());
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (modifierType);
+			Mixin.CheckNotNull (type);
 			this.modifier_type = modifierType;
 			this.etype = MD.ElementType.CModReqD;
 		}

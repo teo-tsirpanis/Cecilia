@@ -30,7 +30,7 @@ namespace Cecilia {
 
 		public CustomAttributeArgument (TypeReference type, object value)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.type = type;
 			this.value = value;
 		}
@@ -51,7 +51,7 @@ namespace Cecilia {
 
 		public CustomAttributeNamedArgument (string name, CustomAttributeArgument argument)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNullOrEmpty (name);
 			this.name = name;
 			this.argument = argument;
 		}

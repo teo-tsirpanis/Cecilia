@@ -317,7 +317,7 @@ namespace Cecilia {
 
 		public GenericParameterConstraint (TypeReference constraintType)
 		{
-			Mixin.CheckType (constraintType, Mixin.Argument.constraintType);
+			Mixin.CheckNotNull (constraintType);
 
 			this.constraint_type = constraintType;
 			this.token = new MetadataToken (TokenType.GenericParamConstraint);

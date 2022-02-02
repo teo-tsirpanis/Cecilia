@@ -23,7 +23,7 @@ namespace Cecilia.Cil {
 		public ISymbolReader GetSymbolReader (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			var file = File.OpenRead (Mixin.GetPdbFileName (fileName));
 			return GetSymbolReader (module, Disposable.Owned (file as Stream), file.Name);
@@ -32,7 +32,7 @@ namespace Cecilia.Cil {
 		public ISymbolReader GetSymbolReader (ModuleDefinition module, Stream symbolStream)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 
 			return GetSymbolReader (module, Disposable.NotOwned (symbolStream), symbolStream.GetFileName ());
 		}
@@ -232,7 +232,7 @@ namespace Cecilia.Cil {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			var file = File.Open (Mixin.GetPdbFileName (fileName), FileMode.OpenOrCreate, FileAccess.ReadWrite);
 			return GetSymbolWriter (module, Disposable.Owned (file as Stream), Disposable.NotOwned ((Stream)null));
@@ -241,7 +241,7 @@ namespace Cecilia.Cil {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, Stream symbolStream)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 
 			// In order to compute the PDB checksum, the stream we're writing to needs to be able to
 			// seek and read as well. We can't assume this about a stream provided by the user.
@@ -485,7 +485,7 @@ namespace Cecilia.Cil {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			var stream = new MemoryStream ();
 			var pdb_writer = (PortablePdbWriter) new PortablePdbWriterProvider ().GetSymbolWriter (module, stream);

@@ -144,7 +144,7 @@ namespace Cecilia {
 		public MethodReference (string name, TypeReference returnType)
 			: base (name)
 		{
-			Mixin.CheckType (returnType, Mixin.Argument.returnType);
+			Mixin.CheckNotNull (returnType, nameof (returnType));
 
 			this.return_type = new MethodReturnType (this);
 			this.return_type.ReturnType = returnType;
@@ -154,7 +154,7 @@ namespace Cecilia {
 		public MethodReference (string name, TypeReference returnType, TypeReference declaringType)
 			: this (name, returnType)
 		{
-			Mixin.CheckType (declaringType, Mixin.Argument.declaringType);
+			Mixin.CheckNotNull (declaringType, nameof (declaringType));
 
 			this.DeclaringType = declaringType;
 		}

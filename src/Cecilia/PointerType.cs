@@ -36,7 +36,7 @@ namespace Cecilia {
 		public PointerType (TypeReference type)
 			: base (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.etype = MD.ElementType.Ptr;
 		}
 	}

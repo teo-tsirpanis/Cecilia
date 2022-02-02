@@ -28,7 +28,7 @@ namespace Cecilia {
 		public SentinelType (TypeReference type)
 			: base (type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			this.etype = MD.ElementType.Sentinel;
 		}
 	}

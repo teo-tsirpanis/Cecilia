@@ -542,7 +542,7 @@ namespace Cecilia {
 
 		public InterfaceImplementation (TypeReference interfaceType)
 		{
-			Mixin.CheckType (interfaceType, Mixin.Argument.interfaceType);
+			Mixin.CheckNotNull (interfaceType);
 
 			this.interface_type = interfaceType;
 			this.token = new MetadataToken (TokenType.InterfaceImpl);

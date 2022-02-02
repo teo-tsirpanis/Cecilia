@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using SR = System.Reflection;
 
@@ -615,7 +616,7 @@ namespace Cecilia {
 
 		public bool HasTypeReference (string scope, string fullName)
 		{
-			Mixin.CheckFullName (fullName);
+			Mixin.CheckNotNullOrEmpty (fullName);
 
 			if (!HasImage)
 				return false;
@@ -630,7 +631,7 @@ namespace Cecilia {
 
 		public bool TryGetTypeReference (string scope, string fullName, out TypeReference type)
 		{
-			Mixin.CheckFullName (fullName);
+			Mixin.CheckNotNullOrEmpty (fullName);
 
 			if (!HasImage) {
 				type = null;
@@ -678,7 +679,7 @@ namespace Cecilia {
 
 		public TypeDefinition GetType (string fullName)
 		{
-			Mixin.CheckFullName (fullName);
+			Mixin.CheckNotNullOrEmpty (fullName);
 
 			var position = fullName.IndexOf ('/');
 			if (position > 0)
@@ -689,7 +690,7 @@ namespace Cecilia {
 
 		public TypeDefinition GetType (string @namespace, string name)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNullOrEmpty (name);
 
 			return ((TypeDefinitionCollection) this.Types).GetType (@namespace ?? string.Empty, name);
 		}
@@ -776,7 +777,7 @@ namespace Cecilia {
 
 		public TypeReference ImportReference (Type type, IGenericParameterProvider context)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			CheckContext (context, this);
 
 			return ReflectionImporter.ImportReference (type, context);
@@ -801,7 +802,7 @@ namespace Cecilia {
 
 		public FieldReference ImportReference (SR.FieldInfo field, IGenericParameterProvider context)
 		{
-			Mixin.CheckField (field);
+			Mixin.CheckNotNull (field);
 			CheckContext (context, this);
 
 			return ReflectionImporter.ImportReference (field, context);
@@ -826,7 +827,7 @@ namespace Cecilia {
 
 		public MethodReference ImportReference (SR.MethodBase method, IGenericParameterProvider context)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 			CheckContext (context, this);
 
 			return ReflectionImporter.ImportReference (method, context);
@@ -851,7 +852,7 @@ namespace Cecilia {
 
 		public TypeReference ImportReference (TypeReference type, IGenericParameterProvider context)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 
 			if (type.Module == this)
 				return type;
@@ -880,7 +881,7 @@ namespace Cecilia {
 
 		public FieldReference ImportReference (FieldReference field, IGenericParameterProvider context)
 		{
-			Mixin.CheckField (field);
+			Mixin.CheckNotNull (field);
 
 			if (field.Module == this)
 				return field;
@@ -909,7 +910,7 @@ namespace Cecilia {
 
 		public MethodReference ImportReference (MethodReference method, IGenericParameterProvider context)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 
 			if (method.Module == this)
 				return method;
@@ -1006,8 +1007,8 @@ namespace Cecilia {
 
 		public static ModuleDefinition CreateModule (string name, ModuleParameters parameters)
 		{
-			Mixin.CheckName (name);
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNullOrEmpty (name);
+			Mixin.CheckNotNull (parameters);
 
 			var module = new ModuleDefinition {
 				Name = name,
@@ -1068,8 +1069,7 @@ namespace Cecilia {
 
 		public void ReadSymbols (ISymbolReader reader, bool throwIfSymbolsAreNotMaching)
 		{
-			if (reader == null)
-				throw new ArgumentNullException ("reader");
+			Mixin.CheckNotNull(reader);
 
 			symbol_reader = reader;
 
@@ -1116,7 +1116,7 @@ namespace Cecilia {
 
 		static Stream GetFileStream (string fileName, FileMode mode, FileAccess access, FileShare share)
 		{
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			return new FileStream (fileName, mode, access, share);
 		}
@@ -1128,7 +1128,7 @@ namespace Cecilia {
 
 		public static ModuleDefinition ReadModule (Stream stream, ReaderParameters parameters)
 		{
-			Mixin.CheckStream (stream);
+			Mixin.CheckNotNull (stream);
 			Mixin.CheckReadSeek (stream);
 
 			return ReadModule (Disposable.NotOwned (stream), stream.GetFileName (), parameters);
@@ -1136,7 +1136,7 @@ namespace Cecilia {
 
 		static ModuleDefinition ReadModule (Disposable<Stream> stream, string fileName, ReaderParameters parameters)
 		{
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNull (parameters);
 
 			return ModuleReader.CreateModule (
 				ImageReader.ReadImage (stream, fileName),
@@ -1150,7 +1150,7 @@ namespace Cecilia {
 
 		public void Write (string fileName, WriterParameters parameters)
 		{
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNull (parameters);
 			var file = GetFileStream (fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.Read);
 			ModuleWriter.WriteModule (this, Disposable.Owned (file), parameters);
 		}
@@ -1175,9 +1175,9 @@ namespace Cecilia {
 
 		public void Write (Stream stream, WriterParameters parameters)
 		{
-			Mixin.CheckStream (stream);
+			Mixin.CheckNotNull (stream);
 			Mixin.CheckWriteSeek (stream);
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNull (parameters);
 
 			ModuleWriter.WriteModule (this, Disposable.NotOwned (stream), parameters);
 		}
@@ -1185,101 +1185,35 @@ namespace Cecilia {
 
 	static partial class Mixin {
 
-		public enum Argument {
-			name,
-			fileName,
-			fullName,
-			stream,
-			type,
-			method,
-			field,
-			parameters,
-			module,
-			modifierType,
-			eventType,
-			fieldType,
-			declaringType,
-			returnType,
-			propertyType,
-			interfaceType,
-			constraintType,
+		public static void CheckNotNull (object x, [CallerArgumentExpression("x")] string expression = "")
+		{
+			if (x == null)
+				throw new ArgumentNullException (expression);
 		}
 
-		public static void CheckName (object name)
+		public static void CheckNotNullOrEmpty (string x, [CallerArgumentExpression("x")] string expression = "")
 		{
-			if (name == null)
-				throw new ArgumentNullException (Argument.name.ToString ());
-		}
-
-		public static void CheckName (string name)
-		{
-			if (string.IsNullOrEmpty (name))
-				throw new ArgumentNullOrEmptyException (Argument.name.ToString ());
-		}
-
-		public static void CheckFileName (string fileName)
-		{
-			if (string.IsNullOrEmpty (fileName))
-				throw new ArgumentNullOrEmptyException (Argument.fileName.ToString ());
-		}
-
-		public static void CheckFullName (string fullName)
-		{
-			if (string.IsNullOrEmpty (fullName))
-				throw new ArgumentNullOrEmptyException (Argument.fullName.ToString ());
-		}
-
-		public static void CheckStream (object stream)
-		{
-			if (stream == null)
-				throw new ArgumentNullException (Argument.stream.ToString ());
+			if (x is null)
+				throw new ArgumentNullException (expression);
+			if (x.Length == 0)
+				throw new ArgumentNullException (expression);
 		}
 
 		public static void CheckWriteSeek (Stream stream)
 		{
 			if (!stream.CanWrite || !stream.CanSeek)
-				throw new ArgumentException ("Stream must be writable and seekable.");
+				throw new ArgumentException ("Stream must be writable and seekable.", nameof (stream));
 		}
 
 		public static void CheckReadSeek (Stream stream)
 		{
 			if (!stream.CanRead || !stream.CanSeek)
-				throw new ArgumentException ("Stream must be readable and seekable.");
-		}
-
-		public static void CheckType (object type)
-		{
-			if (type == null)
-				throw new ArgumentNullException (Argument.type.ToString ());
-		}
-
-		public static void CheckType (object type, Argument argument)
-		{
-			if (type == null)
-				throw new ArgumentNullException (argument.ToString ());
-		}
-
-		public static void CheckField (object field)
-		{
-			if (field == null)
-				throw new ArgumentNullException (Argument.field.ToString ());
-		}
-
-		public static void CheckMethod (object method)
-		{
-			if (method == null)
-				throw new ArgumentNullException (Argument.method.ToString ());
-		}
-
-		public static void CheckParameters (object parameters)
-		{
-			if (parameters == null)
-				throw new ArgumentNullException (Argument.parameters.ToString ());
+				throw new ArgumentException ("Stream must be readable and seekable.", nameof (stream));
 		}
 
 		public static uint GetTimestamp ()
 		{
-			return (uint) DateTime.UtcNow.Subtract (new DateTime (1970, 1, 1)).TotalSeconds;
+			return (uint)DateTime.UtcNow.Subtract (new DateTime (1970, 1, 1)).TotalSeconds;
 		}
 
 		public static bool HasImage (this ModuleDefinition self)
@@ -1336,12 +1270,9 @@ namespace Cecilia {
 
 		public static byte [] ReadAll (this Stream self)
 		{
-			int read;
-			var memory = new MemoryStream ((int) self.Length);
-			var buffer = new byte [1024];
+			var memory = new MemoryStream ((int)self.Length);
 
-			while ((read = self.Read (buffer, 0, buffer.Length)) != 0)
-				memory.Write (buffer, 0, read);
+			self.CopyTo (memory);
 
 			return memory.ToArray ();
 		}

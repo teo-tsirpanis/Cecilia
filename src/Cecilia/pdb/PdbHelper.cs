@@ -20,7 +20,7 @@ namespace Cecilia.Pdb {
 		public ISymbolReader GetSymbolReader (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			return new NativePdbReader (Disposable.Owned (File.OpenRead (Mixin.GetPdbFileName (fileName)) as Stream));
 		}
@@ -28,7 +28,7 @@ namespace Cecilia.Pdb {
 		public ISymbolReader GetSymbolReader (ModuleDefinition module, Stream symbolStream)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 
 			return new NativePdbReader (Disposable.NotOwned (symbolStream));
 		}
@@ -47,7 +47,7 @@ namespace Cecilia.Pdb {
 					return new EmbeddedPortablePdbReaderProvider ().GetSymbolReader (module, fileName);
 			}
 			
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			return Mixin.IsPortablePdb (Mixin.GetPdbFileName (fileName))
 				? new PortablePdbReaderProvider ().GetSymbolReader (module, fileName)
@@ -57,7 +57,7 @@ namespace Cecilia.Pdb {
 		public ISymbolReader GetSymbolReader (ModuleDefinition module, Stream symbolStream)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 			Mixin.CheckReadSeek (symbolStream);
 
 			return Mixin.IsPortablePdb (symbolStream)
@@ -71,7 +71,7 @@ namespace Cecilia.Pdb {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			return new NativePdbWriter (module, CreateWriter (module, Mixin.GetPdbFileName (fileName)));
 		}
@@ -99,7 +99,7 @@ namespace Cecilia.Pdb {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, string fileName)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckFileName (fileName);
+			Mixin.CheckNotNullOrEmpty (fileName);
 
 			if (HasPortablePdbSymbols (module))
 				return new PortablePdbWriterProvider ().GetSymbolWriter (module, fileName);
@@ -115,7 +115,7 @@ namespace Cecilia.Pdb {
 		public ISymbolWriter GetSymbolWriter (ModuleDefinition module, Stream symbolStream)
 		{
 			Mixin.CheckModule (module);
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 			Mixin.CheckReadSeek (symbolStream);
 
 			if (HasPortablePdbSymbols (module))

@@ -112,7 +112,7 @@ namespace Cecilia {
 				throw new ArgumentNullException ("assemblyName");
 			if (moduleName == null)
 				throw new ArgumentNullException ("moduleName");
-			Mixin.CheckParameters (parameters);
+			Mixin.CheckNotNull (parameters);
 			if (parameters.Kind == ModuleKind.NetModule)
 				throw new ArgumentException ("kind");
 

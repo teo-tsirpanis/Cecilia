@@ -84,7 +84,7 @@ namespace Cecilia {
 
 		public virtual TypeDefinition Resolve (TypeReference type)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 
 			type = type.GetElementType ();
 
@@ -158,7 +158,7 @@ namespace Cecilia {
 
 		public virtual FieldDefinition Resolve (FieldReference field)
 		{
-			Mixin.CheckField (field);
+			Mixin.CheckNotNull (field);
 
 			var type = Resolve (field.DeclaringType);
 			if (type == null)
@@ -205,7 +205,7 @@ namespace Cecilia {
 
 		public virtual MethodDefinition Resolve (MethodReference method)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 
 			var type = Resolve (method.DeclaringType);
 			if (type == null)

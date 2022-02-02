@@ -302,7 +302,7 @@ namespace Cecilia {
 
 		public virtual AssemblyNameReference ImportReference (SR.AssemblyName name)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNull (name);
 
 			AssemblyNameReference reference;
 			if (TryGetAssemblyNameReference (name, out reference))
@@ -453,7 +453,7 @@ namespace Cecilia {
 
 		public virtual TypeReference ImportReference (Type type, IGenericParameterProvider context)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			return ImportType (
 				type,
 				ImportGenericContext.For (context),
@@ -462,13 +462,13 @@ namespace Cecilia {
 
 		public virtual FieldReference ImportReference (SR.FieldInfo field, IGenericParameterProvider context)
 		{
-			Mixin.CheckField (field);
+			Mixin.CheckNotNull (field);
 			return ImportField (field, ImportGenericContext.For (context));
 		}
 
 		public virtual MethodReference ImportReference (SR.MethodBase method, IGenericParameterProvider context)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 			return ImportMethod (method,
 				ImportGenericContext.For (context),
 				context != null ? ImportGenericKind.Open : ImportGenericKind.Definition);
@@ -531,7 +531,7 @@ namespace Cecilia {
 
 		public virtual AssemblyNameReference ImportReference (AssemblyNameReference name)
 		{
-			Mixin.CheckName (name);
+			Mixin.CheckNotNull (name);
 
 			AssemblyNameReference reference;
 			if (module.TryGetAssemblyNameReference (name, out reference))
@@ -729,19 +729,19 @@ namespace Cecilia {
 
 		public virtual TypeReference ImportReference (TypeReference type, IGenericParameterProvider context)
 		{
-			Mixin.CheckType (type);
+			Mixin.CheckNotNull (type);
 			return ImportType (type, ImportGenericContext.For (context));
 		}
 
 		public virtual FieldReference ImportReference (FieldReference field, IGenericParameterProvider context)
 		{
-			Mixin.CheckField (field);
+			Mixin.CheckNotNull (field);
 			return ImportField (field, ImportGenericContext.For (context));
 		}
 
 		public virtual MethodReference ImportReference (MethodReference method, IGenericParameterProvider context)
 		{
-			Mixin.CheckMethod (method);
+			Mixin.CheckNotNull (method);
 			return ImportMethod (method, ImportGenericContext.For (context));
 		}
 	}
@@ -751,7 +751,7 @@ namespace Cecilia {
 		public static void CheckModule (ModuleDefinition module)
 		{
 			if (module == null)
-				throw new ArgumentNullException (Argument.module.ToString ());
+				throw new ArgumentNullException (nameof (module));
 		}
 
 		public static bool TryGetAssemblyNameReference (this ModuleDefinition module, AssemblyNameReference name_reference, out AssemblyNameReference assembly_reference)

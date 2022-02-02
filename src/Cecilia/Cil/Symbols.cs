@@ -941,7 +941,7 @@ namespace Cecilia.Cil {
 					return new EmbeddedPortablePdbReaderProvider ().GetSymbolReader (module, "");
 			}
 
-			Mixin.CheckStream (symbolStream);
+			Mixin.CheckNotNull (symbolStream);
 			Mixin.CheckReadSeek (symbolStream);
 
 			var position = symbolStream.Position;

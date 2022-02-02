@@ -12,16 +12,6 @@ using System;
 using Mono.Collections.Generic;
 
 namespace Cecilia {
-	class ArgumentNullOrEmptyException : ArgumentException {
-
-		public ArgumentNullOrEmptyException (string paramName)
-			: base ("Argument null or empty", paramName)
-		{
-		}
-	}
-}
-
-namespace Cecilia {
 
 	static partial class Mixin {
 
