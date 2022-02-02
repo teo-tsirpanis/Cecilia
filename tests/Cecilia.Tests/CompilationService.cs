@@ -1,20 +1,15 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Reflection;
 using NUnit.Framework;
 
-#if NET_CORE
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
 using CS = Microsoft.CodeAnalysis.CSharp;
-#endif
 
 namespace Cecilia.Tests {
-
 	struct CompilationResult {
 		internal DateTime source_write_time;
 		internal string result_file;
@@ -27,14 +22,16 @@ namespace Cecilia.Tests {
 	}
 
 	public static class Platform {
-
 		public static bool OnMono {
 			get { return TryGetType ("Mono.Runtime") != null; }
 		}
 
-		public static bool OnCoreClr {
-			get { return TryGetType ("System.Runtime.Loader.AssemblyLoadContext, System.Runtime.Loader, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a") != null; }
-		}
+		public static bool OnCoreClr =>
+#if NET
+			true;
+#else
+			false;
+#endif
 
 		public static bool OnWindows {
 			get { return Environment.OSVersion.Platform == PlatformID.Win32NT; }
@@ -48,8 +45,9 @@ namespace Cecilia.Tests {
 		{
 			try {
 				// Note that throwOnError=false only suppresses some exceptions, not all.
-				return Type.GetType(assemblyQualifiedName, throwOnError: false);
-			} catch {
+				return Type.GetType (assemblyQualifiedName, throwOnError: false);
+			}
+			catch {
 				return null;
 			}
 		}
@@ -96,13 +94,9 @@ namespace Cecilia.Tests {
 			var extension = Path.GetExtension (name);
 			if (extension == ".il")
 				return IlasmCompilationService.Instance.Compile (name);
-
 			if (extension == ".cs")
-#if NET_CORE
 				return RoslynCompilationService.Instance.Compile (name);
-#else
-				return CodeDomCompilationService.Instance.Compile (name);
-#endif
+			
 			throw new NotSupportedException (extension);
 		}
 
@@ -146,8 +140,6 @@ namespace Cecilia.Tests {
 				Assert.Fail (output.ToString ());
 		}
 	}
-
-#if NET_CORE
 
 	class RoslynCompilationService : CompilationService {
 
@@ -207,68 +199,8 @@ namespace Cecilia.Tests {
 		}
 	}
 
-#else
-
-	class CodeDomCompilationService : CompilationService {
-
-		public static readonly CodeDomCompilationService Instance = new CodeDomCompilationService ();
-
-		protected override string CompileFile (string name)
-		{
-			string file = GetCompiledFilePath (name);
-
-			using (var provider = GetProvider (name)) {
-				var parameters = GetDefaultParameters (name);
-				parameters.IncludeDebugInformation = false;
-				parameters.GenerateExecutable = false;
-				parameters.OutputAssembly = file;
-
-				var results = provider.CompileAssemblyFromFile (parameters, name);
-				AssertCompilerResults (results);
-			}
-
-			return file;
-		}
-
-		static void AssertCompilerResults (CompilerResults results)
-		{
-			Assert.IsFalse (results.Errors.HasErrors, GetErrorMessage (results));
-		}
-
-		static string GetErrorMessage (CompilerResults results)
-		{
-			if (!results.Errors.HasErrors)
-				return string.Empty;
-
-			var builder = new StringBuilder ();
-			foreach (CompilerError error in results.Errors)
-				builder.AppendLine (error.ToString ());
-			return builder.ToString ();
-		}
-
-		static CompilerParameters GetDefaultParameters (string name)
-		{
-			return GetCompilerInfo (name).CreateDefaultCompilerParameters ();
-		}
-
-		static CodeDomProvider GetProvider (string name)
-		{
-			return GetCompilerInfo (name).CreateProvider ();
-		}
-
-		static CompilerInfo GetCompilerInfo (string name)
-		{
-			return CodeDomProvider.GetCompilerInfo (
-				CodeDomProvider.GetLanguageFromExtension (Path.GetExtension (name)));
-		}
-	}
-
-#endif
-
 	class ShellService {
-
 		public class ProcessOutput {
-
 			public int ExitCode;
 			public string StdOut;
 			public string StdErr;
@@ -346,7 +278,7 @@ namespace Cecilia.Tests {
 			return Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Windows), "Microsoft.NET", "Framework", "v4.0.30319", tool + ".exe");
 #else
 			return Path.Combine (
-				Path.GetDirectoryName (typeof (object).Assembly.Location),
+				Path.GetDirectoryName (typeof(object).Assembly.Location),
 				tool + ".exe");
 #endif
 		}
