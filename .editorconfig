@@ -1,6 +1,11 @@
 # top-most EditorConfig file
 root = true
 
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
 [*.cs]
 indent_style = tab
 csharp_space_between_method_declaration_name_and_open_parenthesis = true
