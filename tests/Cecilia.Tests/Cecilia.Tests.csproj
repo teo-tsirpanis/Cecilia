@@ -10,7 +10,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\**\*" LinkBase="Resources\" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="..\Resources\**\*" LinkBase="Resources\" CopyToOutputDirectory="PreserveNewest" />
     <ProjectReference Include="..\..\src\Cecilia\Cecilia.csproj" />
   </ItemGroup>
 </Project>
