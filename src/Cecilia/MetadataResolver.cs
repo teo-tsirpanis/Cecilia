@@ -25,9 +25,6 @@ namespace Cecilia {
 		MethodDefinition Resolve (MethodReference method);
 	}
 
-#if !NET_CORE
-	[Serializable]
-#endif
 	public sealed class ResolutionException : Exception {
 
 		readonly MemberReference member;
@@ -67,15 +64,6 @@ namespace Cecilia {
 
 			this.member = member;
 		}
-
-#if !NET_CORE
-		ResolutionException (
-			System.Runtime.Serialization.SerializationInfo info,
-			System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-#endif
 	}
 
 	public class MetadataResolver : IMetadataResolver {

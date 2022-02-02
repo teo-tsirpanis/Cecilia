@@ -34,9 +34,6 @@ namespace Cecilia {
 		}
 	}
 
-#if !NET_CORE
-	[Serializable]
-#endif
 	public sealed class AssemblyResolutionException : FileNotFoundException {
 
 		readonly AssemblyNameReference reference;
@@ -55,15 +52,6 @@ namespace Cecilia {
 		{
 			this.reference = reference;
 		}
-
-#if !NET_CORE
-		AssemblyResolutionException (
-			System.Runtime.Serialization.SerializationInfo info,
-			System.Runtime.Serialization.StreamingContext context)
-			: base (info, context)
-		{
-		}
-#endif
 	}
 
 	public abstract class BaseAssemblyResolver : IAssemblyResolver {
