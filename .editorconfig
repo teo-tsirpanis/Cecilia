@@ -14,3 +14,4 @@ csharp_space_before_open_square_brackets = true
 csharp_new_line_before_open_brace = methods
 csharp_new_line_before_else = false
 csharp_indent_switch_labels = false
+file_header_template = This file is part of Cecilia.\nLicensed under the MIT License.
