@@ -170,7 +170,7 @@ namespace Mono.Cecil.Tests {
 						Assert.IsNotNull (field.InitialValue);
 
 						int rvaAlignment = AlignmentOfInteger (field.RVA);
-						int desiredAlignment = Math.Min(8, AlignmentOfInteger (field.InitialValue.Length));
+						int desiredAlignment = System.Math.Min(8, AlignmentOfInteger (field.InitialValue.Length));
 						Assert.GreaterOrEqual (rvaAlignment, desiredAlignment);
 					}
 				}

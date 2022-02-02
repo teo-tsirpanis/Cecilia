@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../ProjectInfo.cs" />
+    <InternalsVisibleTo Include="Cecilia.Tests" />
   </ItemGroup>
 </Project>

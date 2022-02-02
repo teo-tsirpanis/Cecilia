@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
-  <Import Project="..\Mono.Cecil.Tests.props" />
+  <Import Project="..\..\Cecilia.Tests.props" />
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
   </PropertyGroup>
@@ -9,13 +9,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Cecilia\Cecilia.csproj" />
+    <ProjectReference Include="..\..\src\Cecilia\Cecilia.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ProjectInfo.cs" />
-    <Compile Include="Mono.Cecil.Tests\*.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\**\*" />
+    <None Include="..\Resources\**\*" />
   </ItemGroup>
 </Project>
