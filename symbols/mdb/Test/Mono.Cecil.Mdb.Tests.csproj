@@ -4,15 +4,8 @@
     <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mono.Cecil.csproj">
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Test\Mono.Cecil.Tests.csproj">
-      <Name>Mono.Cecil.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mono.Cecil.Mdb.csproj">
-      <Name>Mono.Cecil.Mdb</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\Cecilia\Cecilia.csproj" />
+    <ProjectReference Include="..\..\..\Test\Mono.Cecil.Tests.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mono.Cecil.Tests\*.cs" />
