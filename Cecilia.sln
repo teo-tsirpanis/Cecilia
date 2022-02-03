@@ -5,7 +5,17 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cecilia", "src\Cecilia\Cecilia.csproj", "{030BB2D8-835C-43D1-A8FD-EF11C206AB09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cecilia.Tests", "tests\Cecilia.Tests\Cecilia.Tests.csproj", "{62CE062E-E7B2-43DD-B49B-C03FBE2177FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cecilia.Tests", "tests\Cecilia.Tests\Cecilia.Tests.csproj", "{62CE062E-E7B2-43DD-B49B-C03FBE2177FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7C55A3E0-6472-428F-B877-71961D48C221}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		cecilia.snk = cecilia.snk
+		Cecilia.Tests.props = Cecilia.Tests.props
+		Directory.Build.props = Directory.Build.props
+		global.json = global.json
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

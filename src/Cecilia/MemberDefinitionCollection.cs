@@ -8,67 +8,68 @@
 // Licensed under the MIT/X11 license.
 //
 
+using Mono.Collections.Generic;
 using System;
 
-using Mono.Collections.Generic;
+namespace Cecilia
+{
 
-namespace Cecilia {
+    sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition
+    {
 
-	sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition {
+        TypeDefinition container;
 
-		TypeDefinition container;
+        internal MemberDefinitionCollection(TypeDefinition container)
+        {
+            this.container = container;
+        }
 
-		internal MemberDefinitionCollection (TypeDefinition container)
-		{
-			this.container = container;
-		}
+        internal MemberDefinitionCollection(TypeDefinition container, int capacity)
+            : base(capacity)
+        {
+            this.container = container;
+        }
 
-		internal MemberDefinitionCollection (TypeDefinition container, int capacity)
-			: base (capacity)
-		{
-			this.container = container;
-		}
+        protected override void OnAdd(T item, int index)
+        {
+            Attach(item);
+        }
 
-		protected override void OnAdd (T item, int index)
-		{
-			Attach (item);
-		}
+        protected sealed override void OnSet(T item, int index)
+        {
+            Attach(item);
+        }
 
-		protected sealed override void OnSet (T item, int index)
-		{
-			Attach (item);
-		}
+        protected sealed override void OnInsert(T item, int index)
+        {
+            Attach(item);
+        }
 
-		protected sealed override void OnInsert (T item, int index)
-		{
-			Attach (item);
-		}
+        protected sealed override void OnRemove(T item, int index)
+        {
+            Detach(item);
+        }
 
-		protected sealed override void OnRemove (T item, int index)
-		{
-			Detach (item);
-		}
+        protected sealed override void OnClear()
+        {
+            foreach (var definition in this)
+                Detach(definition);
+        }
 
-		protected sealed override void OnClear ()
-		{
-			foreach (var definition in this)
-				Detach (definition);
-		}
+        void Attach(T element)
+        {
+            if (element.DeclaringType == container)
+                return;
 
-		void Attach (T element)
-		{
-			if (element.DeclaringType == container)
-				return;
+            if (element.DeclaringType != null)
+                throw new ArgumentException("Member already attached");
 
-			if (element.DeclaringType != null)
-				throw new ArgumentException ("Member already attached");
+            element.DeclaringType = this.container;
+        }
 
-			element.DeclaringType = this.container;
-		}
-
-		static void Detach (T element)
-		{
-			element.DeclaringType = null;
-		}
-	}
+        static void Detach(T element)
+        {
+            element.DeclaringType = null;
+        }
+    }
 }

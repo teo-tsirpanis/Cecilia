@@ -3,8 +3,10 @@
 
 using System;
 
-namespace Microsoft.Cci.Pdb {
-  internal class PdbScope {
+namespace Microsoft.Cci.Pdb
+{
+  internal class PdbScope
+  {
     internal PdbConstant[] constants;
     internal PdbSlot[] slots;
     internal PdbScope[] scopes;
@@ -15,7 +17,8 @@ namespace Microsoft.Cci.Pdb {
     internal uint offset;
     internal uint length;
 
-    internal PdbScope(uint address, uint offset, uint length, PdbSlot[] slots, PdbConstant[] constants, string[] usedNamespaces) {
+    internal PdbScope(uint address, uint offset, uint length, PdbSlot[] slots, PdbConstant[] constants, string[] usedNamespaces)
+    {
       this.constants = constants;
       this.slots = slots;
       this.scopes = new PdbScope[0];
@@ -30,7 +33,8 @@ namespace Microsoft.Cci.Pdb {
     {
     }
 
-    internal PdbScope(uint funcOffset, BlockSym32 block, BitAccess bits, out uint typind) {
+    internal PdbScope(uint funcOffset, BlockSym32 block, BitAccess bits, out uint typind)
+    {
       //this.segment = block.seg;
       this.address = block.off;
       this.offset = block.off - funcOffset;
@@ -51,7 +55,8 @@ namespace Microsoft.Cci.Pdb {
       int slot = 0;
       int usedNs = 0;
 
-      while (bits.Position < block.end) {
+      while (bits.Position < block.end)
+      {
         ushort siz;
         ushort rec;
 
@@ -61,8 +66,10 @@ namespace Microsoft.Cci.Pdb {
         bits.Position = star;
         bits.ReadUInt16(out rec);
 
-        switch ((SYM)rec) {
-          case SYM.S_BLOCK32: {
+        switch ((SYM)rec)
+        {
+          case SYM.S_BLOCK32:
+            {
               BlockSym32 sub = new BlockSym32();
 
               bits.ReadUInt32(out sub.parent);
@@ -103,7 +110,8 @@ namespace Microsoft.Cci.Pdb {
         }
       }
 
-      if (bits.Position != block.end) {
+      if (bits.Position != block.end)
+      {
         throw new Exception("Not at S_END");
       }
 
@@ -112,7 +120,8 @@ namespace Microsoft.Cci.Pdb {
       bits.ReadUInt16(out esiz);
       bits.ReadUInt16(out erec);
 
-      if (erec != (ushort)SYM.S_END) {
+      if (erec != (ushort)SYM.S_END)
+      {
         throw new Exception("Missing S_END");
       }
     }

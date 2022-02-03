@@ -5,32 +5,40 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Microsoft.Cci.Pdb {
-  internal class BitAccess {
+namespace Microsoft.Cci.Pdb
+{
+  internal class BitAccess
+  {
 
-    internal BitAccess(int capacity) {
+    internal BitAccess(int capacity)
+    {
       this.buffer = new byte[capacity];
     }
 
-    internal BitAccess(byte[] buffer) {
+    internal BitAccess(byte[] buffer)
+    {
       this.buffer = buffer;
       offset = 0;
     }
 
-    internal byte[] Buffer {
+    internal byte[] Buffer
+    {
       get { return buffer; }
     }
     private byte[] buffer;
 
-    internal void FillBuffer(Stream stream, int capacity) {
+    internal void FillBuffer(Stream stream, int capacity)
+    {
       MinCapacity(capacity);
       stream.Read(buffer, 0, capacity);
       offset = 0;
     }
 
-    internal void Append(Stream stream, int count) {
+    internal void Append(Stream stream, int count)
+    {
       int newCapacity = offset + count;
-      if (buffer.Length < newCapacity) {
+      if (buffer.Length < newCapacity)
+      {
         byte[] newBuffer = new byte[newCapacity];
         Array.Copy(buffer, newBuffer, buffer.Length);
         buffer = newBuffer;
@@ -39,7 +47,8 @@ namespace Microsoft.Cci.Pdb {
       offset += count;
     }
 
-    internal int Position {
+    internal int Position
+    {
       get { return offset; }
       set { offset = value; }
     }
@@ -49,15 +58,19 @@ namespace Microsoft.Cci.Pdb {
     //  stream.Write(buffer, 0, count);
     //}
 
-    internal void MinCapacity(int capacity) {
-      if (buffer.Length < capacity) {
+    internal void MinCapacity(int capacity)
+    {
+      if (buffer.Length < capacity)
+      {
         buffer = new byte[capacity];
       }
       offset = 0;
     }
 
-    internal void Align(int alignment) {
-      while ((offset % alignment) != 0) {
+    internal void Align(int alignment)
+    {
+      while ((offset % alignment) != 0)
+      {
         offset++;
       }
     }
@@ -82,18 +95,21 @@ namespace Microsoft.Cci.Pdb {
     //  }
     //}
 
-    internal void ReadInt16(out short value) {
+    internal void ReadInt16(out short value)
+    {
       value = (short)((buffer[offset + 0] & 0xFF) |
                             (buffer[offset + 1] << 8));
       offset += 2;
     }
 
-    internal void ReadInt8(out sbyte value) {
+    internal void ReadInt8(out sbyte value)
+    {
       value = (sbyte)buffer[offset];
       offset += 1;
     }
 
-    internal void ReadInt32(out int value) {
+    internal void ReadInt32(out int value)
+    {
       value = (int)((buffer[offset + 0] & 0xFF) |
                           (buffer[offset + 1] << 8) |
                           (buffer[offset + 2] << 16) |
@@ -101,7 +117,8 @@ namespace Microsoft.Cci.Pdb {
       offset += 4;
     }
 
-    internal void ReadInt64(out long value) {
+    internal void ReadInt64(out long value)
+    {
       value = (long)(((ulong)buffer[offset + 0] & 0xFF) |
                            ((ulong)buffer[offset + 1] << 8) |
                            ((ulong)buffer[offset + 2] << 16) |
@@ -113,18 +130,21 @@ namespace Microsoft.Cci.Pdb {
       offset += 8;
     }
 
-    internal void ReadUInt16(out ushort value) {
+    internal void ReadUInt16(out ushort value)
+    {
       value = (ushort)((buffer[offset + 0] & 0xFF) |
                              (buffer[offset + 1] << 8));
       offset += 2;
     }
 
-    internal void ReadUInt8(out byte value) {
+    internal void ReadUInt8(out byte value)
+    {
       value = (byte)((buffer[offset + 0] & 0xFF));
       offset += 1;
     }
 
-    internal void ReadUInt32(out uint value) {
+    internal void ReadUInt32(out uint value)
+    {
       value = (uint)((buffer[offset + 0] & 0xFF) |
                            (buffer[offset + 1] << 8) |
                            (buffer[offset + 2] << 16) |
@@ -132,7 +152,8 @@ namespace Microsoft.Cci.Pdb {
       offset += 4;
     }
 
-    internal void ReadUInt64(out ulong value) {
+    internal void ReadUInt64(out ulong value)
+    {
       value = (ulong)(((ulong)buffer[offset + 0] & 0xFF) |
                            ((ulong)buffer[offset + 1] << 8) |
                            ((ulong)buffer[offset + 2] << 16) |
@@ -144,74 +165,90 @@ namespace Microsoft.Cci.Pdb {
       offset += 8;
     }
 
-    internal void ReadInt32(int[] values) {
-      for (int i = 0; i < values.Length; i++) {
+    internal void ReadInt32(int[] values)
+    {
+      for (int i = 0; i < values.Length; i++)
+      {
         ReadInt32(out values[i]);
       }
     }
 
-    internal void ReadUInt32(uint[] values) {
-      for (int i = 0; i < values.Length; i++) {
+    internal void ReadUInt32(uint[] values)
+    {
+      for (int i = 0; i < values.Length; i++)
+      {
         ReadUInt32(out values[i]);
       }
     }
 
-    internal void ReadBytes(byte[] bytes) {
-      for (int i = 0; i < bytes.Length; i++) {
+    internal void ReadBytes(byte[] bytes)
+    {
+      for (int i = 0; i < bytes.Length; i++)
+      {
         bytes[i] = buffer[offset++];
       }
     }
 
-    internal float ReadFloat() {
+    internal float ReadFloat()
+    {
       float result = BitConverter.ToSingle(buffer, offset);
       offset += 4;
       return result;
     }
 
-    internal double ReadDouble() {
+    internal double ReadDouble()
+    {
       double result = BitConverter.ToDouble(buffer, offset);
       offset += 8;
       return result;
     }
 
-    internal decimal ReadDecimal() {
+    internal decimal ReadDecimal()
+    {
       int[] bits = new int[4];
       this.ReadInt32(bits);
       return new decimal(bits[2], bits[3], bits[1], bits[0] < 0, (byte)((bits[0] & 0x00FF0000) >> 16));
     }
 
-    internal void ReadBString(out string value) {
+    internal void ReadBString(out string value)
+    {
       ushort len;
       this.ReadUInt16(out len);
       value = Encoding.UTF8.GetString(buffer, offset, len);
       offset += len;
     }
 
-    internal string ReadBString(int len) {
+    internal string ReadBString(int len)
+    {
       var result = Encoding.UTF8.GetString(buffer, offset, len);
       offset += len;
       return result;
     }
 
-    internal void ReadCString(out string value) {
+    internal void ReadCString(out string value)
+    {
       int len = 0;
-      while (offset + len < buffer.Length && buffer[offset + len] != 0) {
+      while (offset + len < buffer.Length && buffer[offset + len] != 0)
+      {
         len++;
       }
       value = Encoding.UTF8.GetString(buffer, offset, len);
       offset += len + 1;
     }
 
-    internal void SkipCString(out string value) {
+    internal void SkipCString(out string value)
+    {
       int len = 0;
-      while (offset + len < buffer.Length && buffer[offset + len] != 0) {
+      while (offset + len < buffer.Length && buffer[offset + len] != 0)
+      {
         len++;
       }
       offset += len + 1;
       value= null;
     }
 
-    internal void ReadGuid(out Guid guid) {
+    internal void ReadGuid(out Guid guid)
+    {
       uint a;
       ushort b;
       ushort c;
@@ -239,9 +276,11 @@ namespace Microsoft.Cci.Pdb {
       guid = new Guid(a, b, c, d, e, f, g, h, i, j, k);
     }
 
-    internal string ReadString() {
+    internal string ReadString()
+    {
       int len = 0;
-      while (offset + len < buffer.Length && buffer[offset + len] != 0) {
+      while (offset + len < buffer.Length && buffer[offset + len] != 0)
+      {
         len+=2;
       }
       string result = Encoding.Unicode.GetString(buffer, offset, len);

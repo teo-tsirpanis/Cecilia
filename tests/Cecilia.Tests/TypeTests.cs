@@ -1,285 +1,298 @@
-using System;
+using Cecilia.Cil;
+using NUnit.Framework;
 using System.Linq;
 
-using Cecilia;
-using Cecilia.Cil;
-using Cecilia.Metadata;
+namespace Cecilia.Tests
+{
 
-using NUnit.Framework;
+    [TestFixture]
+    public class TypeTests : BaseTestFixture
+    {
 
-namespace Cecilia.Tests {
+        [Test]
+        public void TypeLayout()
+        {
+            TestCSharp("Layouts.cs", module =>
+            {
+                var foo = module.GetType("Foo");
+                Assert.IsNotNull(foo);
+                Assert.IsTrue(foo.IsValueType);
 
-	[TestFixture]
-	public class TypeTests : BaseTestFixture {
+                Assert.IsTrue(foo.HasLayoutInfo);
+                Assert.AreEqual(16, foo.ClassSize);
 
-		[Test]
-		public void TypeLayout ()
-		{
-			TestCSharp ("Layouts.cs", module => {
-				var foo = module.GetType ("Foo");
-				Assert.IsNotNull (foo);
-				Assert.IsTrue (foo.IsValueType);
+                var babar = module.GetType("Babar");
+                Assert.IsNotNull(babar);
+                Assert.IsFalse(babar.IsValueType);
+                Assert.IsFalse(babar.HasLayoutInfo);
+            });
+        }
 
-				Assert.IsTrue (foo.HasLayoutInfo);
-				Assert.AreEqual (16, foo.ClassSize);
+        [Test]
+        public void SimpleInterfaces()
+        {
+            TestIL("types.il", module =>
+            {
+                var ibaz = module.GetType("IBaz");
+                Assert.IsNotNull(ibaz);
 
-				var babar = module.GetType ("Babar");
-				Assert.IsNotNull (babar);
-				Assert.IsFalse (babar.IsValueType);
-				Assert.IsFalse (babar.HasLayoutInfo);
-			});
-		}
+                Assert.IsTrue(ibaz.HasInterfaces);
 
-		[Test]
-		public void SimpleInterfaces ()
-		{
-			TestIL ("types.il", module => {
-				var ibaz = module.GetType ("IBaz");
-				Assert.IsNotNull (ibaz);
+                var interfaces = ibaz.Interfaces;
 
-				Assert.IsTrue (ibaz.HasInterfaces);
+                Assert.AreEqual(2, interfaces.Count);
 
-				var interfaces = ibaz.Interfaces;
+                // Mono's ilasm and .NET's are ordering interfaces differently
+                Assert.IsNotNull(interfaces.Single(i => i.InterfaceType.FullName == "IBar"));
+                Assert.IsNotNull(interfaces.Single(i => i.InterfaceType.FullName == "IFoo"));
+            });
+        }
 
-				Assert.AreEqual (2, interfaces.Count);
+        [Test]
+        public void GenericTypeDefinition()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var foo = module.GetType("Foo`2");
+                Assert.IsNotNull(foo);
 
-				// Mono's ilasm and .NET's are ordering interfaces differently
-				Assert.IsNotNull (interfaces.Single (i => i.InterfaceType.FullName == "IBar"));
-				Assert.IsNotNull (interfaces.Single (i => i.InterfaceType.FullName == "IFoo"));
-			});
-		}
+                Assert.IsTrue(foo.HasGenericParameters);
+                Assert.AreEqual(2, foo.GenericParameters.Count);
 
-		[Test]
-		public void GenericTypeDefinition ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var foo = module.GetType ("Foo`2");
-				Assert.IsNotNull (foo);
+                var tbar = foo.GenericParameters[0];
 
-				Assert.IsTrue (foo.HasGenericParameters);
-				Assert.AreEqual (2, foo.GenericParameters.Count);
+                Assert.AreEqual("TBar", tbar.Name);
+                Assert.AreEqual(foo, tbar.Owner);
 
-				var tbar = foo.GenericParameters [0];
+                var tbaz = foo.GenericParameters[1];
 
-				Assert.AreEqual ("TBar", tbar.Name);
-				Assert.AreEqual (foo, tbar.Owner);
+                Assert.AreEqual("TBaz", tbaz.Name);
+                Assert.AreEqual(foo, tbaz.Owner);
+            });
+        }
 
-				var tbaz = foo.GenericParameters [1];
+        [Test]
+        public void ConstrainedGenericType()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var bongo_t = module.GetType("Bongo`1");
+                Assert.IsNotNull(bongo_t);
 
-				Assert.AreEqual ("TBaz", tbaz.Name);
-				Assert.AreEqual (foo, tbaz.Owner);
-			});
-		}
+                var t = bongo_t.GenericParameters[0];
+                Assert.IsNotNull(t);
+                Assert.AreEqual("T", t.Name);
 
-		[Test]
-		public void ConstrainedGenericType ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var bongo_t = module.GetType ("Bongo`1");
-				Assert.IsNotNull (bongo_t);
+                Assert.IsTrue(t.HasConstraints);
+                Assert.AreEqual(2, t.Constraints.Count);
 
-				var t = bongo_t.GenericParameters [0];
-				Assert.IsNotNull (t);
-				Assert.AreEqual ("T", t.Name);
+                Assert.AreEqual("Zap", t.Constraints[0].ConstraintType.FullName);
+                Assert.AreEqual("IZoom", t.Constraints[1].ConstraintType.FullName);
+            });
+        }
 
-				Assert.IsTrue (t.HasConstraints);
-				Assert.AreEqual (2, t.Constraints.Count);
+        [Test]
+        public void GenericBaseType()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var child = module.GetType("Child`1");
 
-				Assert.AreEqual ("Zap", t.Constraints [0].ConstraintType.FullName);
-				Assert.AreEqual ("IZoom", t.Constraints [1].ConstraintType.FullName);
-			});
-		}
+                var child_t = child.GenericParameters[0];
+                Assert.IsNotNull(child_t);
 
-		[Test]
-		public void GenericBaseType ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var child = module.GetType ("Child`1");
+                var instance = child.BaseType as GenericInstanceType;
+                Assert.IsNotNull(instance);
+                Assert.AreNotEqual(0, instance.MetadataToken.RID);
 
-				var child_t = child.GenericParameters [0];
-				Assert.IsNotNull (child_t);
+                Assert.AreEqual(child_t, instance.GenericArguments[0]);
+            });
+        }
 
-				var instance = child.BaseType as GenericInstanceType;
-				Assert.IsNotNull (instance);
-				Assert.AreNotEqual (0, instance.MetadataToken.RID);
+        [Test]
+        public void GenericConstraintOnGenericParameter()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var duel = module.GetType("Duel`3");
 
-				Assert.AreEqual (child_t, instance.GenericArguments [0]);
-			});
-		}
+                Assert.AreEqual(3, duel.GenericParameters.Count);
 
-		[Test]
-		public void GenericConstraintOnGenericParameter ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var duel = module.GetType ("Duel`3");
+                var t1 = duel.GenericParameters[0];
+                var t2 = duel.GenericParameters[1];
+                var t3 = duel.GenericParameters[2];
 
-				Assert.AreEqual (3, duel.GenericParameters.Count);
+                Assert.AreEqual(t1, t2.Constraints[0].ConstraintType);
+                Assert.AreEqual(t2, t3.Constraints[0].ConstraintType);
+            });
+        }
 
-				var t1 = duel.GenericParameters [0];
-				var t2 = duel.GenericParameters [1];
-				var t3 = duel.GenericParameters [2];
+        [Test]
+        public void GenericForwardBaseType()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var tamchild = module.GetType("TamChild");
 
-				Assert.AreEqual (t1, t2.Constraints [0].ConstraintType);
-				Assert.AreEqual (t2, t3.Constraints [0].ConstraintType);
-			});
-		}
+                Assert.IsNotNull(tamchild);
+                Assert.IsNotNull(tamchild.BaseType);
 
-		[Test]
-		public void GenericForwardBaseType ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var tamchild = module.GetType ("TamChild");
+                var generic_instance = tamchild.BaseType as GenericInstanceType;
 
-				Assert.IsNotNull (tamchild);
-				Assert.IsNotNull (tamchild.BaseType);
+                Assert.IsNotNull(generic_instance);
 
-				var generic_instance = tamchild.BaseType as GenericInstanceType;
+                Assert.AreEqual(1, generic_instance.GenericArguments.Count);
+                Assert.AreEqual(module.GetType("Tamtam"), generic_instance.GenericArguments[0]);
+            });
+        }
 
-				Assert.IsNotNull (generic_instance);
+        [Test]
+        public void TypeExtentingGenericOfSelf()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var rec_child = module.GetType("RecChild");
 
-				Assert.AreEqual (1, generic_instance.GenericArguments.Count);
-				Assert.AreEqual (module.GetType ("Tamtam"), generic_instance.GenericArguments [0]);
-			});
-		}
+                Assert.IsNotNull(rec_child);
+                Assert.IsNotNull(rec_child.BaseType);
 
-		[Test]
-		public void TypeExtentingGenericOfSelf ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var rec_child = module.GetType ("RecChild");
+                var generic_instance = rec_child.BaseType as GenericInstanceType;
 
-				Assert.IsNotNull (rec_child);
-				Assert.IsNotNull (rec_child.BaseType);
+                Assert.IsNotNull(generic_instance);
 
-				var generic_instance = rec_child.BaseType as GenericInstanceType;
+                Assert.AreEqual(1, generic_instance.GenericArguments.Count);
+                Assert.AreEqual(rec_child, generic_instance.GenericArguments[0]);
+            });
+        }
 
-				Assert.IsNotNull (generic_instance);
+        [Test]
+        public void TypeReferenceValueType()
+        {
+            TestCSharp("Methods.cs", module =>
+            {
+                var baz = module.GetType("Baz");
+                var method = baz.GetMethod("PrintAnswer");
 
-				Assert.AreEqual (1, generic_instance.GenericArguments.Count);
-				Assert.AreEqual (rec_child, generic_instance.GenericArguments [0]);
-			});
-		}
+                var box = method.Body.Instructions.Where(i => i.OpCode == OpCodes.Box).First();
+                var int32 = (TypeReference)box.Operand;
 
-		[Test]
-		public void TypeReferenceValueType ()
-		{
-			TestCSharp ("Methods.cs", module => {
-				var baz = module.GetType ("Baz");
-				var method = baz.GetMethod ("PrintAnswer");
+                Assert.IsTrue(int32.IsValueType);
+            });
+        }
 
-				var box = method.Body.Instructions.Where (i => i.OpCode == OpCodes.Box).First ();
-				var int32 = (TypeReference) box.Operand;
+        [Test]
+        public void GenericInterfaceReference()
+        {
+            TestModule("gifaceref.exe", module =>
+            {
+                var type = module.GetType("Program");
+                var iface = type.Interfaces[0];
 
-				Assert.IsTrue (int32.IsValueType);
-			});
-		}
+                var instance = (GenericInstanceType)iface.InterfaceType;
+                var owner = instance.ElementType;
 
-		[Test]
-		public void GenericInterfaceReference ()
-		{
-			TestModule ("gifaceref.exe", module => {
-				var type = module.GetType ("Program");
-				var iface = type.Interfaces [0];
+                Assert.AreEqual(1, instance.GenericArguments.Count);
+                Assert.AreEqual(1, owner.GenericParameters.Count);
+            });
+        }
 
-				var instance = (GenericInstanceType) iface.InterfaceType;
-				var owner = instance.ElementType;
+        [Test]
+        public void UnboundGenericParameter()
+        {
+            TestModule("cscgpbug.dll", module =>
+            {
+                var type = module.GetType("ListViewModel");
+                var method = type.GetMethod("<>n__FabricatedMethod1");
 
-				Assert.AreEqual (1, instance.GenericArguments.Count);
-				Assert.AreEqual (1, owner.GenericParameters.Count);
-			});
-		}
+                var parameter = method.ReturnType as GenericParameter;
 
-		[Test]
-		public void UnboundGenericParameter ()
-		{
-			TestModule ("cscgpbug.dll", module => {
-				var type = module.GetType ("ListViewModel");
-				var method = type.GetMethod ("<>n__FabricatedMethod1");
+                Assert.IsNotNull(parameter);
+                Assert.AreEqual(0, parameter.Position);
+                Assert.IsNull(parameter.Owner);
+            }, verify: false);
+        }
 
-				var parameter = method.ReturnType as GenericParameter;
+        [Test]
+        public void GenericMultidimensionalArray()
+        {
+            TestCSharp("Generics.cs", module =>
+            {
+                var type = module.GetType("LaMatrix");
+                var method = type.GetMethod("At");
 
-				Assert.IsNotNull (parameter);
-				Assert.AreEqual (0, parameter.Position);
-				Assert.IsNull (parameter.Owner);
-			}, verify: false);
-		}
+                var call = method.Body.Instructions.Where(i => i.Operand is MethodReference).First();
+                var get = (MethodReference)call.Operand;
 
-		[Test]
-		public void GenericMultidimensionalArray ()
-		{
-			TestCSharp ("Generics.cs", module => {
-				var type = module.GetType ("LaMatrix");
-				var method = type.GetMethod ("At");
+                Assert.IsNotNull(get);
+                Assert.AreEqual(0, get.GenericParameters.Count);
+                Assert.AreEqual(MethodCallingConvention.Default, get.CallingConvention);
+                Assert.AreEqual(method.GenericParameters[0], get.ReturnType);
+            });
+        }
 
-				var call = method.Body.Instructions.Where (i => i.Operand is MethodReference).First ();
-				var get = (MethodReference) call.Operand;
+        [Test]
+        public void CorlibPrimitive()
+        {
+            var module = typeof(TypeTests).ToDefinition().Module;
 
-				Assert.IsNotNull (get);
-				Assert.AreEqual (0, get.GenericParameters.Count);
-				Assert.AreEqual (MethodCallingConvention.Default, get.CallingConvention);
-				Assert.AreEqual (method.GenericParameters [0], get.ReturnType);
-			});
-		}
+            var int32 = module.TypeSystem.Int32;
+            Assert.IsTrue(int32.IsPrimitive);
+            Assert.AreEqual(MetadataType.Int32, int32.MetadataType);
 
-		[Test]
-		public void CorlibPrimitive ()
-		{
-			var module = typeof (TypeTests).ToDefinition ().Module;
+            var int32_def = int32.Resolve();
+            Assert.IsTrue(int32_def.IsPrimitive);
+            Assert.AreEqual(MetadataType.Int32, int32_def.MetadataType);
+        }
 
-			var int32 = module.TypeSystem.Int32;
-			Assert.IsTrue (int32.IsPrimitive);
-			Assert.AreEqual (MetadataType.Int32, int32.MetadataType);
+        [Test]
+        public void ExplicitThis()
+        {
+            TestIL("explicitthis.il", module =>
+            {
+                var type = module.GetType("MakeDecision");
+                var method = type.GetMethod("Decide");
+                var fptr = method.ReturnType as FunctionPointerType;
 
-			var int32_def = int32.Resolve ();
-			Assert.IsTrue (int32_def.IsPrimitive);
-			Assert.AreEqual (MetadataType.Int32, int32_def.MetadataType);
-		}
+                Assert.IsNotNull(fptr);
+                Assert.IsTrue(fptr.HasThis);
+                Assert.IsTrue(fptr.ExplicitThis);
 
-		[Test]
-		public void ExplicitThis ()
-		{
-			TestIL ("explicitthis.il", module => {
-				var type = module.GetType ("MakeDecision");
-				var method = type.GetMethod ("Decide");
-				var fptr = method.ReturnType as FunctionPointerType;
+                Assert.AreEqual(0, fptr.Parameters[0].Sequence);
+                Assert.AreEqual(1, fptr.Parameters[1].Sequence);
+            }, verify: false);
+        }
 
-				Assert.IsNotNull (fptr);
-				Assert.IsTrue (fptr.HasThis);
-				Assert.IsTrue (fptr.ExplicitThis);
+        [Test]
+        public void DeferredCorlibTypeDef()
+        {
+            using (var module = ModuleDefinition.ReadModule(typeof(object).Assembly.Location, new ReaderParameters(ReadingMode.Deferred)))
+            {
+                var object_type = module.TypeSystem.Object;
+                Assert.IsInstanceOf<TypeDefinition>(object_type);
+            }
+        }
 
-				Assert.AreEqual (0, fptr.Parameters [0].Sequence);
-				Assert.AreEqual (1, fptr.Parameters [1].Sequence);
-			}, verify: false);
-		}
+        [Test]
+        public void CorlibTypesMetadataType()
+        {
+            using (var module = ModuleDefinition.ReadModule(typeof(object).Assembly.Location))
+            {
+                var type = module.GetType("System.String");
+                Assert.IsNotNull(type);
+                Assert.IsNotNull(type.BaseType);
+                Assert.AreEqual("System.Object", type.BaseType.FullName);
+                Assert.IsInstanceOf<TypeDefinition>(type.BaseType);
+                Assert.AreEqual(MetadataType.String, type.MetadataType);
+                Assert.AreEqual(MetadataType.Object, type.BaseType.MetadataType);
+            }
+        }
 
-		[Test]
-		public void DeferredCorlibTypeDef ()
-		{
-			using (var module = ModuleDefinition.ReadModule (typeof (object).Assembly.Location, new ReaderParameters (ReadingMode.Deferred))) {
-				var object_type = module.TypeSystem.Object;
-				Assert.IsInstanceOf<TypeDefinition> (object_type);
-			}
-		}
-
-		[Test]
-		public void CorlibTypesMetadataType ()
-		{
-			using (var module = ModuleDefinition.ReadModule (typeof (object).Assembly.Location)) {
-				var type = module.GetType ("System.String");
-				Assert.IsNotNull (type);
-				Assert.IsNotNull (type.BaseType);
-				Assert.AreEqual ("System.Object", type.BaseType.FullName);
-				Assert.IsInstanceOf<TypeDefinition> (type.BaseType);
-				Assert.AreEqual (MetadataType.String, type.MetadataType);
-				Assert.AreEqual (MetadataType.Object, type.BaseType.MetadataType);
-			}
-		}
-
-		[Test]
-		public void SelfReferencingTypeRef ()
-		{
-			TestModule ("self-ref-typeref.dll", module => {
-			}, verify: false);
-		}
-	}
+        [Test]
+        public void SelfReferencingTypeRef()
+        {
+            TestModule("self-ref-typeref.dll", module =>
+            {
+            }, verify: false);
+        }
+    }
 }

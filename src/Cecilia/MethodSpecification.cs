@@ -8,77 +8,89 @@
 // Licensed under the MIT/X11 license.
 //
 
+using Mono.Collections.Generic;
 using System;
 
-using Mono.Collections.Generic;
+namespace Cecilia
+{
 
-namespace Cecilia {
+    public abstract class MethodSpecification : MethodReference
+    {
 
-	public abstract class MethodSpecification : MethodReference {
+        readonly MethodReference method;
 
-		readonly MethodReference method;
+        public MethodReference ElementMethod
+        {
+            get { return method; }
+        }
 
-		public MethodReference ElementMethod {
-			get { return method; }
-		}
+        public override string Name
+        {
+            get { return method.Name; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override string Name {
-			get { return method.Name; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override MethodCallingConvention CallingConvention
+        {
+            get { return method.CallingConvention; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override MethodCallingConvention CallingConvention {
-			get { return method.CallingConvention; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool HasThis
+        {
+            get { return method.HasThis; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override bool HasThis {
-			get { return method.HasThis; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool ExplicitThis
+        {
+            get { return method.ExplicitThis; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override bool ExplicitThis {
-			get { return method.ExplicitThis; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override MethodReturnType MethodReturnType
+        {
+            get { return method.MethodReturnType; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override MethodReturnType MethodReturnType {
-			get { return method.MethodReturnType; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override TypeReference DeclaringType
+        {
+            get { return method.DeclaringType; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override TypeReference DeclaringType {
-			get { return method.DeclaringType; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override ModuleDefinition Module
+        {
+            get { return method.Module; }
+        }
 
-		public override ModuleDefinition Module {
-			get { return method.Module; }
-		}
+        public override bool HasParameters
+        {
+            get { return method.HasParameters; }
+        }
 
-		public override bool HasParameters {
-			get { return method.HasParameters; }
-		}
+        public override Collection<ParameterDefinition> Parameters
+        {
+            get { return method.Parameters; }
+        }
 
-		public override Collection<ParameterDefinition> Parameters {
-			get { return method.Parameters; }
-		}
+        public override bool ContainsGenericParameter
+        {
+            get { return method.ContainsGenericParameter; }
+        }
 
-		public override bool ContainsGenericParameter {
-			get { return method.ContainsGenericParameter; }
-		}
+        internal MethodSpecification(MethodReference method)
+        {
+            Mixin.CheckNotNull(method);
 
-		internal MethodSpecification (MethodReference method)
-		{
-			Mixin.CheckNotNull (method);
+            this.method = method;
+            this.token = new MetadataToken(TokenType.MethodSpec);
+        }
 
-			this.method = method;
-			this.token = new MetadataToken (TokenType.MethodSpec);
-		}
-
-		public sealed override MethodReference GetElementMethod ()
-		{
-			return method.GetElementMethod ();
-		}
-	}
+        public sealed override MethodReference GetElementMethod()
+        {
+            return method.GetElementMethod();
+        }
+    }
 }

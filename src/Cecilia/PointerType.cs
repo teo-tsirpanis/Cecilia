@@ -12,32 +12,38 @@ using System;
 
 using MD = Cecilia.Metadata;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class PointerType : TypeSpecification {
+    public sealed class PointerType : TypeSpecification
+    {
 
-		public override string Name {
-			get { return base.Name + "*"; }
-		}
+        public override string Name
+        {
+            get { return base.Name + "*"; }
+        }
 
-		public override string FullName {
-			get { return base.FullName + "*"; }
-		}
+        public override string FullName
+        {
+            get { return base.FullName + "*"; }
+        }
 
-		public override bool IsValueType {
-			get { return false; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool IsValueType
+        {
+            get { return false; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override bool IsPointer {
-			get { return true; }
-		}
+        public override bool IsPointer
+        {
+            get { return true; }
+        }
 
-		public PointerType (TypeReference type)
-			: base (type)
-		{
-			Mixin.CheckNotNull (type);
-			this.etype = MD.ElementType.Ptr;
-		}
-	}
+        public PointerType(TypeReference type)
+            : base(type)
+        {
+            Mixin.CheckNotNull(type);
+            this.etype = MD.ElementType.Ptr;
+        }
+    }
 }

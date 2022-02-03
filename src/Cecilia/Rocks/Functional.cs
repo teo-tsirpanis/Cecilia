@@ -11,31 +11,33 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cecilia.Rocks {
+namespace Cecilia.Rocks
+{
 
-	static class Functional {
+    static class Functional
+    {
 
-		public static System.Func<A, R> Y<A, R> (System.Func<System.Func<A, R>, System.Func<A, R>> f)
-		{
-			System.Func<A, R> g = null;
-			g = f (a => g (a));
-			return g;
-		}
+        public static System.Func<A, R> Y<A, R>(System.Func<System.Func<A, R>, System.Func<A, R>> f)
+        {
+            System.Func<A, R> g = null;
+            g = f(a => g(a));
+            return g;
+        }
 
-		public static IEnumerable<TSource> Prepend<TSource> (this IEnumerable<TSource> source, TSource element)
-		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
+        public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource element)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
 
-			return PrependIterator (source, element);
-		}
+            return PrependIterator(source, element);
+        }
 
-		static IEnumerable<TSource> PrependIterator<TSource> (IEnumerable<TSource> source, TSource element)
-		{
-			yield return element;
+        static IEnumerable<TSource> PrependIterator<TSource>(IEnumerable<TSource> source, TSource element)
+        {
+            yield return element;
 
-			foreach (var item in source)
-				yield return item;
-		}
-	}
+            foreach (var item in source)
+                yield return item;
+        }
+    }
 }

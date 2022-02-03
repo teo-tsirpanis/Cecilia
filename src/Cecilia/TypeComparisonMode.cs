@@ -1,6 +1,7 @@
 namespace Cecilia
 {
-    internal enum TypeComparisonMode {
+    internal enum TypeComparisonMode
+    {
         Exact,
         SignatureOnly,
 

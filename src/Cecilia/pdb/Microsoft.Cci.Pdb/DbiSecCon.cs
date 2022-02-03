@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace Microsoft.Cci.Pdb {
-  internal struct DbiSecCon {
-    internal DbiSecCon(BitAccess bits) {
+namespace Microsoft.Cci.Pdb
+{
+  internal struct DbiSecCon
+  {
+    internal DbiSecCon(BitAccess bits)
+    {
       bits.ReadInt16(out section);
       bits.ReadInt16(out pad1);
       bits.ReadInt32(out offset);

@@ -8,42 +8,47 @@
 // Licensed under the MIT/X11 license.
 //
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public class ModuleReference : IMetadataScope {
+    public class ModuleReference : IMetadataScope
+    {
 
-		string name;
+        string name;
 
-		internal MetadataToken token;
+        internal MetadataToken token;
 
-		public string Name {
-			get { return name; }
-			set { name = value; }
-		}
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
 
-		public virtual MetadataScopeType MetadataScopeType {
-			get { return MetadataScopeType.ModuleReference; }
-		}
+        public virtual MetadataScopeType MetadataScopeType
+        {
+            get { return MetadataScopeType.ModuleReference; }
+        }
 
-		public MetadataToken MetadataToken {
-			get { return token; }
-			set { token = value; }
-		}
+        public MetadataToken MetadataToken
+        {
+            get { return token; }
+            set { token = value; }
+        }
 
-		internal ModuleReference ()
-		{
-			this.token = new MetadataToken (TokenType.ModuleRef);
-		}
+        internal ModuleReference()
+        {
+            this.token = new MetadataToken(TokenType.ModuleRef);
+        }
 
-		public ModuleReference (string name)
-			: this ()
-		{
-			this.name = name;
-		}
+        public ModuleReference(string name)
+            : this()
+        {
+            this.name = name;
+        }
 
-		public override string ToString ()
-		{
-			return name;
-		}
-	}
+        public override string ToString()
+        {
+            return name;
+        }
+    }
 }

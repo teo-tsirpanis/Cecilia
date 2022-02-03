@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
 
-namespace Microsoft.Cci.Pdb {
+namespace Microsoft.Cci.Pdb
+{
   // The IntHashTable class represents a dictionary of associated keys and
   // values with constant lookup time.
   //
@@ -52,7 +52,8 @@ namespace Microsoft.Cci.Pdb {
   // By Brian Grunkemeyer, algorithm by Patrick Dussud.
   // Version 1.30 2/20/2000
   //| <include path='docs/doc[@for="IntHashTable"]/*' />
-  internal class IntHashTable {//: IEnumerable {
+  internal class IntHashTable
+  {//: IEnumerable {
     /*
       Implementation Notes:
 
@@ -123,13 +124,17 @@ namespace Microsoft.Cci.Pdb {
             187751, 225307, 270371, 324449, 389357, 467237, 560689, 672827, 807403, 968897, 1162687, 1395263,
             1674319, 2009191, 2411033, 2893249, 3471899, 4166287, 4999559, 5999471, 7199369};
 
-    private static int GetPrime(int minSize) {
-      if (minSize < 0) {
+    private static int GetPrime(int minSize)
+    {
+      if (minSize < 0)
+      {
         throw new ArgumentException("Arg_HTCapacityOverflow");
       }
-      for (int i = 0; i < primes.Length; i++) {
+      for (int i = 0; i < primes.Length; i++)
+      {
         int size = primes[i];
-        if (size >= minSize) {
+        if (size >= minSize)
+        {
           return size;
         }
       }
@@ -140,7 +145,8 @@ namespace Microsoft.Cci.Pdb {
 
     // The hash table data.
     // This cannot be serialised
-    private struct bucket {
+    private struct bucket
+    {
       internal int key;
       internal int hash_coll;   // Store hash code; sign bit means there was a collision.
       internal Object val;
@@ -163,7 +169,8 @@ namespace Microsoft.Cci.Pdb {
     // capacity of zero and a load factor of 1.0.
     //| <include path='docs/doc[@for="IntHashTable.IntHashTable"]/*' />
     internal IntHashTable()
-      : this(0, 100) {
+      : this(0, 100)
+    {
     }
 
     //// Constructs a new hashtable with the given initial capacity and a load
@@ -190,7 +197,8 @@ namespace Microsoft.Cci.Pdb {
     // the best balance between speed and size.
     //
     //| <include path='docs/doc[@for="IntHashTable.IntHashTable3"]/*' />
-    internal IntHashTable(int capacity, int loadFactorPerc) {
+    internal IntHashTable(int capacity, int loadFactorPerc)
+    {
       if (capacity < 0)
         throw new ArgumentOutOfRangeException("capacity", "ArgumentOutOfRange_NeedNonNegNum");
       if (!(loadFactorPerc >= 10 && loadFactorPerc <= 100))
@@ -211,7 +219,8 @@ namespace Microsoft.Cci.Pdb {
     // The out parameter seed is h1(key), while the out parameter
     // incr is h2(key, hashSize).  Callers of this function should
     // add incr each time through a loop.
-    private static uint InitHash(int key, int hashsize, out uint seed, out uint incr) {
+    private static uint InitHash(int key, int hashsize, out uint seed, out uint incr)
+    {
       // Hashcode must be positive.  Also, we must not use the sign bit, since
       // that is used for the collision bit.
       uint hashcode = (uint)key & 0x7FFFFFFF;
@@ -230,7 +239,8 @@ namespace Microsoft.Cci.Pdb {
     // present in the hashtable.
     //
     //| <include path='docs/doc[@for="IntHashTable.Add"]/*' />
-    internal void Add(int key, Object value) {
+    internal void Add(int key, Object value)
+    {
       Insert(key, value, true);
     }
 
@@ -285,9 +295,12 @@ namespace Microsoft.Cci.Pdb {
     // given key is not found, the returned value is null.
     //
     //| <include path='docs/doc[@for="IntHashTable.this"]/*' />
-    internal Object this[int key] {
-      get {
-        if (key < 0) {
+    internal Object this[int key]
+    {
+      get
+      {
+        if (key < 0)
+        {
           throw new ArgumentException("Argument_KeyLessThanZero");
         }
         uint seed;
@@ -298,13 +311,16 @@ namespace Microsoft.Cci.Pdb {
         int ntry = 0;
 
         bucket b;
-        do {
+        do
+        {
           int bucketNumber = (int)(seed % (uint)lbuckets.Length);
           b = lbuckets[bucketNumber];
-          if (b.val == null) {
+          if (b.val == null)
+          {
             return null;
           }
-          if (((b.hash_coll & 0x7FFFFFFF) == hashcode) && key == b.key) {
+          if (((b.hash_coll & 0x7FFFFFFF) == hashcode) && key == b.key)
+          {
             return b.val;
           }
           seed += incr;
@@ -323,16 +339,19 @@ namespace Microsoft.Cci.Pdb {
     // that is larger than twice the current number of buckets, and the entries
     // in the hashtable are redistributed into the new buckets using the cached
     // hashcodes.
-    private void expand() {
+    private void expand()
+    {
       rehash(GetPrime(1+buckets.Length*2));
     }
 
     // We occationally need to rehash the table to clean up the collision bits.
-    private void rehash() {
+    private void rehash()
+    {
       rehash(buckets.Length);
     }
 
-    private void rehash(int newsize) {
+    private void rehash(int newsize)
+    {
 
       // reset occupancy
       occupancy=0;
@@ -347,9 +366,11 @@ namespace Microsoft.Cci.Pdb {
 
       // rehash table into new buckets
       int nb;
-      for (nb = 0; nb < buckets.Length; nb++) {
+      for (nb = 0; nb < buckets.Length; nb++)
+      {
         bucket oldb = buckets[nb];
-        if (oldb.val != null) {
+        if (oldb.val != null)
+        {
           putEntry(newBuckets, oldb.key, oldb.val, oldb.hash_coll & 0x7FFFFFFF);
         }
       }
@@ -359,7 +380,8 @@ namespace Microsoft.Cci.Pdb {
       buckets = newBuckets;
       loadsize = (int)(loadFactorPerc * newsize) / 100;
 
-      if (loadsize >= newsize) {
+      if (loadsize >= newsize)
+      {
         loadsize = newsize-1;
       }
 
@@ -381,16 +403,22 @@ namespace Microsoft.Cci.Pdb {
     // Inserts an entry into this hashtable. This method is called from the Set
     // and Add methods. If the add parameter is true and the given key already
     // exists in the hashtable, an exception is thrown.
-    private void Insert(int key, Object nvalue, bool add) {
-      if (key < 0) {
+    private void Insert(int key, Object nvalue, bool add)
+    {
+      if (key < 0)
+      {
         throw new ArgumentException("Argument_KeyLessThanZero");
       }
-      if (nvalue == null) {
+      if (nvalue == null)
+      {
         throw new ArgumentNullException("nvalue", "ArgumentNull_Value");
       }
-      if (count >= loadsize) {
+      if (count >= loadsize)
+      {
         expand();
-      } else if (occupancy > loadsize && count > 100) {
+      }
+      else if (occupancy > loadsize && count > 100)
+      {
         rehash();
       }
 
@@ -403,7 +431,8 @@ namespace Microsoft.Cci.Pdb {
       int emptySlotNumber = -1; // We use the empty slot number to cache the first empty slot. We chose to reuse slots
       // create by remove that have the collision bit set over using up new slots.
 
-      do {
+      do
+      {
         int bucketNumber = (int)(seed % (uint)buckets.Length);
 
         // Set emptySlot number to current bucket if it is the first available bucket that we have seen
@@ -414,10 +443,12 @@ namespace Microsoft.Cci.Pdb {
         // Insert the key/value pair into this bucket if this bucket is empty and has never contained an entry
         // OR
         // This bucket once contained an entry but there has never been a collision
-        if (buckets[bucketNumber].val == null) {
+        if (buckets[bucketNumber].val == null)
+        {
           // If we have found an available bucket that has never had a collision, but we've seen an available
           // bucket in the past that has the collision bit set, use the previous bucket instead
-          if (emptySlotNumber != -1) { // Reuse slot
+          if (emptySlotNumber != -1)
+          { // Reuse slot
             bucketNumber = emptySlotNumber;
           }
 
@@ -435,8 +466,10 @@ namespace Microsoft.Cci.Pdb {
         // OR
         // it is available, but has had the collision bit set and we have already found an available bucket
         if (((buckets[bucketNumber].hash_coll & 0x7FFFFFFF) == hashcode) &&
-                    key == buckets[bucketNumber].key) {
-          if (add) {
+                    key == buckets[bucketNumber].key)
+        {
+          if (add)
+          {
             throw new ArgumentException("Argument_AddingDuplicate__" + buckets[bucketNumber].key);
           }
           buckets[bucketNumber].val = nvalue;
@@ -447,8 +480,10 @@ namespace Microsoft.Cci.Pdb {
         // The current bucket is full, and we have therefore collided.  We need to set the collision bit
         // UNLESS
         // we have remembered an available slot previously.
-        if (emptySlotNumber == -1) {// We don't need to set the collision bit here since we already have an empty slot
-          if (buckets[bucketNumber].hash_coll >= 0) {
+        if (emptySlotNumber == -1)
+        {// We don't need to set the collision bit here since we already have an empty slot
+          if (buckets[bucketNumber].hash_coll >= 0)
+          {
             buckets[bucketNumber].hash_coll |= unchecked((int)0x80000000);
             occupancy++;
           }
@@ -457,7 +492,8 @@ namespace Microsoft.Cci.Pdb {
       } while (++ntry < buckets.Length);
 
       // This code is here if and only if there were no buckets without a collision bit set in the entire table
-      if (emptySlotNumber != -1) {
+      if (emptySlotNumber != -1)
+      {
         // We pretty much have to insert in this order.  Don't set hash
         // code until the value & key are set appropriately.
         buckets[emptySlotNumber].val = nvalue;
@@ -475,21 +511,25 @@ namespace Microsoft.Cci.Pdb {
       throw new InvalidOperationException("InvalidOperation_HashInsertFailed");
     }
 
-    private void putEntry(bucket[] newBuckets, int key, Object nvalue, int hashcode) {
+    private void putEntry(bucket[] newBuckets, int key, Object nvalue, int hashcode)
+    {
       uint seed = (uint)hashcode;
       uint incr = (uint)(1 + (((seed >> 5) + 1) % ((uint)newBuckets.Length - 1)));
 
-      do {
+      do
+      {
         int bucketNumber = (int)(seed % (uint)newBuckets.Length);
 
-        if ((newBuckets[bucketNumber].val == null)) {
+        if ((newBuckets[bucketNumber].val == null))
+        {
           newBuckets[bucketNumber].val = nvalue;
           newBuckets[bucketNumber].key = key;
           newBuckets[bucketNumber].hash_coll |= hashcode;
           return;
         }
 
-        if (newBuckets[bucketNumber].hash_coll >= 0) {
+        if (newBuckets[bucketNumber].hash_coll >= 0)
+        {
           newBuckets[bucketNumber].hash_coll |= unchecked((int)0x80000000);
           occupancy++;
         }

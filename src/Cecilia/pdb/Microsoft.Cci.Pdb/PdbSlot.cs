@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace Microsoft.Cci.Pdb {
-  internal class PdbSlot {
+namespace Microsoft.Cci.Pdb
+{
+  internal class PdbSlot
+  {
     internal uint slot;
     internal uint typeToken;
     internal string name;
@@ -20,7 +20,8 @@ namespace Microsoft.Cci.Pdb {
       this.flags = flags;
     }
 
-    internal PdbSlot(BitAccess bits) {
+    internal PdbSlot(BitAccess bits)
+    {
       AttrSlotSym slot;
 
       bits.ReadUInt32(out slot.index);

@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace Microsoft.Cci.Pdb {
-  internal struct BitSet {
-    internal BitSet(BitAccess bits) {
+namespace Microsoft.Cci.Pdb
+{
+  internal struct BitSet
+  {
+    internal BitSet(BitAccess bits)
+    {
       bits.ReadInt32(out size);    // 0..3 : Number of words
       words = new uint[size];
       bits.ReadUInt32(words);
@@ -16,7 +17,8 @@ namespace Microsoft.Cci.Pdb {
     //  words = new uint[size];
     //}
 
-    internal bool IsSet(int index) {
+    internal bool IsSet(int index)
+    {
       int word = index / 32;
       if (word >= this.size) return false;
       return ((words[word] & GetBit(index)) != 0);
@@ -34,7 +36,8 @@ namespace Microsoft.Cci.Pdb {
     //  words[word] &= ~GetBit(index);
     //}
 
-    private static uint GetBit(int index) {
+    private static uint GetBit(int index)
+    {
       return ((uint)1 << (index % 32));
     }
 
@@ -47,7 +50,8 @@ namespace Microsoft.Cci.Pdb {
     //  return o;
     //}
 
-    internal bool IsEmpty {
+    internal bool IsEmpty
+    {
       get { return size == 0; }
     }
 

@@ -12,24 +12,28 @@ using System;
 
 using MD = Cecilia.Metadata;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class PinnedType : TypeSpecification {
+    public sealed class PinnedType : TypeSpecification
+    {
 
-		public override bool IsValueType {
-			get { return false; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool IsValueType
+        {
+            get { return false; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override bool IsPinned {
-			get { return true; }
-		}
+        public override bool IsPinned
+        {
+            get { return true; }
+        }
 
-		public PinnedType (TypeReference type)
-			: base (type)
-		{
-			Mixin.CheckNotNull (type);
-			this.etype = MD.ElementType.Pinned;
-		}
-	}
+        public PinnedType(TypeReference type)
+            : base(type)
+        {
+            Mixin.CheckNotNull(type);
+            this.etype = MD.ElementType.Pinned;
+        }
+    }
 }

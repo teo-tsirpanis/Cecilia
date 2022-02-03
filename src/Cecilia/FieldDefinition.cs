@@ -8,275 +8,319 @@
 // Licensed under the MIT/X11 license.
 //
 
-using System;
-using System.Threading;
 using Mono.Collections.Generic;
+using System;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class FieldDefinition : FieldReference, IMemberDefinition, IConstantProvider, IMarshalInfoProvider {
+    public sealed class FieldDefinition : FieldReference, IMemberDefinition, IConstantProvider, IMarshalInfoProvider
+    {
 
-		ushort attributes;
-		Collection<CustomAttribute> custom_attributes;
+        ushort attributes;
+        Collection<CustomAttribute> custom_attributes;
 
-		int offset = Mixin.NotResolvedMarker;
+        int offset = Mixin.NotResolvedMarker;
 
-		internal int rva = Mixin.NotResolvedMarker;
-		byte [] initial_value;
+        internal int rva = Mixin.NotResolvedMarker;
+        byte[] initial_value;
 
-		object constant = Mixin.NotResolved;
+        object constant = Mixin.NotResolved;
 
-		MarshalInfo marshal_info;
+        MarshalInfo marshal_info;
 
-		void ResolveLayout ()
-		{
-			if (offset != Mixin.NotResolvedMarker)
-				return;
+        void ResolveLayout()
+        {
+            if (offset != Mixin.NotResolvedMarker)
+                return;
 
-			if (!HasImage) {
-				offset = Mixin.NoDataMarker;
-				return;
-			}
+            if (!HasImage)
+            {
+                offset = Mixin.NoDataMarker;
+                return;
+            }
 
-			lock (Module.SyncRoot) {
-				if (offset != Mixin.NotResolvedMarker)
-					return;
-				offset = Module.Read (this, (field, reader) => reader.ReadFieldLayout (field));
-			}
-		}
+            lock (Module.SyncRoot)
+            {
+                if (offset != Mixin.NotResolvedMarker)
+                    return;
+                offset = Module.Read(this, (field, reader) => reader.ReadFieldLayout(field));
+            }
+        }
 
-		public bool HasLayoutInfo {
-			get {
-				if (offset >= 0)
-					return true;
+        public bool HasLayoutInfo
+        {
+            get
+            {
+                if (offset >= 0)
+                    return true;
 
-				ResolveLayout ();
+                ResolveLayout();
 
-				return offset >= 0;
-			}
-		}
+                return offset >= 0;
+            }
+        }
 
-		public int Offset {
-			get {
-				if (offset >= 0)
-					return offset;
+        public int Offset
+        {
+            get
+            {
+                if (offset >= 0)
+                    return offset;
 
-				ResolveLayout ();
+                ResolveLayout();
 
-				return offset >= 0 ? offset : -1;
-			}
-			set { offset = value; }
-		}
+                return offset >= 0 ? offset : -1;
+            }
+            set { offset = value; }
+        }
 
-		internal FieldDefinitionProjection WindowsRuntimeProjection {
-			get { return (FieldDefinitionProjection) projection; }
-			set { projection = value; }
-		}
+        internal FieldDefinitionProjection WindowsRuntimeProjection
+        {
+            get { return (FieldDefinitionProjection)projection; }
+            set { projection = value; }
+        }
 
-		void ResolveRVA ()
-		{
-			if (rva != Mixin.NotResolvedMarker)
-				return;
+        void ResolveRVA()
+        {
+            if (rva != Mixin.NotResolvedMarker)
+                return;
 
-			if (!HasImage)
-				return;
+            if (!HasImage)
+                return;
 
-			lock (Module.SyncRoot) {
-				if (rva != Mixin.NotResolvedMarker)
-					return;
-				rva = Module.Read (this, (field, reader) => reader.ReadFieldRVA (field));
-			}
-		}
+            lock (Module.SyncRoot)
+            {
+                if (rva != Mixin.NotResolvedMarker)
+                    return;
+                rva = Module.Read(this, (field, reader) => reader.ReadFieldRVA(field));
+            }
+        }
 
-		public int RVA {
-			get {
-				if (rva > 0)
-					return rva;
+        public int RVA
+        {
+            get
+            {
+                if (rva > 0)
+                    return rva;
 
-				ResolveRVA ();
+                ResolveRVA();
 
-				return rva > 0 ? rva : 0;
-			}
-		}
+                return rva > 0 ? rva : 0;
+            }
+        }
 
-		public byte [] InitialValue {
-			get {
-				if (initial_value != null)
-					return initial_value;
+        public byte[] InitialValue
+        {
+            get
+            {
+                if (initial_value != null)
+                    return initial_value;
 
-				ResolveRVA ();
+                ResolveRVA();
 
-				if (initial_value == null)
-					initial_value = Array.Empty<byte>();
+                if (initial_value == null)
+                    initial_value = Array.Empty<byte>();
 
-				return initial_value;
-			}
-			set {
-				initial_value = value;
-				HasFieldRVA = !initial_value.IsNullOrEmpty ();
-				rva = 0;
-			}
-		}
+                return initial_value;
+            }
+            set
+            {
+                initial_value = value;
+                HasFieldRVA = !initial_value.IsNullOrEmpty();
+                rva = 0;
+            }
+        }
 
-		public FieldAttributes Attributes {
-			get { return (FieldAttributes) attributes; }
-			set {
-				if (IsWindowsRuntimeProjection && (ushort) value != attributes)
-					throw new InvalidOperationException ();
+        public FieldAttributes Attributes
+        {
+            get { return (FieldAttributes)attributes; }
+            set
+            {
+                if (IsWindowsRuntimeProjection && (ushort)value != attributes)
+                    throw new InvalidOperationException();
 
-				attributes = (ushort) value;
-			}
-		}
+                attributes = (ushort)value;
+            }
+        }
 
-		public bool HasConstant {
-			get {
-				this.ResolveConstant (ref constant, Module);
+        public bool HasConstant
+        {
+            get
+            {
+                this.ResolveConstant(ref constant, Module);
 
-				return constant != Mixin.NoValue;
-			}
-			set { if (!value) constant = Mixin.NoValue; }
-		}
+                return constant != Mixin.NoValue;
+            }
+            set { if (!value) constant = Mixin.NoValue; }
+        }
 
-		public object Constant {
-			get { return HasConstant ? constant : null;	}
-			set { constant = value; }
-		}
+        public object Constant
+        {
+            get { return HasConstant ? constant : null; }
+            set { constant = value; }
+        }
 
-		public bool HasCustomAttributes {
-			get {
-				if (custom_attributes != null)
-					return custom_attributes.Count > 0;
+        public bool HasCustomAttributes
+        {
+            get
+            {
+                if (custom_attributes != null)
+                    return custom_attributes.Count > 0;
 
-				return this.GetHasCustomAttributes (Module);
-			}
-		}
+                return this.GetHasCustomAttributes(Module);
+            }
+        }
 
-		public Collection<CustomAttribute> CustomAttributes {
-			get { return custom_attributes ?? (this.GetCustomAttributes (ref custom_attributes, Module)); }
-		}
+        public Collection<CustomAttribute> CustomAttributes
+        {
+            get { return custom_attributes ?? (this.GetCustomAttributes(ref custom_attributes, Module)); }
+        }
 
-		public bool HasMarshalInfo {
-			get {
-				if (marshal_info != null)
-					return true;
+        public bool HasMarshalInfo
+        {
+            get
+            {
+                if (marshal_info != null)
+                    return true;
 
-				return this.GetHasMarshalInfo (Module);
-			}
-		}
+                return this.GetHasMarshalInfo(Module);
+            }
+        }
 
-		public MarshalInfo MarshalInfo {
-			get { return marshal_info ?? (this.GetMarshalInfo (ref marshal_info, Module)); }
-			set { marshal_info = value; }
-		}
+        public MarshalInfo MarshalInfo
+        {
+            get { return marshal_info ?? (this.GetMarshalInfo(ref marshal_info, Module)); }
+            set { marshal_info = value; }
+        }
 
-		#region FieldAttributes
+        #region FieldAttributes
 
-		public bool IsCompilerControlled {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.CompilerControlled); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.CompilerControlled, value); }
-		}
+        public bool IsCompilerControlled
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.CompilerControlled); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.CompilerControlled, value); }
+        }
 
-		public bool IsPrivate {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Private); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Private, value); }
-		}
+        public bool IsPrivate
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Private); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Private, value); }
+        }
 
-		public bool IsFamilyAndAssembly {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.FamANDAssem); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.FamANDAssem, value); }
-		}
+        public bool IsFamilyAndAssembly
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.FamANDAssem); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.FamANDAssem, value); }
+        }
 
-		public bool IsAssembly {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Assembly); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Assembly, value); }
-		}
+        public bool IsAssembly
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Assembly); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Assembly, value); }
+        }
 
-		public bool IsFamily {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Family); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Family, value); }
-		}
+        public bool IsFamily
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Family); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Family, value); }
+        }
 
-		public bool IsFamilyOrAssembly {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.FamORAssem); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.FamORAssem, value); }
-		}
+        public bool IsFamilyOrAssembly
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.FamORAssem); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.FamORAssem, value); }
+        }
 
-		public bool IsPublic {
-			get { return attributes.GetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Public); }
-			set { attributes = attributes.SetMaskedAttributes ((ushort) FieldAttributes.FieldAccessMask, (ushort) FieldAttributes.Public, value); }
-		}
+        public bool IsPublic
+        {
+            get { return attributes.GetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Public); }
+            set { attributes = attributes.SetMaskedAttributes((ushort)FieldAttributes.FieldAccessMask, (ushort)FieldAttributes.Public, value); }
+        }
 
-		public bool IsStatic {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.Static); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.Static, value); }
-		}
+        public bool IsStatic
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.Static); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.Static, value); }
+        }
 
-		public bool IsInitOnly {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.InitOnly); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.InitOnly, value); }
-		}
+        public bool IsInitOnly
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.InitOnly); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.InitOnly, value); }
+        }
 
-		public bool IsLiteral {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.Literal); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.Literal, value); }
-		}
+        public bool IsLiteral
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.Literal); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.Literal, value); }
+        }
 
-		public bool IsNotSerialized {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.NotSerialized); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.NotSerialized, value); }
-		}
+        public bool IsNotSerialized
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.NotSerialized); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.NotSerialized, value); }
+        }
 
-		public bool IsSpecialName {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.SpecialName); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.SpecialName, value); }
-		}
+        public bool IsSpecialName
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.SpecialName); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.SpecialName, value); }
+        }
 
-		public bool IsPInvokeImpl {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.PInvokeImpl); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.PInvokeImpl, value); }
-		}
+        public bool IsPInvokeImpl
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.PInvokeImpl); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.PInvokeImpl, value); }
+        }
 
-		public bool IsRuntimeSpecialName {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.RTSpecialName); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.RTSpecialName, value); }
-		}
+        public bool IsRuntimeSpecialName
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.RTSpecialName); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.RTSpecialName, value); }
+        }
 
-		public bool HasDefault {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.HasDefault); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.HasDefault, value); }
-		}
+        public bool HasDefault
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.HasDefault); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.HasDefault, value); }
+        }
 
-		public bool HasFieldRVA {
-			get { return attributes.GetAttributes ((ushort) FieldAttributes.HasFieldRVA); }
-			set { attributes = attributes.SetAttributes ((ushort) FieldAttributes.HasFieldRVA, value); }
-		}
+        public bool HasFieldRVA
+        {
+            get { return attributes.GetAttributes((ushort)FieldAttributes.HasFieldRVA); }
+            set { attributes = attributes.SetAttributes((ushort)FieldAttributes.HasFieldRVA, value); }
+        }
 
-		#endregion
+        #endregion
 
-		public override bool IsDefinition {
-			get { return true; }
-		}
+        public override bool IsDefinition
+        {
+            get { return true; }
+        }
 
-		public new TypeDefinition DeclaringType {
-			get { return (TypeDefinition) base.DeclaringType; }
-			set { base.DeclaringType = value; }
-		}
+        public new TypeDefinition DeclaringType
+        {
+            get { return (TypeDefinition)base.DeclaringType; }
+            set { base.DeclaringType = value; }
+        }
 
-		public FieldDefinition (string name, FieldAttributes attributes, TypeReference fieldType)
-			: base (name, fieldType)
-		{
-			this.attributes = (ushort) attributes;
-		}
+        public FieldDefinition(string name, FieldAttributes attributes, TypeReference fieldType)
+            : base(name, fieldType)
+        {
+            this.attributes = (ushort)attributes;
+        }
 
-		public override FieldDefinition Resolve ()
-		{
-			return this;
-		}
-	}
+        public override FieldDefinition Resolve()
+        {
+            return this;
+        }
+    }
 
-	static partial class Mixin {
+    static partial class Mixin
+    {
 
-		public const int NotResolvedMarker = -2;
-		public const int NoDataMarker = -1;
-	}
+        public const int NotResolvedMarker = -2;
+        public const int NoDataMarker = -1;
+    }
 }

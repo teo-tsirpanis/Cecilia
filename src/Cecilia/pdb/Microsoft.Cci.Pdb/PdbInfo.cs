@@ -4,12 +4,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Cci.Pdb {
+namespace Microsoft.Cci.Pdb
+{
 
   /// <summary>
   /// This class represents the information read from a PDB file (both legacy Windows and Portable).
   /// </summary>
-  internal class PdbInfo {
+  internal class PdbInfo
+  {
     /// <summary>
     /// Enumeration of per-function information contained in the PDB file.
     /// </summary>

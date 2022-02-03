@@ -8,39 +8,42 @@
 // Licensed under the MIT/X11 license.
 //
 
-using System;
 using Mono.Collections.Generic;
+using System;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	static partial class Mixin {
+    static partial class Mixin
+    {
 
-		public static bool IsNullOrEmpty<T> (this T [] self)
-		{
-			return self == null || self.Length == 0;
-		}
+        public static bool IsNullOrEmpty<T>(this T[] self)
+        {
+            return self == null || self.Length == 0;
+        }
 
-		public static bool IsNullOrEmpty<T> (this Collection<T> self)
-		{
-			return self == null || self.size == 0;
-		}
+        public static bool IsNullOrEmpty<T>(this Collection<T> self)
+        {
+            return self == null || self.size == 0;
+        }
 
-		public static T [] Resize<T> (this T [] self, int length)
-		{
-			Array.Resize (ref self, length);
-			return self;
-		}
+        public static T[] Resize<T>(this T[] self, int length)
+        {
+            Array.Resize(ref self, length);
+            return self;
+        }
 
-		public static T [] Add<T> (this T [] self, T item)
-		{
-			if (self == null) {
-				self = new [] { item };
-				return self;
-			}
+        public static T[] Add<T>(this T[] self, T item)
+        {
+            if (self == null)
+            {
+                self = new[] { item };
+                return self;
+            }
 
-			self = self.Resize (self.Length + 1);
-			self [self.Length - 1] = item;
-			return self;
-		}
-	}
+            self = self.Resize(self.Length + 1);
+            self[self.Length - 1] = item;
+            return self;
+        }
+    }
 }

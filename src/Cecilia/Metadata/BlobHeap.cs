@@ -10,45 +10,48 @@
 
 using System;
 
-namespace Cecilia.Metadata {
+namespace Cecilia.Metadata
+{
 
-	sealed class BlobHeap : Heap {
+    sealed class BlobHeap : Heap
+    {
 
-		public BlobHeap (byte [] data)
-			: base (data)
-		{
-		}
+        public BlobHeap(byte[] data)
+            : base(data)
+        {
+        }
 
-		public byte [] Read (uint index)
-		{
-			if (index == 0 || index > this.data.Length - 1)
-				return Array.Empty<byte>();
+        public byte[] Read(uint index)
+        {
+            if (index == 0 || index > this.data.Length - 1)
+                return Array.Empty<byte>();
 
-			int position = (int) index;
-			int length = (int) data.ReadCompressedUInt32 (ref position);
+            int position = (int)index;
+            int length = (int)data.ReadCompressedUInt32(ref position);
 
-			if (length > data.Length - position)
-				return Array.Empty<byte>();
+            if (length > data.Length - position)
+                return Array.Empty<byte>();
 
-			var buffer = new byte [length];
+            var buffer = new byte[length];
 
-			Buffer.BlockCopy (data, position, buffer, 0, length);
+            Buffer.BlockCopy(data, position, buffer, 0, length);
 
-			return buffer;
-		}
+            return buffer;
+        }
 
-		public void GetView (uint signature, out byte [] buffer, out int index, out int length)
-		{
-			if (signature == 0 || signature > data.Length - 1) {
-				buffer = null;
-				index = length = 0;
-				return;
-			}
+        public void GetView(uint signature, out byte[] buffer, out int index, out int length)
+        {
+            if (signature == 0 || signature > data.Length - 1)
+            {
+                buffer = null;
+                index = length = 0;
+                return;
+            }
 
-			buffer = data;
+            buffer = data;
 
-			index = (int) signature;
-			length = (int) buffer.ReadCompressedUInt32 (ref index);
-		}
-	}
+            index = (int)signature;
+            length = (int)buffer.ReadCompressedUInt32(ref index);
+        }
+    }
 }

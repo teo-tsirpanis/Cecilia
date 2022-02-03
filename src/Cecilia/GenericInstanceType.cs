@@ -8,69 +8,79 @@
 // Licensed under the MIT/X11 license.
 //
 
+using Mono.Collections.Generic;
 using System;
 using System.Text;
 using System.Threading;
-using Mono.Collections.Generic;
-
 using MD = Cecilia.Metadata;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class GenericInstanceType : TypeSpecification, IGenericInstance, IGenericContext {
+    public sealed class GenericInstanceType : TypeSpecification, IGenericInstance, IGenericContext
+    {
 
-		Collection<TypeReference> arguments;
+        Collection<TypeReference> arguments;
 
-		public bool HasGenericArguments {
-			get { return !arguments.IsNullOrEmpty (); }
-		}
+        public bool HasGenericArguments
+        {
+            get { return !arguments.IsNullOrEmpty(); }
+        }
 
-		public Collection<TypeReference> GenericArguments {
-			get {
-				if (arguments == null)
-					Interlocked.CompareExchange (ref arguments, new Collection<TypeReference> (), null);
+        public Collection<TypeReference> GenericArguments
+        {
+            get
+            {
+                if (arguments == null)
+                    Interlocked.CompareExchange(ref arguments, new Collection<TypeReference>(), null);
 
-				return arguments;
-			}
-		}
+                return arguments;
+            }
+        }
 
-		public override TypeReference DeclaringType {
-			get { return ElementType.DeclaringType; }
-			set { throw new NotSupportedException (); }
-		}
+        public override TypeReference DeclaringType
+        {
+            get { return ElementType.DeclaringType; }
+            set { throw new NotSupportedException(); }
+        }
 
-		public override string FullName {
-			get {
-				var name = new StringBuilder ();
-				name.Append (base.FullName);
-				this.GenericInstanceFullName (name);
-				return name.ToString ();
-			}
-		}
+        public override string FullName
+        {
+            get
+            {
+                var name = new StringBuilder();
+                name.Append(base.FullName);
+                this.GenericInstanceFullName(name);
+                return name.ToString();
+            }
+        }
 
-		public override bool IsGenericInstance {
-			get { return true; }
-		}
+        public override bool IsGenericInstance
+        {
+            get { return true; }
+        }
 
-		public override bool ContainsGenericParameter {
-			get { return this.ContainsGenericParameter () || base.ContainsGenericParameter; }
-		}
+        public override bool ContainsGenericParameter
+        {
+            get { return this.ContainsGenericParameter() || base.ContainsGenericParameter; }
+        }
 
-		IGenericParameterProvider IGenericContext.Type {
-			get { return ElementType; }
-		}
+        IGenericParameterProvider IGenericContext.Type
+        {
+            get { return ElementType; }
+        }
 
-		public GenericInstanceType (TypeReference type)
-			: base (type)
-		{
-			base.IsValueType = type.IsValueType;
-			this.etype = MD.ElementType.GenericInst;
-		}
+        public GenericInstanceType(TypeReference type)
+            : base(type)
+        {
+            base.IsValueType = type.IsValueType;
+            this.etype = MD.ElementType.GenericInst;
+        }
 
-		internal GenericInstanceType (TypeReference type, int arity)
-			: this (type)
-		{
-			this.arguments = new Collection<TypeReference> (arity);
-		}
-	}
+        internal GenericInstanceType(TypeReference type, int arity)
+            : this(type)
+        {
+            this.arguments = new Collection<TypeReference>(arity);
+        }
+    }
 }

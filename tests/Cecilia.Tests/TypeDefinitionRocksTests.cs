@@ -1,97 +1,100 @@
+using Cecilia.Rocks;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cecilia.Rocks;
 
-using NUnit.Framework;
+namespace Cecilia.Tests
+{
 
-namespace Cecilia.Tests {
+    [TestFixture]
+    public class TypeDefinitionRocksTests
+    {
 
-	[TestFixture]
-	public class TypeDefinitionRocksTests {
+        class Foo
+        {
 
-		class Foo {
+            static Foo()
+            {
+            }
 
-			static Foo ()
-			{
-			}
+            public Foo(int a)
+            {
+            }
 
-			public Foo (int a)
-			{
-			}
+            public Foo(int a, string s)
+            {
+            }
 
-			public Foo (int a, string s)
-			{
-			}
+            public static void Bar()
+            {
+            }
 
-			public static void Bar ()
-			{
-			}
+            void Baz()
+            {
+            }
+        }
 
-			void Baz ()
-			{
-			}
-		}
+        [Test]
+        public void GetConstructors()
+        {
+            var foo = typeof(Foo).ToDefinition();
+            var ctors = foo.GetConstructors().Select(ctor => ctor.FullName);
 
-		[Test]
-		public void GetConstructors ()
-		{
-			var foo = typeof (Foo).ToDefinition ();
-			var ctors = foo.GetConstructors ().Select (ctor => ctor.FullName);
+            var expected = new[] {
+                "System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()",
+                "System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32)",
+                "System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32,System.String)",
+            };
 
-			var expected = new [] {
-				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()",
-				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32)",
-				"System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.ctor(System.Int32,System.String)",
-			};
+            AssertSet(expected, ctors);
+        }
 
-			AssertSet (expected, ctors);
-		}
+        static void AssertSet<T>(IEnumerable<T> expected, IEnumerable<T> actual)
+        {
+            Assert.IsFalse(expected.Except(actual).Any());
+            Assert.IsTrue(expected.Intersect(actual).SequenceEqual(expected));
+        }
 
-		static void AssertSet<T> (IEnumerable<T> expected, IEnumerable<T> actual)
-		{
-			Assert.IsFalse (expected.Except (actual).Any ());
-			Assert.IsTrue (expected.Intersect (actual).SequenceEqual (expected));
-		}
+        [Test]
+        public void GetStaticConstructor()
+        {
+            var foo = typeof(Foo).ToDefinition();
+            var cctor = foo.GetStaticConstructor();
 
-		[Test]
-		public void GetStaticConstructor ()
-		{
-			var foo = typeof (Foo).ToDefinition ();
-			var cctor = foo.GetStaticConstructor ();
+            Assert.IsNotNull(cctor);
+            Assert.AreEqual("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()", cctor.FullName);
+        }
 
-			Assert.IsNotNull (cctor);
-			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::.cctor()", cctor.FullName);
-		}
+        [Test]
+        public void GetMethods()
+        {
+            var foo = typeof(Foo).ToDefinition();
+            var methods = foo.GetMethods().ToArray();
 
-		[Test]
-		public void GetMethods ()
-		{
-			var foo = typeof (Foo).ToDefinition ();
-			var methods = foo.GetMethods ().ToArray ();
+            Assert.AreEqual(2, methods.Length);
+            Assert.AreEqual("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Bar()", methods[0].FullName);
+            Assert.AreEqual("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Baz()", methods[1].FullName);
+        }
 
-			Assert.AreEqual (2, methods.Length);
-			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Bar()", methods [0].FullName);
-			Assert.AreEqual ("System.Void Cecilia.Tests.TypeDefinitionRocksTests/Foo::Baz()", methods [1].FullName);
-		}
+        enum Pan : byte
+        {
+            Pin,
+            Pon,
+        }
 
-		enum Pan : byte {
-			Pin,
-			Pon,
-		}
+        [Test]
+        public void GetEnumUnderlyingType()
+        {
+            var pan = typeof(Pan).ToDefinition();
 
-		[Test]
-		public void GetEnumUnderlyingType ()
-		{
-			var pan = typeof (Pan).ToDefinition ();
+            Assert.IsNotNull(pan);
+            Assert.IsTrue(pan.IsEnum);
 
-			Assert.IsNotNull (pan);
-			Assert.IsTrue (pan.IsEnum);
+            var underlying_type = pan.GetEnumUnderlyingType();
+            Assert.IsNotNull(underlying_type);
 
-			var underlying_type = pan.GetEnumUnderlyingType ();
-			Assert.IsNotNull (underlying_type);
-
-			Assert.AreEqual ("System.Byte", underlying_type.FullName);
-		}
-	}
+            Assert.AreEqual("System.Byte", underlying_type.FullName);
+        }
+    }
 }

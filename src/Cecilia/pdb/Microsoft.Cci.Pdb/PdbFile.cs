@@ -2,13 +2,14 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Microsoft.Cci.Pdb {
+namespace Microsoft.Cci.Pdb
+{
 
-  internal class PdbFile {
+  internal class PdbFile
+  {
 
     /// <summary>
     /// GUID of the Basic source language.
@@ -19,7 +20,8 @@ namespace Microsoft.Cci.Pdb {
     {
     }
 
-    static void LoadInjectedSourceInformation(BitAccess bits, out Guid doctype, out Guid language, out Guid vendor, out Guid checksumAlgo, out byte[] checksum) {
+    static void LoadInjectedSourceInformation(BitAccess bits, out Guid doctype, out Guid language, out Guid vendor, out Guid checksumAlgo, out byte[] checksum)
+    {
       int checksumSize;
       int injectedSourceSize;
       checksum = null;
@@ -31,13 +33,15 @@ namespace Microsoft.Cci.Pdb {
       bits.ReadInt32(out checksumSize);
       bits.ReadInt32(out injectedSourceSize);
 
-      if (checksumSize > 0) {
-          checksum = new byte[checksumSize];
-          bits.ReadBytes(checksum);
+      if (checksumSize > 0)
+      {
+        checksum = new byte[checksumSize];
+        bits.ReadBytes(checksum);
       }
     }
 
-    static Dictionary<string, int> LoadNameIndex(BitAccess bits, out int age, out Guid guid) {
+    static Dictionary<string, int> LoadNameIndex(BitAccess bits, out int age, out Guid guid)
+    {
       Dictionary<string, int> result = new Dictionary<string, int>();
       int ver;
       int sig;
@@ -68,13 +72,16 @@ namespace Microsoft.Cci.Pdb {
 
       BitSet present = new BitSet(bits);
       BitSet deleted = new BitSet(bits);
-      if (!deleted.IsEmpty) {
+      if (!deleted.IsEmpty)
+      {
         throw new PdbDebugException("Unsupported PDB deleted bitset is not empty.");
       }
 
       int j = 0;
-      for (int i = 0; i < max; i++) {
-        if (present.IsSet(i)) {
+      for (int i = 0; i < max; i++)
+      {
+        if (present.IsSet(i))
+        {
           int ns;
           int ni;
           bits.ReadInt32(out ns);
@@ -90,13 +97,15 @@ namespace Microsoft.Cci.Pdb {
           j++;
         }
       }
-      if (j != cnt) {
+      if (j != cnt)
+      {
         throw new PdbDebugException("Count mismatch. ({0} != {1})", j, cnt);
       }
       return result;
     }
 
-    static IntHashTable LoadNameStream(BitAccess bits) {
+    static IntHashTable LoadNameStream(BitAccess bits)
+    {
       IntHashTable ht = new IntHashTable();
 
       uint sig;
@@ -108,7 +117,8 @@ namespace Microsoft.Cci.Pdb {
       int buf;
       bits.ReadInt32(out buf);    //  8..11 Bytes of Strings
 
-      if (sig != 0xeffeeffe || ver != 1) {
+      if (sig != 0xeffeeffe || ver != 1)
+      {
         throw new PdbDebugException("Unsupported Name Stream version. "+
                                             "(sig={0:x8}, ver={1})",
                                     sig, ver);
@@ -122,13 +132,15 @@ namespace Microsoft.Cci.Pdb {
       bits.ReadInt32(out siz);    // n+0..3 Number of hash buckets.
       nxt = bits.Position;
 
-      for (int i = 0; i < siz; i++) {
+      for (int i = 0; i < siz; i++)
+      {
         int ni;
         string name;
 
         bits.ReadInt32(out ni);
 
-        if (ni != 0) {
+        if (ni != 0)
+        {
           int saved = bits.Position;
           bits.Position = beg + ni;
           bits.ReadCString(out name);
@@ -142,10 +154,12 @@ namespace Microsoft.Cci.Pdb {
       return ht;
     }
 
-    private static int FindFunction(PdbFunction[] funcs, ushort sec, uint off) {
-      var match = new PdbFunction {
-         segment = sec,
-         address = off
+    private static int FindFunction(PdbFunction[] funcs, ushort sec, uint off)
+    {
+      var match = new PdbFunction
+      {
+        segment = sec,
+        address = off
       };
 
       return Array.BinarySearch(funcs, match, PdbFunction.byAddress);
@@ -167,15 +181,18 @@ namespace Microsoft.Cci.Pdb {
 
       // Read the lines next.
       bits.Position = begin;
-      while (bits.Position < limit) {
+      while (bits.Position < limit)
+      {
         int sig;
         int siz;
         bits.ReadInt32(out sig);
         bits.ReadInt32(out siz);
         int endSym = bits.Position + siz;
 
-        switch ((DEBUG_S_SUBSECTION)sig) {
-          case DEBUG_S_SUBSECTION.LINES: {
+        switch ((DEBUG_S_SUBSECTION)sig)
+        {
+          case DEBUG_S_SUBSECTION.LINES:
+            {
               CV_LineSection sec;
 
               bits.ReadUInt32(out sec.off);
@@ -185,15 +202,20 @@ namespace Microsoft.Cci.Pdb {
               int funcIndex = FindFunction(funcs, sec.sec, sec.off);
               if (funcIndex < 0) break;
               var func = funcs[funcIndex];
-              if (func.lines == null) {
-                while (funcIndex > 0) {
+              if (func.lines == null)
+              {
+                while (funcIndex > 0)
+                {
                   var f = funcs[funcIndex-1];
                   if (f.lines != null || f.segment != sec.sec || f.address != sec.off) break;
                   func = f;
                   funcIndex--;
                 }
-              } else {
-                while (funcIndex < funcs.Length-1 && func.lines != null) {
+              }
+              else
+              {
+                while (funcIndex < funcs.Length-1 && func.lines != null)
+                {
                   var f = funcs[funcIndex+1];
                   if (f.segment != sec.sec || f.address != sec.off) break;
                   func = f;
@@ -205,7 +227,8 @@ namespace Microsoft.Cci.Pdb {
               // Count the line blocks.
               int begSym = bits.Position;
               int blocks = 0;
-              while (bits.Position < endSym) {
+              while (bits.Position < endSym)
+              {
                 CV_SourceFile file;
                 bits.ReadUInt32(out file.index);
                 bits.ReadUInt32(out file.count);
@@ -219,7 +242,8 @@ namespace Microsoft.Cci.Pdb {
               int block = 0;
 
               bits.Position = begSym;
-              while (bits.Position < endSym) {
+              while (bits.Position < endSym)
+              {
                 CV_SourceFile file;
                 bits.ReadUInt32(out file.index);
                 bits.ReadUInt32(out file.count);
@@ -238,7 +262,8 @@ namespace Microsoft.Cci.Pdb {
                 int plin = bits.Position;
                 int pcol = bits.Position + 8 * (int)file.count;
 
-                for (int i = 0; i < file.count; i++) {
+                for (int i = 0; i < file.count; i++)
+                {
                   CV_Line line;
                   CV_Column column = new CV_Column();
 
@@ -249,7 +274,8 @@ namespace Microsoft.Cci.Pdb {
                   uint lineBegin = line.flags & (uint)CV_Line_Flags.linenumStart;
                   uint delta = (line.flags & (uint)CV_Line_Flags.deltaLineEnd) >> 24;
                   //bool statement = ((line.flags & (uint)CV_Line_Flags.fStatement) == 0);
-                  if ((sec.flags & 1) != 0) {
+                  if ((sec.flags & 1) != 0)
+                  {
                     bits.Position = pcol + 4 * i;
                     bits.ReadUInt16(out column.offColumnStart);
                     bits.ReadUInt16(out column.offColumnEnd);
@@ -284,7 +310,8 @@ namespace Microsoft.Cci.Pdb {
       bits.Position = 0;
       int sig;
       bits.ReadInt32(out sig);
-      if (sig != 4) {
+      if (sig != 4)
+      {
         throw new PdbDebugException("Invalid signature. (sig={0})", sig);
       }
 
@@ -293,13 +320,15 @@ namespace Microsoft.Cci.Pdb {
       funcs = PdbFunction.LoadManagedFunctions(/*info.moduleName,*/
                                                bits, (uint)info.cbSyms,
                                                readStrings);
-      if (funcs != null) {
+      if (funcs != null)
+      {
         bits.Position = info.cbSyms + info.cbOldLines;
         LoadManagedLines(funcs, names, bits, dir, nameIndex, reader,
                          (uint)(info.cbSyms + info.cbOldLines + info.cbLines),
                          sourceCache);
 
-        for (int i = 0; i < funcs.Length; i++) {
+        for (int i = 0; i < funcs.Length; i++)
+        {
           funcList.Add(funcs[i]);
         }
       }
@@ -308,7 +337,8 @@ namespace Microsoft.Cci.Pdb {
     static void LoadDbiStream(BitAccess bits,
                               out DbiModuleInfo[] modules,
                               out DbiDbgHdr header,
-                              bool readStrings) {
+                              bool readStrings)
+    {
       DbiHeader dh = new DbiHeader(bits);
       header = new DbiDbgHdr();
 
@@ -320,18 +350,23 @@ namespace Microsoft.Cci.Pdb {
       // Read gpmod section.
       List<DbiModuleInfo> modList = new List<DbiModuleInfo>();
       int end = bits.Position + dh.gpmodiSize;
-      while (bits.Position < end) {
+      while (bits.Position < end)
+      {
         DbiModuleInfo mod = new DbiModuleInfo(bits, readStrings);
         modList.Add(mod);
       }
-      if (bits.Position != end) {
+      if (bits.Position != end)
+      {
         throw new PdbDebugException("Error reading DBI stream, pos={0} != {1}",
                                     bits.Position, end);
       }
 
-      if (modList.Count > 0) {
+      if (modList.Count > 0)
+      {
         modules = modList.ToArray();
-      } else {
+      }
+      else
+      {
         modules = null;
       }
 
@@ -352,13 +387,15 @@ namespace Microsoft.Cci.Pdb {
 
       // Read the optional header.
       end = bits.Position + dh.dbghdrSize;
-      if (dh.dbghdrSize > 0) {
+      if (dh.dbghdrSize > 0)
+      {
         header = new DbiDbgHdr(bits);
       }
       bits.Position = end;
     }
 
-    internal static PdbInfo LoadFunctions(Stream read) {
+    internal static PdbInfo LoadFunctions(Stream read)
+    {
       PdbInfo pdbInfo = new PdbInfo();
 
       pdbInfo.TokenToSourceMapping = new Dictionary<uint, PdbTokenLine>();
@@ -373,7 +410,8 @@ namespace Microsoft.Cci.Pdb {
       dir.streams[1].Read(reader, bits);
       Dictionary<string, int> nameIndex = LoadNameIndex(bits, out pdbInfo.Age, out pdbInfo.Guid);
       int nameStream;
-      if (!nameIndex.TryGetValue("/NAMES", out nameStream)) {
+      if (!nameIndex.TryGetValue("/NAMES", out nameStream))
+      {
         throw new PdbException("Could not find the '/NAMES' stream: the PDB file may be a public symbol file instead of a private symbol file");
       }
       dir.streams[nameStream].Read(reader, bits);
@@ -382,7 +420,8 @@ namespace Microsoft.Cci.Pdb {
       int srcsrvStream;
       if (!nameIndex.TryGetValue("SRCSRV", out srcsrvStream))
         pdbInfo.SourceServerData = string.Empty;
-      else {
+      else
+      {
         DataStream dataStream = dir.streams[srcsrvStream];
         byte[] bytes = new byte[dataStream.contentSize];
         dataStream.Read(reader, bits);
@@ -390,7 +429,8 @@ namespace Microsoft.Cci.Pdb {
       }
 
       int sourceLinkStream;
-      if (nameIndex.TryGetValue("SOURCELINK", out sourceLinkStream)) {
+      if (nameIndex.TryGetValue("SOURCELINK", out sourceLinkStream))
+      {
         DataStream dataStream = dir.streams[sourceLinkStream];
         pdbInfo.SourceLinkData = new byte[dataStream.contentSize];
         dataStream.Read(reader, bits);
@@ -402,12 +442,16 @@ namespace Microsoft.Cci.Pdb {
 
       List<PdbFunction> funcList = new List<PdbFunction>();
 
-      if (modules != null) {
-        for (int m = 0; m < modules.Length; m++) {
+      if (modules != null)
+      {
+        for (int m = 0; m < modules.Length; m++)
+        {
           var module = modules[m];
-          if (module.stream > 0) {
+          if (module.stream > 0)
+          {
             dir.streams[module.stream].Read(reader, bits);
-            if (module.moduleName == "TokenSourceLineInfo") {
+            if (module.moduleName == "TokenSourceLineInfo")
+            {
               LoadTokenToSourceInfo(bits, module, names, dir, nameIndex, reader, pdbInfo.TokenToSourceMapping, sourceCache);
               continue;
             }
@@ -419,12 +463,14 @@ namespace Microsoft.Cci.Pdb {
       PdbFunction[] funcs = funcList.ToArray();
 
       // After reading the functions, apply the token remapping table if it exists.
-      if (header.snTokenRidMap != 0 && header.snTokenRidMap != 0xffff) {
+      if (header.snTokenRidMap != 0 && header.snTokenRidMap != 0xffff)
+      {
         dir.streams[header.snTokenRidMap].Read(reader, bits);
         uint[] ridMap = new uint[dir.streams[header.snTokenRidMap].Length / 4];
         bits.ReadUInt32(ridMap);
 
-        foreach (PdbFunction func in funcs) {
+        foreach (PdbFunction func in funcs)
+        {
           func.token = 0x06000000 | ridMap[func.token & 0xffffff];
         }
       }
@@ -437,17 +483,20 @@ namespace Microsoft.Cci.Pdb {
     }
 
     private static void LoadTokenToSourceInfo(BitAccess bits, DbiModuleInfo module, IntHashTable names, MsfDirectory dir,
-      Dictionary<string, int> nameIndex, PdbReader reader, Dictionary<uint, PdbTokenLine> tokenToSourceMapping, Dictionary<string,PdbSource> sourceCache) {
+      Dictionary<string, int> nameIndex, PdbReader reader, Dictionary<uint, PdbTokenLine> tokenToSourceMapping, Dictionary<string, PdbSource> sourceCache)
+    {
       bits.Position = 0;
       int sig;
       bits.ReadInt32(out sig);
-      if (sig != 4) {
+      if (sig != 4)
+      {
         throw new PdbDebugException("Invalid signature. (sig={0})", sig);
       }
 
       bits.Position = 4;
 
-      while (bits.Position < module.cbSyms) {
+      while (bits.Position < module.cbSyms)
+      {
         ushort siz;
         ushort rec;
 
@@ -457,7 +506,8 @@ namespace Microsoft.Cci.Pdb {
         bits.Position = star;
         bits.ReadUInt16(out rec);
 
-        switch ((SYM)rec) {
+        switch ((SYM)rec)
+        {
           case SYM.S_OEM:
             OemSymbol oem;
 
@@ -465,9 +515,11 @@ namespace Microsoft.Cci.Pdb {
             bits.ReadUInt32(out oem.typind);
             // internal byte[]   rgl;        // user data, force 4-byte alignment
 
-            if (oem.idOem == PdbFunction.msilMetaData) {
+            if (oem.idOem == PdbFunction.msilMetaData)
+            {
               string name = bits.ReadString();
-              if (name == "TSLI") {
+              if (name == "TSLI")
+              {
                 uint token;
                 uint file_id;
                 uint line;
@@ -483,14 +535,17 @@ namespace Microsoft.Cci.Pdb {
                 PdbTokenLine tokenLine;
                 if (!tokenToSourceMapping.TryGetValue(token, out tokenLine))
                   tokenToSourceMapping.Add(token, new PdbTokenLine(token, file_id, line, column, endLine, endColumn));
-                else {
+                else
+                {
                   while (tokenLine.nextLine != null) tokenLine = tokenLine.nextLine;
                   tokenLine.nextLine = new PdbTokenLine(token, file_id, line, column, endLine, endColumn);
                 }
               }
               bits.Position = stop;
               break;
-            } else {
+            }
+            else
+            {
               throw new PdbDebugException("OEM section: guid={0} ti={1}",
                                           oem.idOem, oem.typind);
               // bits.Position = stop;
@@ -511,7 +566,8 @@ namespace Microsoft.Cci.Pdb {
       bits.Position = module.cbSyms + module.cbOldLines;
       int limit = module.cbSyms + module.cbOldLines + module.cbLines;
       IntHashTable sourceFiles = ReadSourceFileInfo(bits, (uint)limit, names, dir, nameIndex, reader, sourceCache);
-      foreach (var tokenLine in tokenToSourceMapping.Values) {
+      foreach (var tokenLine in tokenToSourceMapping.Values)
+      {
         tokenLine.sourceFile = (PdbSource)sourceFiles[(int)tokenLine.file_id];
       }
 
@@ -525,7 +581,8 @@ namespace Microsoft.Cci.Pdb {
       IntHashTable checks = new IntHashTable();
 
       int begin = bits.Position;
-      while (bits.Position < limit) {
+      while (bits.Position < limit)
+      {
         int sig;
         int siz;
         bits.ReadInt32(out sig);
@@ -533,9 +590,11 @@ namespace Microsoft.Cci.Pdb {
         int place = bits.Position;
         int endSym = bits.Position + siz;
 
-        switch ((DEBUG_S_SUBSECTION)sig) {
+        switch ((DEBUG_S_SUBSECTION)sig)
+        {
           case DEBUG_S_SUBSECTION.FILECHKSMS:
-            while (bits.Position < endSym) {
+            while (bits.Position < endSym)
+            {
               CV_FileCheckSum chk;
 
               int ni = bits.Position - place;

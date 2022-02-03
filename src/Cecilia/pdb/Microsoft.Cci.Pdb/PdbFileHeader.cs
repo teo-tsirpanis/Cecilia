@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 
-namespace Microsoft.Cci.Pdb {
-  internal class PdbFileHeader {
+namespace Microsoft.Cci.Pdb
+{
+  internal class PdbFileHeader
+  {
     private readonly byte[] windowsPdbMagic = new byte[32] {
                   0x4D, 0x69, 0x63, 0x72, 0x6F, 0x73, 0x6F, 0x66, // "Microsof"
                   0x74, 0x20, 0x43, 0x2F, 0x43, 0x2B, 0x2B, 0x20, // "t C/C++ "
@@ -25,7 +25,8 @@ namespace Microsoft.Cci.Pdb {
     //  this.pageSize = pageSize;
     //}
 
-    internal PdbFileHeader(Stream reader, BitAccess bits) {
+    internal PdbFileHeader(Stream reader, BitAccess bits)
+    {
       bits.MinCapacity(56);
       reader.Seek(0, SeekOrigin.Begin);
       bits.FillBuffer(reader, 52);

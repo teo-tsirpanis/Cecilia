@@ -1,124 +1,124 @@
+using Cecilia.Rocks;
+using NUnit.Framework;
 using System;
 
-using Cecilia.Rocks;
+namespace Cecilia.Tests
+{
 
-using NUnit.Framework;
+    [TestFixture]
+    public class TypeReferenceRocksTests
+    {
 
-namespace Cecilia.Tests {
+        [Test]
+        public void MakeArrayType()
+        {
+            var @string = GetTypeReference(typeof(string));
 
-	[TestFixture]
-	public class TypeReferenceRocksTests {
+            var string_array = @string.MakeArrayType();
 
-		[Test]
-		public void MakeArrayType ()
-		{
-			var @string = GetTypeReference (typeof (string));
+            Assert.IsInstanceOf(typeof(ArrayType), string_array);
+            Assert.AreEqual(1, string_array.Rank);
+        }
 
-			var string_array = @string.MakeArrayType ();
+        [Test]
+        public void MakeArrayTypeRank()
+        {
+            var @string = GetTypeReference(typeof(string));
 
-			Assert.IsInstanceOf (typeof (ArrayType), string_array);
-			Assert.AreEqual (1, string_array.Rank);
-		}
+            var string_array = @string.MakeArrayType(3);
 
-		[Test]
-		public void MakeArrayTypeRank ()
-		{
-			var @string = GetTypeReference (typeof (string));
+            Assert.IsInstanceOf(typeof(ArrayType), string_array);
+            Assert.AreEqual(3, string_array.Rank);
+        }
 
-			var string_array = @string.MakeArrayType (3);
+        [Test]
+        public void MakePointerType()
+        {
+            var @string = GetTypeReference(typeof(string));
 
-			Assert.IsInstanceOf (typeof (ArrayType), string_array);
-			Assert.AreEqual (3, string_array.Rank);
-		}
+            var string_ptr = @string.MakePointerType();
 
-		[Test]
-		public void MakePointerType ()
-		{
-			var @string = GetTypeReference (typeof (string));
+            Assert.IsInstanceOf(typeof(PointerType), string_ptr);
+        }
 
-			var string_ptr = @string.MakePointerType ();
+        [Test]
+        public void MakeByReferenceType()
+        {
+            var @string = GetTypeReference(typeof(string));
 
-			Assert.IsInstanceOf (typeof (PointerType), string_ptr);
-		}
+            var string_byref = @string.MakeByReferenceType();
 
-		[Test]
-		public void MakeByReferenceType ()
-		{
-			var @string = GetTypeReference (typeof (string));
+            Assert.IsInstanceOf(typeof(ByReferenceType), string_byref);
+        }
 
-			var string_byref = @string.MakeByReferenceType ();
+        class OptionalModifier { }
 
-			Assert.IsInstanceOf (typeof (ByReferenceType), string_byref);
-		}
+        [Test]
+        public void MakeOptionalModifierType()
+        {
+            var @string = GetTypeReference(typeof(string));
+            var modopt = GetTypeReference(typeof(OptionalModifier));
 
-		class OptionalModifier {}
+            var string_modopt = @string.MakeOptionalModifierType(modopt);
 
-		[Test]
-		public void MakeOptionalModifierType ()
-		{
-			var @string = GetTypeReference (typeof (string));
-			var modopt = GetTypeReference (typeof (OptionalModifier));
+            Assert.IsInstanceOf(typeof(OptionalModifierType), string_modopt);
+            Assert.AreEqual(modopt, string_modopt.ModifierType);
+        }
 
-			var string_modopt = @string.MakeOptionalModifierType (modopt);
+        class RequiredModifier { }
 
-			Assert.IsInstanceOf (typeof (OptionalModifierType), string_modopt);
-			Assert.AreEqual (modopt, string_modopt.ModifierType);
-		}
+        [Test]
+        public void MakeRequiredModifierType()
+        {
+            var @string = GetTypeReference(typeof(string));
+            var modreq = GetTypeReference(typeof(RequiredModifierType));
 
-		class RequiredModifier { }
+            var string_modreq = @string.MakeRequiredModifierType(modreq);
 
-		[Test]
-		public void MakeRequiredModifierType ()
-		{
-			var @string = GetTypeReference (typeof (string));
-			var modreq = GetTypeReference (typeof (RequiredModifierType));
+            Assert.IsInstanceOf(typeof(RequiredModifierType), string_modreq);
+            Assert.AreEqual(modreq, string_modreq.ModifierType);
+        }
 
-			var string_modreq = @string.MakeRequiredModifierType (modreq);
+        [Test]
+        public void MakePinnedType()
+        {
+            var byte_array = GetTypeReference(typeof(byte[]));
 
-			Assert.IsInstanceOf (typeof (RequiredModifierType), string_modreq);
-			Assert.AreEqual (modreq, string_modreq.ModifierType);
-		}
+            var pinned_byte_array = byte_array.MakePinnedType();
 
-		[Test]
-		public void MakePinnedType ()
-		{
-			var byte_array = GetTypeReference (typeof (byte []));
+            Assert.IsInstanceOf(typeof(PinnedType), pinned_byte_array);
+        }
 
-			var pinned_byte_array = byte_array.MakePinnedType ();
+        [Test]
+        public void MakeSentinelType()
+        {
+            var @string = GetTypeReference(typeof(string));
 
-			Assert.IsInstanceOf (typeof (PinnedType), pinned_byte_array);
-		}
+            var string_sentinel = @string.MakeSentinelType();
 
-		[Test]
-		public void MakeSentinelType ()
-		{
-			var @string = GetTypeReference (typeof (string));
+            Assert.IsInstanceOf(typeof(SentinelType), string_sentinel);
+        }
 
-			var string_sentinel = @string.MakeSentinelType ();
+        class Foo<T1, T2> { }
 
-			Assert.IsInstanceOf (typeof (SentinelType), string_sentinel);
-		}
+        [Test]
+        public void MakeGenericInstanceType()
+        {
+            var foo = GetTypeReference(typeof(Foo<,>));
+            var @string = GetTypeReference(typeof(string));
+            var @int = GetTypeReference(typeof(int));
 
-		class Foo<T1, T2> {}
+            var foo_string_int = foo.MakeGenericInstanceType(@string, @int);
 
-		[Test]
-		public void MakeGenericInstanceType ()
-		{
-			var foo = GetTypeReference (typeof (Foo<,>));
-			var @string = GetTypeReference (typeof (string));
-			var @int = GetTypeReference (typeof (int));
+            Assert.IsInstanceOf(typeof(GenericInstanceType), foo_string_int);
+            Assert.AreEqual(2, foo_string_int.GenericArguments.Count);
+            Assert.AreEqual(@string, foo_string_int.GenericArguments[0]);
+            Assert.AreEqual(@int, foo_string_int.GenericArguments[1]);
+        }
 
-			var foo_string_int = foo.MakeGenericInstanceType (@string, @int);
-
-			Assert.IsInstanceOf (typeof (GenericInstanceType), foo_string_int);
-			Assert.AreEqual (2, foo_string_int.GenericArguments.Count);
-			Assert.AreEqual (@string, foo_string_int.GenericArguments [0]);
-			Assert.AreEqual (@int, foo_string_int.GenericArguments [1]);
-		}
-
-		static TypeReference GetTypeReference (Type type)
-		{
-			return ModuleDefinition.ReadModule (typeof (TypeReferenceRocksTests).Module.FullyQualifiedName).ImportReference (type);
-		}
-	}
+        static TypeReference GetTypeReference(Type type)
+        {
+            return ModuleDefinition.ReadModule(typeof(TypeReferenceRocksTests).Module.FullyQualifiedName).ImportReference(type);
+        }
+    }
 }

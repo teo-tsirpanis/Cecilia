@@ -3,8 +3,10 @@
 
 using System;
 
-namespace Microsoft.Cci.Pdb {
-  internal class PdbSource {
+namespace Microsoft.Cci.Pdb
+{
+  internal class PdbSource
+  {
     //internal uint index;
     internal string name;
     internal Guid doctype;
@@ -13,7 +15,8 @@ namespace Microsoft.Cci.Pdb {
     internal Guid checksumAlgorithm;
     internal byte[] checksum;
 
-    internal PdbSource(/*uint index, */string name, Guid doctype, Guid language, Guid vendor, Guid checksumAlgorithm, byte[] checksum) {
+    internal PdbSource(/*uint index, */string name, Guid doctype, Guid language, Guid vendor, Guid checksumAlgorithm, byte[] checksum)
+    {
       //this.index = index;
       this.name = name;
       this.doctype = doctype;

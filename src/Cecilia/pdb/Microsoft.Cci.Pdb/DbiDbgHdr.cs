@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace Microsoft.Cci.Pdb {
-  internal struct DbiDbgHdr {
-    internal DbiDbgHdr(BitAccess bits) {
+namespace Microsoft.Cci.Pdb
+{
+  internal struct DbiDbgHdr
+  {
+    internal DbiDbgHdr(BitAccess bits)
+    {
       bits.ReadUInt16(out snFPO);
       bits.ReadUInt16(out snException);
       bits.ReadUInt16(out snFixup);

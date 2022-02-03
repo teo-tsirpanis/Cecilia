@@ -1,35 +1,41 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.IO;
-
-namespace Microsoft.Cci.Pdb {
-  internal class DataStream {
-    internal DataStream() {
+namespace Microsoft.Cci.Pdb
+{
+  internal class DataStream
+  {
+    internal DataStream()
+    {
     }
 
-    internal DataStream(int contentSize, BitAccess bits, int count) {
+    internal DataStream(int contentSize, BitAccess bits, int count)
+    {
       this.contentSize = contentSize;
-      if (count > 0) {
+      if (count > 0)
+      {
         this.pages = new int[count];
         bits.ReadInt32(this.pages);
       }
     }
 
-    internal void Read(PdbReader reader, BitAccess bits) {
+    internal void Read(PdbReader reader, BitAccess bits)
+    {
       bits.MinCapacity(contentSize);
       Read(reader, 0, bits.Buffer, 0, contentSize);
     }
 
     internal void Read(PdbReader reader, int position,
-                     byte[] bytes, int offset, int data) {
-      if (position + data > contentSize) {
+                     byte[] bytes, int offset, int data)
+    {
+      if (position + data > contentSize)
+      {
         throw new PdbException("DataStream can't read off end of stream. " +
                                        "(pos={0},siz={1})",
                                position, data);
       }
-      if (position == contentSize) {
+      if (position == contentSize)
+      {
         return;
       }
 
@@ -38,9 +44,11 @@ namespace Microsoft.Cci.Pdb {
       int rema = position % reader.pageSize;
 
       // First get remained of first page.
-      if (rema != 0) {
+      if (rema != 0)
+      {
         int todo = reader.pageSize - rema;
-        if (todo > left) {
+        if (todo > left)
+        {
           todo = left;
         }
 
@@ -53,9 +61,11 @@ namespace Microsoft.Cci.Pdb {
       }
 
       // Now get the remaining pages.
-      while (left > 0) {
+      while (left > 0)
+      {
         int todo = reader.pageSize;
-        if (todo > left) {
+        if (todo > left)
+        {
           todo = left;
         }
 
@@ -90,7 +100,8 @@ namespace Microsoft.Cci.Pdb {
     //  get { return pages == null ? 0 : pages.Length; }
     //}
 
-    internal int Length {
+    internal int Length
+    {
       get { return contentSize; }
     }
 

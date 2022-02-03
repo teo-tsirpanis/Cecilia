@@ -8,17 +8,17 @@
 // Licensed under the MIT/X11 license.
 //
 
-using System;
-
 using RVA = System.UInt32;
 
-namespace Cecilia.PE {
+namespace Cecilia.PE
+{
 
-	sealed class Section {
-		public string Name;
-		public RVA VirtualAddress;
-		public uint VirtualSize;
-		public uint SizeOfRawData;
-		public uint PointerToRawData;
-	}
+    sealed class Section
+    {
+        public string Name;
+        public RVA VirtualAddress;
+        public uint VirtualSize;
+        public uint SizeOfRawData;
+        public uint PointerToRawData;
+    }
 }

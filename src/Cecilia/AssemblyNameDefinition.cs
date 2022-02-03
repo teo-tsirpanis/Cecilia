@@ -10,23 +10,26 @@
 
 using System;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class AssemblyNameDefinition : AssemblyNameReference {
+    public sealed class AssemblyNameDefinition : AssemblyNameReference
+    {
 
-		public override byte [] Hash {
-			get { return Array.Empty<byte>(); }
-		}
+        public override byte[] Hash
+        {
+            get { return Array.Empty<byte>(); }
+        }
 
-		internal AssemblyNameDefinition ()
-		{
-			this.token = new MetadataToken (TokenType.Assembly, 1);
-		}
+        internal AssemblyNameDefinition()
+        {
+            this.token = new MetadataToken(TokenType.Assembly, 1);
+        }
 
-		public AssemblyNameDefinition (string name, Version version)
-			: base (name, version)
-		{
-			this.token = new MetadataToken (TokenType.Assembly, 1);
-		}
-	}
+        public AssemblyNameDefinition(string name, Version version)
+            : base(name, version)
+        {
+            this.token = new MetadataToken(TokenType.Assembly, 1);
+        }
+    }
 }

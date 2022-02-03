@@ -1,16 +1,18 @@
 ﻿using System.Reflection;
 
-namespace Cecilia.Tests {
+namespace Cecilia.Tests
+{
 
-	public class LoadAssemblyDefinitionForTestsBaseSimple {
+    public class LoadAssemblyDefinitionForTestsBaseSimple
+    {
 
-		protected AssemblyDefinition _assembly;
-		protected AssemblyDefinition _mscorlib;
+        protected AssemblyDefinition _assembly;
+        protected AssemblyDefinition _mscorlib;
 
-		public void SetupAssemblyDefinitions (Assembly testAssembly)
-		{
-			_assembly = AssemblyDefinition.ReadAssembly (testAssembly.Location);
-			_mscorlib = _assembly.MainModule.TypeSystem.Object.Resolve ().Module.Assembly;
-		}
-	}
+        public void SetupAssemblyDefinitions(Assembly testAssembly)
+        {
+            _assembly = AssemblyDefinition.ReadAssembly(testAssembly.Location);
+            _mscorlib = _assembly.MainModule.TypeSystem.Object.Resolve().Module.Assembly;
+        }
+    }
 }

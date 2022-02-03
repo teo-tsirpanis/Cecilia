@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-
-namespace Microsoft.Cci.Pdb {
-  internal class DbiModuleInfo {
-    internal DbiModuleInfo(BitAccess bits, bool readStrings) {
+namespace Microsoft.Cci.Pdb
+{
+  internal class DbiModuleInfo
+  {
+    internal DbiModuleInfo(BitAccess bits, bool readStrings)
+    {
       bits.ReadInt32(out opened);
       new DbiSecCon(bits);
       bits.ReadUInt16(out flags);
@@ -18,10 +19,13 @@ namespace Microsoft.Cci.Pdb {
       bits.ReadUInt32(out offsets);
       bits.ReadInt32(out niSource);
       bits.ReadInt32(out niCompiler);
-      if (readStrings) {
+      if (readStrings)
+      {
         bits.ReadCString(out moduleName);
         bits.ReadCString(out objectName);
-      } else {
+      }
+      else
+      {
         bits.SkipCString(out moduleName);
         bits.SkipCString(out objectName);
       }

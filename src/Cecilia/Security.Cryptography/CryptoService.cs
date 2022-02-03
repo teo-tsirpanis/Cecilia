@@ -8,197 +8,205 @@
 // Licensed under the MIT/X11 license.
 //
 
+using Cecilia.PE;
+using Mono.Security.Cryptography;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 
-using Mono.Security.Cryptography;
+namespace Cecilia
+{
 
-using Cecilia.PE;
+    // Most of this code has been adapted
+    // from Jeroen Frijters' fantastic work
+    // in IKVM.Reflection.Emit. Thanks!
 
-namespace Cecilia {
+    static class CryptoService
+    {
 
-	// Most of this code has been adapted
-	// from Jeroen Frijters' fantastic work
-	// in IKVM.Reflection.Emit. Thanks!
+        public static byte[] GetPublicKey(WriterParameters parameters)
+        {
+            using (var rsa = parameters.CreateRSA())
+            {
+                var cspBlob = CryptoConvert.ToCapiPublicKeyBlob(rsa);
+                var publicKey = new byte[12 + cspBlob.Length];
+                Buffer.BlockCopy(cspBlob, 0, publicKey, 12, cspBlob.Length);
+                // The first 12 bytes are documented at:
+                // http://msdn.microsoft.com/library/en-us/cprefadd/html/grfungethashfromfile.asp
+                // ALG_ID - Signature
+                publicKey[1] = 36;
+                // ALG_ID - Hash
+                publicKey[4] = 4;
+                publicKey[5] = 128;
+                // Length of Public Key (in bytes)
+                publicKey[8] = (byte)(cspBlob.Length >> 0);
+                publicKey[9] = (byte)(cspBlob.Length >> 8);
+                publicKey[10] = (byte)(cspBlob.Length >> 16);
+                publicKey[11] = (byte)(cspBlob.Length >> 24);
+                return publicKey;
+            }
+        }
 
-	static class CryptoService {
+        public static void StrongName(Stream stream, ImageWriter writer, WriterParameters parameters)
+        {
+            int strong_name_pointer;
 
-		public static byte [] GetPublicKey (WriterParameters parameters)
-		{
-			using (var rsa = parameters.CreateRSA ()) {
-				var cspBlob = CryptoConvert.ToCapiPublicKeyBlob (rsa);
-				var publicKey = new byte [12 + cspBlob.Length];
-				Buffer.BlockCopy (cspBlob, 0, publicKey, 12, cspBlob.Length);
-				// The first 12 bytes are documented at:
-				// http://msdn.microsoft.com/library/en-us/cprefadd/html/grfungethashfromfile.asp
-				// ALG_ID - Signature
-				publicKey [1] = 36;
-				// ALG_ID - Hash
-				publicKey [4] = 4;
-				publicKey [5] = 128;
-				// Length of Public Key (in bytes)
-				publicKey [8] = (byte) (cspBlob.Length >> 0);
-				publicKey [9] = (byte) (cspBlob.Length >> 8);
-				publicKey [10] = (byte) (cspBlob.Length >> 16);
-				publicKey [11] = (byte) (cspBlob.Length >> 24);
-				return publicKey;
-			}
-		}
+            var strong_name = CreateStrongName(parameters, HashStream(stream, writer, out strong_name_pointer));
+            PatchStrongName(stream, strong_name_pointer, strong_name);
+        }
 
-		public static void StrongName (Stream stream, ImageWriter writer, WriterParameters parameters)
-		{
-			int strong_name_pointer;
+        static void PatchStrongName(Stream stream, int strong_name_pointer, byte[] strong_name)
+        {
+            stream.Seek(strong_name_pointer, SeekOrigin.Begin);
+            stream.Write(strong_name, 0, strong_name.Length);
+        }
 
-			var strong_name = CreateStrongName (parameters, HashStream (stream, writer, out strong_name_pointer));
-			PatchStrongName (stream, strong_name_pointer, strong_name);
-		}
+        static byte[] CreateStrongName(WriterParameters parameters, byte[] hash)
+        {
+            const string hash_algo = "SHA1";
 
-		static void PatchStrongName (Stream stream, int strong_name_pointer, byte [] strong_name)
-		{
-			stream.Seek (strong_name_pointer, SeekOrigin.Begin);
-			stream.Write (strong_name, 0, strong_name.Length);
-		}
+            using (var rsa = parameters.CreateRSA())
+            {
+                var formatter = new RSAPKCS1SignatureFormatter(rsa);
+                formatter.SetHashAlgorithm(hash_algo);
 
-		static byte [] CreateStrongName (WriterParameters parameters, byte [] hash)
-		{
-			const string hash_algo = "SHA1";
+                byte[] signature = formatter.CreateSignature(hash);
+                Array.Reverse(signature);
 
-			using (var rsa = parameters.CreateRSA ()) {
-				var formatter = new RSAPKCS1SignatureFormatter (rsa);
-				formatter.SetHashAlgorithm (hash_algo);
+                return signature;
+            }
+        }
 
-				byte [] signature = formatter.CreateSignature (hash);
-				Array.Reverse (signature);
+        static byte[] HashStream(Stream stream, ImageWriter writer, out int strong_name_pointer)
+        {
+            const int buffer_size = 8192;
 
-				return signature;
-			}
-		}
+            var text = writer.text;
+            var header_size = (int)writer.GetHeaderSize();
+            var text_section_pointer = (int)text.PointerToRawData;
+            var strong_name_directory = writer.GetStrongNameSignatureDirectory();
 
-		static byte [] HashStream (Stream stream, ImageWriter writer, out int strong_name_pointer)
-		{
-			const int buffer_size = 8192;
+            if (strong_name_directory.Size == 0)
+                throw new InvalidOperationException();
 
-			var text = writer.text;
-			var header_size = (int) writer.GetHeaderSize ();
-			var text_section_pointer = (int) text.PointerToRawData;
-			var strong_name_directory = writer.GetStrongNameSignatureDirectory ();
+            strong_name_pointer = (int)(text_section_pointer
+                + (strong_name_directory.VirtualAddress - text.VirtualAddress));
+            var strong_name_length = (int)strong_name_directory.Size;
 
-			if (strong_name_directory.Size == 0)
-				throw new InvalidOperationException ();
+            var sha1 = new SHA1Managed();
+            var buffer = new byte[buffer_size];
+            using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                CopyStreamChunk(stream, crypto_stream, buffer, header_size);
 
-			strong_name_pointer = (int) (text_section_pointer
-				+ (strong_name_directory.VirtualAddress - text.VirtualAddress));
-			var strong_name_length = (int) strong_name_directory.Size;
+                stream.Seek(text_section_pointer, SeekOrigin.Begin);
+                CopyStreamChunk(stream, crypto_stream, buffer, (int)strong_name_pointer - text_section_pointer);
 
-			var sha1 = new SHA1Managed ();
-			var buffer = new byte [buffer_size];
-			using (var crypto_stream = new CryptoStream (Stream.Null, sha1, CryptoStreamMode.Write)) {
-				stream.Seek (0, SeekOrigin.Begin);
-				CopyStreamChunk (stream, crypto_stream, buffer, header_size);
+                stream.Seek(strong_name_length, SeekOrigin.Current);
+                CopyStreamChunk(stream, crypto_stream, buffer, (int)(stream.Length - (strong_name_pointer + strong_name_length)));
+            }
 
-				stream.Seek (text_section_pointer, SeekOrigin.Begin);
-				CopyStreamChunk (stream, crypto_stream, buffer, (int) strong_name_pointer - text_section_pointer);
+            return sha1.Hash;
+        }
 
-				stream.Seek (strong_name_length, SeekOrigin.Current);
-				CopyStreamChunk (stream, crypto_stream, buffer, (int) (stream.Length - (strong_name_pointer + strong_name_length)));
-			}
+        public static void CopyStreamChunk(Stream stream, Stream dest_stream, byte[] buffer, int length)
+        {
+            while (length > 0)
+            {
+                int read = stream.Read(buffer, 0, System.Math.Min(buffer.Length, length));
+                dest_stream.Write(buffer, 0, read);
+                length -= read;
+            }
+        }
 
-			return sha1.Hash;
-		}
+        public static byte[] ComputeHash(string file)
+        {
+            if (!File.Exists(file))
+                return Array.Empty<byte>();
 
-		public static void CopyStreamChunk (Stream stream, Stream dest_stream, byte [] buffer, int length)
-		{
-			while (length > 0) {
-				int read = stream.Read (buffer, 0, System.Math.Min (buffer.Length, length));
-				dest_stream.Write (buffer, 0, read);
-				length -= read;
-			}
-		}
+            using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
+                return ComputeHash(stream);
+        }
 
-		public static byte [] ComputeHash (string file)
-		{
-			if (!File.Exists (file))
-				return Array.Empty<byte>();
+        public static byte[] ComputeHash(Stream stream)
+        {
+            const int buffer_size = 8192;
 
-			using (var stream = new FileStream (file, FileMode.Open, FileAccess.Read, FileShare.Read))
-				return ComputeHash (stream);
-		}
+            var sha1 = new SHA1Managed();
+            var buffer = new byte[buffer_size];
 
-		public static byte [] ComputeHash (Stream stream)
-		{
-			const int buffer_size = 8192;
+            using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
+                CopyStreamChunk(stream, crypto_stream, buffer, (int)stream.Length);
 
-			var sha1 = new SHA1Managed ();
-			var buffer = new byte [buffer_size];
+            return sha1.Hash;
+        }
 
-			using (var crypto_stream = new CryptoStream (Stream.Null, sha1, CryptoStreamMode.Write))
-				CopyStreamChunk (stream, crypto_stream, buffer, (int) stream.Length);
+        public static byte[] ComputeHash(params ByteBuffer[] buffers)
+        {
+            var sha1 = new SHA1Managed();
 
-			return sha1.Hash;
-		}
+            using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
+            {
+                for (int i = 0; i < buffers.Length; i++)
+                {
+                    crypto_stream.Write(buffers[i].buffer, 0, buffers[i].length);
+                }
+            }
 
-		public static byte [] ComputeHash (params ByteBuffer [] buffers)
-		{
-			var sha1 = new SHA1Managed ();
+            return sha1.Hash;
+        }
 
-			using (var crypto_stream = new CryptoStream (Stream.Null, sha1, CryptoStreamMode.Write)) {
-				for (int i = 0; i < buffers.Length; i++) {
-					crypto_stream.Write (buffers [i].buffer, 0, buffers [i].length);
-				}
-			}
+        public static Guid ComputeGuid(byte[] hash)
+        {
+            // From corefx/src/System.Reflection.Metadata/src/System/Reflection/Metadata/BlobContentId.cs
+            var guid = new byte[16];
+            Buffer.BlockCopy(hash, 0, guid, 0, 16);
 
-			return sha1.Hash;
-		}
+            // modify the guid data so it decodes to the form of a "random" guid ala rfc4122
+            guid[7] = (byte)((guid[7] & 0x0f) | (4 << 4));
+            guid[8] = (byte)((guid[8] & 0x3f) | (2 << 6));
 
-		public static Guid ComputeGuid (byte [] hash)
-		{
-			// From corefx/src/System.Reflection.Metadata/src/System/Reflection/Metadata/BlobContentId.cs
-			var guid = new byte [16];
-			Buffer.BlockCopy (hash, 0, guid, 0, 16);
+            return new Guid(guid);
+        }
+    }
 
-			// modify the guid data so it decodes to the form of a "random" guid ala rfc4122
-			guid [7] = (byte) ((guid [7] & 0x0f) | (4 << 4));
-			guid [8] = (byte) ((guid [8] & 0x3f) | (2 << 6));
+    static partial class Mixin
+    {
 
-			return new Guid (guid);
-		}
-	}
+        public static RSA CreateRSA(this WriterParameters writer_parameters)
+        {
+            byte[] key;
+            string key_container;
 
-	static partial class Mixin {
+            if (writer_parameters.StrongNameKeyBlob != null)
+                return CryptoConvert.FromCapiKeyBlob(writer_parameters.StrongNameKeyBlob);
 
-		public static RSA CreateRSA (this WriterParameters writer_parameters)
-		{
-			byte [] key;
-			string key_container;
+            if (writer_parameters.StrongNameKeyContainer != null)
+                key_container = writer_parameters.StrongNameKeyContainer;
+            else if (!TryGetKeyContainer(writer_parameters.StrongNameKeyPair, out key, out key_container))
+                return CryptoConvert.FromCapiKeyBlob(key);
 
-			if (writer_parameters.StrongNameKeyBlob != null)
-				return CryptoConvert.FromCapiKeyBlob (writer_parameters.StrongNameKeyBlob);
+            var parameters = new CspParameters
+            {
+                Flags = CspProviderFlags.UseMachineKeyStore,
+                KeyContainerName = key_container,
+                KeyNumber = 2,
+            };
 
-			if (writer_parameters.StrongNameKeyContainer != null)
-				key_container = writer_parameters.StrongNameKeyContainer;
-			else if (!TryGetKeyContainer (writer_parameters.StrongNameKeyPair, out key, out key_container))
-				return CryptoConvert.FromCapiKeyBlob (key);
+            return new RSACryptoServiceProvider(parameters);
+        }
 
-			var parameters = new CspParameters {
-				Flags = CspProviderFlags.UseMachineKeyStore,
-				KeyContainerName = key_container,
-				KeyNumber = 2,
-			};
+        static bool TryGetKeyContainer(ISerializable key_pair, out byte[] key, out string key_container)
+        {
+            var info = new SerializationInfo(typeof(StrongNameKeyPair), new FormatterConverter());
+            key_pair.GetObjectData(info, new StreamingContext());
 
-			return new RSACryptoServiceProvider (parameters);
-		}
-
-		static bool TryGetKeyContainer (ISerializable key_pair, out byte [] key, out string key_container)
-		{
-			var info = new SerializationInfo (typeof (StrongNameKeyPair), new FormatterConverter ());
-			key_pair.GetObjectData (info, new StreamingContext ());
-
-			key = (byte []) info.GetValue ("_keyPairArray", typeof (byte []));
-			key_container = info.GetString ("_keyPairContainer");
-			return key_container != null;
-		}
-	}
+            key = (byte[])info.GetValue("_keyPairArray", typeof(byte[]));
+            key_container = info.GetString("_keyPairContainer");
+            return key_container != null;
+        }
+    }
 }

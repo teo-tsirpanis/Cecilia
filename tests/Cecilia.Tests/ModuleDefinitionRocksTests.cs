@@ -1,29 +1,30 @@
+using Cecilia.Rocks;
+using NUnit.Framework;
 using System.Linq;
 
-using NUnit.Framework;
+namespace Cecilia.Tests
+{
 
-using Cecilia.Rocks;
+    [TestFixture]
+    public class ModuleDefinitionRocksTests : BaseTestFixture
+    {
 
-namespace Cecilia.Tests {
+        [Test]
+        public void GetAllTypesTest()
+        {
+            TestCSharp("Types.cs", module =>
+            {
+                var sequence = new[] {
+                module.GetType ("<Module>"),
+                module.GetType ("Foo"),
+                module.GetType ("Foo/Bar"),
+                module.GetType ("Foo/Gazonk"),
+                module.GetType ("Foo/Gazonk/Baz"),
+                module.GetType ("Pan"),
+            };
 
-	[TestFixture]
-	public class ModuleDefinitionRocksTests : BaseTestFixture {
-
-		[Test]
-		public void GetAllTypesTest ()
-		{
-			TestCSharp ("Types.cs", module => {
-				var sequence = new [] {
-				module.GetType ("<Module>"),
-				module.GetType ("Foo"),
-				module.GetType ("Foo/Bar"),
-				module.GetType ("Foo/Gazonk"),
-				module.GetType ("Foo/Gazonk/Baz"),
-				module.GetType ("Pan"),
-			};
-
-				Assert.IsTrue (sequence.SequenceEqual (module.GetAllTypes ()));
-			});
-		}
-	}
+                Assert.IsTrue(sequence.SequenceEqual(module.GetAllTypes()));
+            });
+        }
+    }
 }

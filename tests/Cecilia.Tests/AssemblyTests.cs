@@ -1,109 +1,113 @@
+using Cecilia.Cil;
+using NUnit.Framework;
 using System;
 
-using Cecilia;
-using Cecilia.Cil;
+namespace Cecilia.Tests
+{
 
-using NUnit.Framework;
+    [TestFixture]
+    public class AssemblyTests : BaseTestFixture
+    {
 
-namespace Cecilia.Tests {
+        [Test]
+        public void Name()
+        {
+            TestModule("hello.exe", module =>
+            {
+                var name = module.Assembly.Name;
 
-	[TestFixture]
-	public class AssemblyTests : BaseTestFixture {
+                Assert.IsNotNull(name);
 
-		[Test]
-		public void Name ()
-		{
-			TestModule ("hello.exe", module => {
-				var name = module.Assembly.Name;
+                Assert.AreEqual("hello", name.Name);
+                Assert.AreEqual("", name.Culture);
+                Assert.AreEqual(new Version(0, 0, 0, 0), name.Version);
+                Assert.AreEqual(AssemblyHashAlgorithm.SHA1, name.HashAlgorithm);
+            });
+        }
 
-				Assert.IsNotNull (name);
+        [Test]
+        public void ParseLowerCaseNameParts()
+        {
+            var name = AssemblyNameReference.Parse("Foo, version=2.0.0.0, culture=fr-FR");
+            Assert.AreEqual("Foo", name.Name);
+            Assert.AreEqual(2, name.Version.Major);
+            Assert.AreEqual(0, name.Version.Minor);
+            Assert.AreEqual("fr-FR", name.Culture);
+        }
 
-				Assert.AreEqual ("hello", name.Name);
-				Assert.AreEqual ("", name.Culture);
-				Assert.AreEqual (new Version (0, 0, 0, 0), name.Version);
-				Assert.AreEqual (AssemblyHashAlgorithm.SHA1, name.HashAlgorithm);
-			});
-		}
+        [Test]
+        public void ZeroVersion()
+        {
+            var name = new AssemblyNameReference("Foo", null);
+            Assert.AreEqual("0.0.0.0", name.Version.ToString(fieldCount: 4));
+            Assert.AreEqual("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
 
-		[Test]
-		public void ParseLowerCaseNameParts ()
-		{
-			var name = AssemblyNameReference.Parse ("Foo, version=2.0.0.0, culture=fr-FR");
-			Assert.AreEqual ("Foo", name.Name);
-			Assert.AreEqual (2, name.Version.Major);
-			Assert.AreEqual (0, name.Version.Minor);
-			Assert.AreEqual ("fr-FR", name.Culture);
-		}
+            name = new AssemblyNameReference("Foo", new Version(0, 0, 0, 0));
+            Assert.AreEqual("0.0.0.0", name.Version.ToString(fieldCount: 4));
+            Assert.AreEqual("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
+        }
 
-		[Test]
-		public void ZeroVersion ()
-		{
-			var name = new AssemblyNameReference ("Foo", null);
-			Assert.AreEqual ("0.0.0.0", name.Version.ToString (fieldCount: 4));
-			Assert.AreEqual ("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
+        [Test]
+        public void NoBuildOrMajor()
+        {
+            var name = new AssemblyNameReference("Foo", new Version(0, 0));
+            Assert.AreEqual("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
 
-			name = new AssemblyNameReference ("Foo", new Version (0, 0, 0, 0));
-			Assert.AreEqual ("0.0.0.0", name.Version.ToString (fieldCount: 4));
-			Assert.AreEqual ("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
-		}
+            name = new AssemblyNameReference("Foo", new Version(0, 0, 0));
+            Assert.AreEqual("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
+        }
 
-		[Test]
-		public void NoBuildOrMajor ()
-		{
-			var name = new AssemblyNameReference ("Foo", new Version (0, 0));
-			Assert.AreEqual ("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
+        [Test]
+        public void Retargetable()
+        {
+            if (Platform.OnCoreClr)
+                return;
 
-			name = new AssemblyNameReference ("Foo", new Version (0, 0, 0));
-			Assert.AreEqual ("Foo, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", name.FullName);
-		}
+            TestModule("RetargetableExample.dll", module =>
+            {
+                var type = module.Types[1];
+                var property = type.Properties[0];
+                var attribute = property.CustomAttributes[0];
 
-		[Test]
-		public void Retargetable ()
-		{
-			if (Platform.OnCoreClr)
-				return;
+                var argumentType = ((CustomAttributeArgument)attribute.ConstructorArguments[0].Value).Type;
+                var reference = (AssemblyNameReference)argumentType.Scope;
 
-			TestModule ("RetargetableExample.dll", module => {
-				var type = module.Types [1];
-				var property = type.Properties [0];
-				var attribute = property.CustomAttributes [0];
+                Assert.AreEqual(
+                    "System.Data, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, Retargetable=Yes",
+                    reference.FullName);
+            }, verify: !Platform.OnMono);
+        }
 
-				var argumentType = ((CustomAttributeArgument) attribute.ConstructorArguments [0].Value).Type;
-				var reference = (AssemblyNameReference) argumentType.Scope;
+        [Test]
+        public void SystemRuntime()
+        {
+            if (Platform.OnCoreClr)
+                return;
 
-				Assert.AreEqual (
-					"System.Data, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac, Retargetable=Yes",
-					reference.FullName);
-			}, verify: !Platform.OnMono);
-		}
+            TestModule("System.Runtime.dll", module =>
+            {
+                Assert.AreEqual("System.Runtime", module.Assembly.Name.Name);
+                Assert.AreEqual(1, module.AssemblyReferences.Count);
+                Assert.AreNotEqual(module, module.TypeSystem.CoreLibrary);
+                Assert.AreEqual(module.AssemblyReferences[0], module.TypeSystem.CoreLibrary);
+            }, verify: !Platform.OnMono);
+        }
 
-		[Test]
-		public void SystemRuntime ()
-		{
-			if (Platform.OnCoreClr)
-				return;
+        [Test]
+        public void MismatchedLibraryAndSymbols()
+        {
+            // SQLite-net.dll (from nuget) shiped with mismatched symbol files, but throwIfNoSymbol did not prevent it from throwing
+            var parameters = new ReaderParameters
+            {
+                ReadSymbols = true,
+                SymbolReaderProvider = new DefaultSymbolReaderProvider(throwIfNoSymbol: false),
+                ThrowIfSymbolsAreNotMatching = false,
+            };
 
-			TestModule ("System.Runtime.dll", module => {
-				Assert.AreEqual ("System.Runtime", module.Assembly.Name.Name);
-				Assert.AreEqual (1, module.AssemblyReferences.Count);
-				Assert.AreNotEqual (module, module.TypeSystem.CoreLibrary);
-				Assert.AreEqual (module.AssemblyReferences [0], module.TypeSystem.CoreLibrary);
-			}, verify: !Platform.OnMono);
-		}
-
-		[Test]
-		public void MismatchedLibraryAndSymbols ()
-		{
-			// SQLite-net.dll (from nuget) shiped with mismatched symbol files, but throwIfNoSymbol did not prevent it from throwing
-			var parameters = new ReaderParameters {
-				ReadSymbols = true,
-				SymbolReaderProvider = new DefaultSymbolReaderProvider (throwIfNoSymbol: false),
-				ThrowIfSymbolsAreNotMatching = false,
-			};
-
-			using (var module = GetResourceModule ("SQLite-net.dll", parameters)) {
-				Assert.Null (module.SymbolReader);
-			}
-		}
-	}
+            using (var module = GetResourceModule("SQLite-net.dll", parameters))
+            {
+                Assert.Null(module.SymbolReader);
+            }
+        }
+    }
 }

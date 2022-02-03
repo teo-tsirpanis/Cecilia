@@ -8,12 +8,14 @@
 // Licensed under the MIT/X11 license.
 //
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public enum TargetRuntime {
-		Net_1_0,
-		Net_1_1,
-		Net_2_0,
-		Net_4_0,
-	}
+    public enum TargetRuntime
+    {
+        Net_1_0,
+        Net_1_1,
+        Net_2_0,
+        Net_4_0,
+    }
 }

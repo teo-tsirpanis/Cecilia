@@ -1,32 +1,37 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System;
-using System.Runtime.InteropServices;
-
-namespace Microsoft.Cci.Pdb {
+namespace Microsoft.Cci.Pdb
+{
   /// <summary />
-  internal class PdbConstant {
+  internal class PdbConstant
+  {
     internal string name;
     internal uint token;
     internal object value;
 
-    internal PdbConstant(string name, uint token, object value) {
+    internal PdbConstant(string name, uint token, object value)
+    {
       this.name = name;
       this.token = token;
       this.value = value;
     }
 
-    internal PdbConstant(BitAccess bits) {
+    internal PdbConstant(BitAccess bits)
+    {
       bits.ReadUInt32(out this.token);
       byte tag1;
       bits.ReadUInt8(out tag1);
       byte tag2;
       bits.ReadUInt8(out tag2);
-      if (tag2 == 0) {
+      if (tag2 == 0)
+      {
         this.value = tag1;
-      } else if (tag2 == 0x80) {
-        switch (tag1) {
+      }
+      else if (tag2 == 0x80)
+      {
+        switch (tag1)
+        {
           case 0x00: //sbyte
             sbyte sb;
             bits.ReadInt8(out sb);
@@ -78,9 +83,11 @@ namespace Microsoft.Cci.Pdb {
             break;
           default:
             //TODO: error
-            break; 
+            break;
         }
-      } else {
+      }
+      else
+      {
         //TODO: error
       }
       bits.ReadCString(out name);

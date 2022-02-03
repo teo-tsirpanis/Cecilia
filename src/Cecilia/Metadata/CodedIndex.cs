@@ -8,22 +8,24 @@
 // Licensed under the MIT/X11 license.
 //
 
-namespace Cecilia.Metadata {
+namespace Cecilia.Metadata
+{
 
-	enum CodedIndex {
-		TypeDefOrRef,
-		HasConstant,
-		HasCustomAttribute,
-		HasFieldMarshal,
-		HasDeclSecurity,
-		MemberRefParent,
-		HasSemantics,
-		MethodDefOrRef,
-		MemberForwarded,
-		Implementation,
-		CustomAttributeType,
-		ResolutionScope,
-		TypeOrMethodDef,
-		HasCustomDebugInformation,
-	}
+    enum CodedIndex
+    {
+        TypeDefOrRef,
+        HasConstant,
+        HasCustomAttribute,
+        HasFieldMarshal,
+        HasDeclSecurity,
+        MemberRefParent,
+        HasSemantics,
+        MethodDefOrRef,
+        MemberForwarded,
+        Implementation,
+        CustomAttributeType,
+        ResolutionScope,
+        TypeOrMethodDef,
+        HasCustomDebugInformation,
+    }
 }

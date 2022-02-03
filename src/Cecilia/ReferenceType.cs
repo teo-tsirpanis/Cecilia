@@ -12,32 +12,38 @@ using System;
 
 using MD = Cecilia.Metadata;
 
-namespace Cecilia {
+namespace Cecilia
+{
 
-	public sealed class ByReferenceType : TypeSpecification {
+    public sealed class ByReferenceType : TypeSpecification
+    {
 
-		public override string Name {
-			get { return base.Name + "&"; }
-		}
+        public override string Name
+        {
+            get { return base.Name + "&"; }
+        }
 
-		public override string FullName {
-			get { return base.FullName + "&"; }
-		}
+        public override string FullName
+        {
+            get { return base.FullName + "&"; }
+        }
 
-		public override bool IsValueType {
-			get { return false; }
-			set { throw new InvalidOperationException (); }
-		}
+        public override bool IsValueType
+        {
+            get { return false; }
+            set { throw new InvalidOperationException(); }
+        }
 
-		public override bool IsByReference {
-			get { return true; }
-		}
+        public override bool IsByReference
+        {
+            get { return true; }
+        }
 
-		public ByReferenceType (TypeReference type)
-			: base (type)
-		{
-			Mixin.CheckNotNull (type);
-			this.etype = MD.ElementType.ByRef;
-		}
-	}
+        public ByReferenceType(TypeReference type)
+            : base(type)
+        {
+            Mixin.CheckNotNull(type);
+            this.etype = MD.ElementType.ByRef;
+        }
+    }
 }
