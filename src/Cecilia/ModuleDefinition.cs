@@ -208,9 +208,7 @@ namespace Cecilia
         Stream symbol_stream;
         ISymbolWriterProvider symbol_writer_provider;
         bool write_symbols;
-        byte[] key_blob;
-        string key_container;
-        SR.StrongNameKeyPair key_pair;
+        PortableStrongNameKeyPair key_pair;
 
         public uint? Timestamp
         {
@@ -238,22 +236,20 @@ namespace Cecilia
 
         public bool HasStrongNameKey
         {
-            get { return key_pair != null || key_blob != null || key_container != null; }
+            get { return key_pair != null; }
         }
 
         public byte[] StrongNameKeyBlob
         {
-            get { return key_blob; }
-            set { key_blob = value; }
+            set { key_pair = new(value); }
         }
 
         public string StrongNameKeyContainer
         {
-            get { return key_container; }
-            set { key_container = value; }
+            set { key_pair = new(value); }
         }
 
-        public SR.StrongNameKeyPair StrongNameKeyPair
+        public PortableStrongNameKeyPair StrongNameKeyPair
         {
             get { return key_pair; }
             set { key_pair = value; }

@@ -35,22 +35,17 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Runtime.Serialization;
 
 using Mono.Security.Cryptography;
 
 namespace Cecilia
 {
-
-    [Serializable]
-    public class PortableStrongNameKeyPair : ISerializable, IDeserializationCallback
+    public class PortableStrongNameKeyPair
     {
         private byte[] _publicKey;
         private string _keyPairContainer;
-        private bool _keyPairExported;
         private byte[] _keyPairArray;
 
-        [NonSerialized]
         private RSA _rsa;
 
         public PortableStrongNameKeyPair(byte[] keyPairArray)
@@ -80,27 +75,7 @@ namespace Cecilia
             GetRSA();
         }
 
-        protected PortableStrongNameKeyPair(SerializationInfo info, StreamingContext context)
-        {
-            _publicKey = (byte[])info.GetValue("_publicKey", typeof(byte[]));
-            _keyPairContainer = info.GetString("_keyPairContainer");
-            _keyPairExported = info.GetBoolean("_keyPairExported");
-            _keyPairArray = (byte[])info.GetValue("_keyPairArray", typeof(byte[]));
-        }
-
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("_publicKey", _publicKey, typeof(byte[]));
-            info.AddValue("_keyPairContainer", _keyPairContainer);
-            info.AddValue("_keyPairExported", _keyPairExported);
-            info.AddValue("_keyPairArray", _keyPairArray, typeof(byte[]));
-        }
-
-        void IDeserializationCallback.OnDeserialization(object sender)
-        {
-        }
-
-        private RSA GetRSA()
+        internal RSA GetRSA()
         {
             if (_rsa != null) return _rsa;
 
