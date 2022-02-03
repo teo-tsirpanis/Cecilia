@@ -10,10 +10,5 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-
-[assembly: AssemblyTitle(Consts.AssemblyName)]
-
-[assembly: Guid("fd225bb4-fa53-44b2-a6db-85f5e48dcb54")]
 
 [assembly: InternalsVisibleTo("Cecilia.Tests, PublicKey=" + Consts.PublicKey)]
