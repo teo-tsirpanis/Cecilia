@@ -17,14 +17,11 @@ using System.Security.Cryptography;
 
 namespace Cecilia
 {
-
     // Most of this code has been adapted
     // from Jeroen Frijters' fantastic work
     // in IKVM.Reflection.Emit. Thanks!
-
     internal static class CryptoService
     {
-
         public static byte[] GetPublicKey(WriterParameters parameters)
         {
             var rsaParams = parameters.StrongNameKeyPair.GetRSA().ExportParameters(false);
@@ -45,9 +42,7 @@ namespace Cecilia
 
         public static void StrongName(Stream stream, ImageWriter writer, WriterParameters parameters)
         {
-            int strong_name_pointer;
-
-            var strong_name = CreateStrongName(parameters, HashStream(stream, writer, out strong_name_pointer));
+            var strong_name = CreateStrongName(parameters, HashStream(stream, writer, out int strong_name_pointer));
             PatchStrongName(stream, strong_name_pointer, strong_name);
         }
 
@@ -59,13 +54,8 @@ namespace Cecilia
 
         static byte[] CreateStrongName(WriterParameters parameters, byte[] hash)
         {
-            const string hash_algo = "SHA1";
-
             var rsa = parameters.StrongNameKeyPair.GetRSA();
-            var formatter = new RSAPKCS1SignatureFormatter(rsa);
-            formatter.SetHashAlgorithm(hash_algo);
-
-            byte[] signature = formatter.CreateSignature(hash);
+            byte[] signature = rsa.SignHash(hash, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
             Array.Reverse(signature);
 
             return signature;
@@ -87,7 +77,7 @@ namespace Cecilia
                 + (strong_name_directory.VirtualAddress - text.VirtualAddress));
             var strong_name_length = (int)strong_name_directory.Size;
 
-            var sha1 = new SHA1Managed();
+            var sha1 = SHA1.Create();
             var buffer = new byte[buffer_size];
             using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
             {
@@ -108,7 +98,7 @@ namespace Cecilia
         {
             while (length > 0)
             {
-                int read = stream.Read(buffer, 0, System.Math.Min(buffer.Length, length));
+                int read = stream.Read(buffer, 0, Math.Min(buffer.Length, length));
                 dest_stream.Write(buffer, 0, read);
                 length -= read;
             }
@@ -116,18 +106,18 @@ namespace Cecilia
 
         public static byte[] ComputeHash(string file)
         {
-            if (!File.Exists(file))
-                return Array.Empty<byte>();
+            // It used to return an empty array if the file did not exist,
+            // but in Cecilia the check was removed.
 
-            using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-                return ComputeHash(stream);
+            using var stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return ComputeHash(stream);
         }
 
         public static byte[] ComputeHash(Stream stream)
         {
             const int buffer_size = 8192;
 
-            var sha1 = new SHA1Managed();
+            var sha1 = SHA1.Create();
             var buffer = new byte[buffer_size];
 
             using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
@@ -136,32 +126,22 @@ namespace Cecilia
             return sha1.Hash;
         }
 
-        public static byte[] ComputeHash(params ByteBuffer[] buffers)
-        {
-            var sha1 = new SHA1Managed();
-
-            using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
-            {
-                for (int i = 0; i < buffers.Length; i++)
-                {
-                    crypto_stream.Write(buffers[i].buffer, 0, buffers[i].length);
-                }
-            }
-
-            return sha1.Hash;
-        }
-
-        public static Guid ComputeGuid(byte[] hash)
+        public static Guid ComputeGuid(ReadOnlySpan<byte> hash)
         {
             // From corefx/src/System.Reflection.Metadata/src/System/Reflection/Metadata/BlobContentId.cs
-            var guid = new byte[16];
-            Buffer.BlockCopy(hash, 0, guid, 0, 16);
+            Span<byte> guid = stackalloc byte[16];
+
+            hash.Slice(0, 16).CopyTo(guid);
 
             // modify the guid data so it decodes to the form of a "random" guid ala rfc4122
             guid[7] = (byte)((guid[7] & 0x0f) | (4 << 4));
             guid[8] = (byte)((guid[8] & 0x3f) | (2 << 6));
 
+#if NETSTANDARD2_0
+            return new Guid(guid.ToArray());
+#else
             return new Guid(guid);
+#endif
         }
     }
 }
