@@ -3,7 +3,6 @@
     <TargetFrameworks>net6.0;netstandard2.1;netstandard2.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);INSIDE_ROCKS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<LangVersion>10</LangVersion>
     <Version>0.0.1</Version>
     <Description>Cecilia is a fork of Mono.Cecil maintained by Theodore Tsirpanis to generate and inspect programs and libraries in the ECMA CIL format. It has full support for generics, and support some debugging symbol format. In simple English, with Cecilia, you can load existing managed assemblies, browse all the contained types, modify them on the fly and save back to the disk the modified assembly.</Description>
     <Authors>Theodore Tsirpanis and Mono.Cecil contributors</Authors>
