@@ -32,28 +32,32 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using Cecilia.Security.Cryptography;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
-
-using Mono.Security.Cryptography;
 
 namespace Cecilia
 {
     public class PortableStrongNameKeyPair
     {
-        private byte[] _publicKey;
-        private string _keyPairContainer;
-        private byte[] _keyPairArray;
+        private static readonly byte[] s_ecmaKey = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0 };
 
-        private RSA _rsa;
+        private byte[] _publicKey;
+
+        private readonly RSA _rsa;
+
+        public PortableStrongNameKeyPair(ReadOnlySpan<byte> keyPair)
+        {
+            LoadKey(keyPair, out _rsa);
+        }
 
         public PortableStrongNameKeyPair(byte[] keyPairArray)
         {
             Mixin.CheckNotNull(keyPairArray);
 
-            LoadKey(keyPairArray);
-            GetRSA();
+            LoadKey(keyPairArray, out _rsa);
         }
 
         public PortableStrongNameKeyPair(FileStream keyPairFile)
@@ -62,82 +66,56 @@ namespace Cecilia
 
             byte[] input = new byte[keyPairFile.Length];
             keyPairFile.Read(input, 0, input.Length);
-            LoadKey(input);
-            GetRSA();
+            LoadKey(input, out _rsa);
         }
 
+#if NET
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         public PortableStrongNameKeyPair(string keyPairContainer)
         {
             Mixin.CheckNotNull(keyPairContainer);
-            // named key container
 
-            _keyPairContainer = keyPairContainer;
-            GetRSA();
+            var csp = new CspParameters
+            {
+                KeyContainerName = keyPairContainer
+            };
+            _rsa = new RSACryptoServiceProvider(csp);
         }
 
+        // Warning: the returned instance must not be disposed.
         internal RSA GetRSA()
         {
-            if (_rsa != null) return _rsa;
-
-            if (_keyPairArray != null)
-            {
-                try
-                {
-                    _rsa = CryptoConvert.FromCapiKeyBlob(_keyPairArray);
-                }
-                catch
-                {
-                    // exception is thrown when getting PublicKey
-                    // to match MS implementation
-                    _keyPairArray = null;
-                }
-            }
-            else if (_keyPairContainer != null)
-            {
-                CspParameters csp = new CspParameters();
-                csp.KeyContainerName = _keyPairContainer;
-                _rsa = new RSACryptoServiceProvider(csp);
-            }
+            // ECMA "key" is valid but doesn't produce a RSA instance
+            if (ReferenceEquals(_publicKey, s_ecmaKey))
+                throw new InvalidOperationException("Cannot use the ECMA Standard Public Key for signing.");
+            Debug.Assert(_rsa != null);
             return _rsa;
         }
 
-        private void LoadKey(byte[] key)
+        private void LoadKey(ReadOnlySpan<byte> key, out RSA rsa)
         {
-            try
+            // check for ECMA key
+            if (key.SequenceEqual(s_ecmaKey))
             {
-                // check for ECMA key
-                if (key.Length == 16)
-                {
-                    int i = 0;
-                    int sum = 0;
-                    while (i < key.Length)
-                        sum += key[i++];
-                    if (sum == 4)
-                    {
-                        // it is the ECMA key
-                        _publicKey = (byte[])key.Clone();
-                    }
-                }
-                else
-                    _keyPairArray = key;
+                // We reuse the array to save an allocation.
+                // If the PublicKey array is ever exposed, we must clone s_ecmaKey.
+                _publicKey = s_ecmaKey;
+                rsa = null;
             }
-            catch
+            else
             {
-                // exception is thrown when getting PublicKey
-                // to match MS implementation
+                rsa = CryptoConvert.FromCapiKeyBlob(key);
             }
         }
 
-        public byte[] PublicKey
+        public ReadOnlySpan<byte> PublicKeySpan
         {
             get
             {
                 if (_publicKey == null)
                 {
                     RSA rsa = GetRSA();
-                    // ECMA "key" is valid but doesn't produce a RSA instance
-                    if (rsa == null)
-                        throw new ArgumentException("invalid keypair");
 
                     byte[] blob = CryptoConvert.ToCapiPublicKeyBlob(rsa);
                     _publicKey = new byte[blob.Length + 12];

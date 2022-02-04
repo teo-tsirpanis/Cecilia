@@ -244,6 +244,9 @@ namespace Cecilia
             set { key_pair = new(value); }
         }
 
+#if NET
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         public string StrongNameKeyContainer
         {
             set { key_pair = new(value); }

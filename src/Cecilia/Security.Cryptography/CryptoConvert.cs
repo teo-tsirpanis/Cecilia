@@ -28,119 +28,97 @@
 //
 
 using System;
+using System.Buffers.Binary;
 using System.Security.Cryptography;
 
-namespace Mono.Security.Cryptography
+namespace Cecilia.Security.Cryptography
 {
-
-    static class CryptoConvert
+    internal static class CryptoConvert
     {
-
-        static private int ToInt32LE(byte[] bytes, int offset)
+#if NETSTANDARD
+        static private Span<T> TrimStart<T>(this Span<T> span, T element) where T: IEquatable<T>
         {
-            return (bytes[offset+3] << 24) | (bytes[offset+2] << 16) | (bytes[offset+1] << 8) | bytes[offset];
-        }
-
-        static private uint ToUInt32LE(byte[] bytes, int offset)
-        {
-            return (uint)((bytes[offset+3] << 24) | (bytes[offset+2] << 16) | (bytes[offset+1] << 8) | bytes[offset]);
-        }
-
-        static private byte[] GetBytesLE(int val)
-        {
-            return new byte[] {
-                (byte) (val & 0xff),
-                (byte) ((val >> 8) & 0xff),
-                (byte) ((val >> 16) & 0xff),
-                (byte) ((val >> 24) & 0xff)
-            };
-        }
-
-        static private byte[] Trim(byte[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < span.Length; i++)
             {
-                if (array[i] != 0x00)
+                if (!span[i].Equals(element))
                 {
-                    byte[] result = new byte[array.Length - i];
-                    Buffer.BlockCopy(array, i, result, 0, result.Length);
-                    return result;
+                    return span.Slice(i);
                 }
             }
-            return null;
+            return default;
         }
+#endif
 
-        static RSA FromCapiPrivateKeyBlob(byte[] blob, int offset)
+        static RSA FromCapiPrivateKeyBlob(ReadOnlySpan<byte> blob)
         {
-            RSAParameters rsap = new RSAParameters();
+            var rsap = new RSAParameters();
             try
             {
-                if ((blob[offset]   != 0x07) ||             // PRIVATEKEYBLOB (0x07)
-                    (blob[offset+1] != 0x02) ||             // Version (0x02)
-                    (blob[offset+2] != 0x00) ||             // Reserved (word)
-                    (blob[offset+3] != 0x00) ||
-                    (ToUInt32LE(blob, offset+8) != 0x32415352)) // DWORD magic = RSA2
+                // We used to read the reserved bytes at 2 and 3.
+                // Reserved values must be ignored when reading them.
+                // A different value should not cause an error.
+                if ((blob[0] != 0x07) || // PRIVATEKEYBLOB (0x07)
+                    (blob[1] != 0x02) || // Version (0x02)
+                    (BinaryPrimitives.ReadUInt32LittleEndian(blob.Slice(8)) != 0x32415352)) // DWORD magic = RSA2
                     throw new CryptographicException("Invalid blob header");
 
                 // ALGID (CALG_RSA_SIGN, CALG_RSA_KEYX, ...)
-                // int algId = ToInt32LE (blob, offset+4);
+                // int algId = BinaryPrimitives.ReadInt32LittleEndian(blob.Slice(4));
 
                 // DWORD bitlen
-                int bitLen = ToInt32LE(blob, offset+12);
+                int bitLen = BinaryPrimitives.ReadInt32LittleEndian(blob.Slice(12));
 
                 // DWORD public exponent
-                byte[] exp = new byte[4];
-                Buffer.BlockCopy(blob, offset+16, exp, 0, 4);
-                Array.Reverse(exp);
-                rsap.Exponent = Trim(exp);
+                Span<byte> exp = stackalloc byte[4];
+                blob.Slice(16, 4).CopyTo(exp);
+                exp.Reverse();
+                rsap.Exponent = exp.TrimStart<byte>(0).ToArray();
 
-                int pos = offset+20;
+                int pos = 20;
                 // BYTE modulus[rsapubkey.bitlen/8];
-                int byteLen = (bitLen >> 3);
+                int byteLen = bitLen / 8;
                 rsap.Modulus = new byte[byteLen];
-                Buffer.BlockCopy(blob, pos, rsap.Modulus, 0, byteLen);
+                blob.Slice(pos, byteLen).CopyTo(rsap.Modulus);
                 Array.Reverse(rsap.Modulus);
                 pos += byteLen;
 
                 // BYTE prime1[rsapubkey.bitlen/16];
-                int byteHalfLen = (byteLen >> 1);
-                rsap.P = new byte[byteHalfLen];
-                Buffer.BlockCopy(blob, pos, rsap.P, 0, byteHalfLen);
+                int byteHalfLen = byteLen / 2;
+                rsap.P = blob.Slice(pos, byteHalfLen).ToArray();
                 Array.Reverse(rsap.P);
                 pos += byteHalfLen;
 
                 // BYTE prime2[rsapubkey.bitlen/16];
-                rsap.Q = new byte[byteHalfLen];
-                Buffer.BlockCopy(blob, pos, rsap.Q, 0, byteHalfLen);
+                rsap.Q = blob.Slice(pos, byteHalfLen).ToArray();
                 Array.Reverse(rsap.Q);
                 pos += byteHalfLen;
 
                 // BYTE exponent1[rsapubkey.bitlen/16];
-                rsap.DP = new byte[byteHalfLen];
-                Buffer.BlockCopy(blob, pos, rsap.DP, 0, byteHalfLen);
+                rsap.DP = blob.Slice(pos, byteHalfLen).ToArray();
                 Array.Reverse(rsap.DP);
                 pos += byteHalfLen;
 
                 // BYTE exponent2[rsapubkey.bitlen/16];
-                rsap.DQ = new byte[byteHalfLen];
-                Buffer.BlockCopy(blob, pos, rsap.DQ, 0, byteHalfLen);
+                rsap.DQ = blob.Slice(pos, byteHalfLen).ToArray();
                 Array.Reverse(rsap.DQ);
                 pos += byteHalfLen;
 
                 // BYTE coefficient[rsapubkey.bitlen/16];
-                rsap.InverseQ = new byte[byteHalfLen];
-                Buffer.BlockCopy(blob, pos, rsap.InverseQ, 0, byteHalfLen);
+                rsap.InverseQ = blob.Slice(pos, byteHalfLen).ToArray();
                 Array.Reverse(rsap.InverseQ);
                 pos += byteHalfLen;
 
                 // ok, this is hackish but CryptoAPI support it so...
                 // note: only works because CRT is used by default
                 // http://bugzilla.ximian.com/show_bug.cgi?id=57941
+                // TL;DR: the blob might not include the private D
+                // exponent, but it is not needed since we give it
+                // the Chinese Remainder Theorem parameters.
                 rsap.D = new byte[byteLen]; // must be allocated
-                if (pos + byteLen + offset <= blob.Length)
+                if (pos + byteLen <= blob.Length)
                 {
                     // BYTE privateExponent[rsapubkey.bitlen/8];
-                    Buffer.BlockCopy(blob, pos, rsap.D, 0, byteLen);
+                    blob.Slice(pos, byteLen).CopyTo(rsap.D);
                     Array.Reverse(rsap.D);
                 }
             }
@@ -149,86 +127,39 @@ namespace Mono.Security.Cryptography
                 throw new CryptographicException("Invalid blob.", e);
             }
 
-            RSA rsa = null;
-            try
-            {
-                rsa = RSA.Create();
-                rsa.ImportParameters(rsap);
-            }
-            catch (CryptographicException)
-            {
-                // this may cause problem when this code is run under
-                // the SYSTEM identity on Windows (e.g. ASP.NET). See
-                // http://bugzilla.ximian.com/show_bug.cgi?id=77559
-                bool throws = false;
-                try
-                {
-                    CspParameters csp = new CspParameters();
-                    csp.Flags = CspProviderFlags.UseMachineKeyStore;
-                    rsa = new RSACryptoServiceProvider(csp);
-                    rsa.ImportParameters(rsap);
-                }
-                catch
-                {
-                    throws = true;
-                }
-
-                if (throws)
-                {
-                    // rethrow original, not the latter, exception if this fails
-                    throw;
-                }
-            }
+            RSA rsa = RSA.Create();
+            rsa.ImportParameters(rsap);
             return rsa;
         }
 
-        static RSA FromCapiPublicKeyBlob(byte[] blob, int offset)
+        static RSA FromCapiPublicKeyBlob(ReadOnlySpan<byte> blob)
         {
             try
             {
-                if ((blob[offset]   != 0x06) ||             // PUBLICKEYBLOB (0x06)
-                    (blob[offset+1] != 0x02) ||             // Version (0x02)
-                    (blob[offset+2] != 0x00) ||             // Reserved (word)
-                    (blob[offset+3] != 0x00) ||
-                    (ToUInt32LE(blob, offset+8) != 0x31415352)) // DWORD magic = RSA1
+                if ((blob[0] != 0x06) || // PUBLICKEYBLOB (0x06)
+                    (blob[1] != 0x02) || // Version (0x02)
+                    (BinaryPrimitives.ReadUInt32LittleEndian(blob.Slice(8)) != 0x31415352)) // DWORD magic = RSA1
                     throw new CryptographicException("Invalid blob header");
 
                 // ALGID (CALG_RSA_SIGN, CALG_RSA_KEYX, ...)
-                // int algId = ToInt32LE (blob, offset+4);
+                // int algId = BinaryPrimitives.ReadInt32LittleEndian(blob.Slice(4));
 
                 // DWORD bitlen
-                int bitLen = ToInt32LE(blob, offset+12);
+                int bitLen = BinaryPrimitives.ReadInt32LittleEndian(blob.Slice(12));
 
                 // DWORD public exponent
-                RSAParameters rsap = new RSAParameters();
-                rsap.Exponent = new byte[3];
-                rsap.Exponent[0] = blob[offset+18];
-                rsap.Exponent[1] = blob[offset+17];
-                rsap.Exponent[2] = blob[offset+16];
+                var rsap = new RSAParameters
+                {
+                    Exponent = new byte[3] { blob[18], blob[17], blob[16] }
+                };
 
-                int pos = offset+20;
                 // BYTE modulus[rsapubkey.bitlen/8];
-                int byteLen = (bitLen >> 3);
-                rsap.Modulus = new byte[byteLen];
-                Buffer.BlockCopy(blob, pos, rsap.Modulus, 0, byteLen);
+                int byteLen = bitLen / 8;
+                rsap.Modulus = blob.Slice(20, byteLen).ToArray();
                 Array.Reverse(rsap.Modulus);
 
-                RSA rsa = null;
-                try
-                {
-                    rsa = RSA.Create();
-                    rsa.ImportParameters(rsap);
-                }
-                catch (CryptographicException)
-                {
-                    // this may cause problem when this code is run under
-                    // the SYSTEM identity on Windows (e.g. ASP.NET). See
-                    // http://bugzilla.ximian.com/show_bug.cgi?id=77559
-                    CspParameters csp = new CspParameters();
-                    csp.Flags = CspProviderFlags.UseMachineKeyStore;
-                    rsa = new RSACryptoServiceProvider(csp);
-                    rsa.ImportParameters(rsap);
-                }
+                RSA rsa = RSA.Create();
+                rsa.ImportParameters(rsap);
                 return rsa;
             }
             catch (Exception e)
@@ -237,34 +168,25 @@ namespace Mono.Security.Cryptography
             }
         }
 
-        // PRIVATEKEYBLOB
-        // PUBLICKEYBLOB
-        static public RSA FromCapiKeyBlob(byte[] blob)
+        static public RSA FromCapiKeyBlob(ReadOnlySpan<byte> blob)
         {
-            return FromCapiKeyBlob(blob, 0);
-        }
+            if (blob.IsEmpty)
+                throw new ArgumentException("blob is too small.", nameof(blob));
 
-        static public RSA FromCapiKeyBlob(byte[] blob, int offset)
-        {
-            if (blob == null)
-                throw new ArgumentNullException("blob");
-            if (offset >= blob.Length)
-                throw new ArgumentException("blob is too small.");
-
-            switch (blob[offset])
+            switch (blob[0])
             {
                 case 0x00:
                     // this could be a public key inside an header
                     // like "sn -e" would produce
-                    if (blob[offset + 12] == 0x06)
+                    if (blob[12] == 0x06)
                     {
-                        return FromCapiPublicKeyBlob(blob, offset + 12);
+                        return FromCapiPublicKeyBlob(blob.Slice(12));
                     }
                     break;
                 case 0x06:
-                    return FromCapiPublicKeyBlob(blob, offset);
+                    return FromCapiPublicKeyBlob(blob);
                 case 0x07:
-                    return FromCapiPrivateKeyBlob(blob, offset);
+                    return FromCapiPrivateKeyBlob(blob);
             }
             throw new CryptographicException("Unknown blob format.");
         }
@@ -273,7 +195,7 @@ namespace Mono.Security.Cryptography
         {
             RSAParameters p = rsa.ExportParameters(false);
             int keyLength = p.Modulus.Length; // in bytes
-            byte[] blob = new byte[20 + keyLength];
+            var blob = new byte[20 + keyLength];
 
             blob[0] = 0x06; // Type - PUBLICKEYBLOB (0x06)
             blob[1] = 0x02; // Version - Always CUR_BLOB_VERSION (0x02)
@@ -284,24 +206,16 @@ namespace Mono.Security.Cryptography
             blob[10] = 0x41;
             blob[11] = 0x31;
 
-            byte[] bitlen = GetBytesLE(keyLength << 3);
-            blob[12] = bitlen[0];   // bitlen
-            blob[13] = bitlen[1];
-            blob[14] = bitlen[2];
-            blob[15] = bitlen[3];
+            BinaryPrimitives.WriteInt32LittleEndian(blob.AsSpan(12), keyLength * 8);
 
             // public exponent (DWORD)
-            int pos = 16;
-            int n = p.Exponent.Length;
-            while (n > 0)
-                blob[pos++] = p.Exponent[--n];
+            var exp = new Span<byte>(blob, 16, 4);
+            p.Exponent.AsSpan().CopyTo(exp);
+            exp.Reverse();
             // modulus
-            pos = 20;
-            byte[] part = p.Modulus;
-            int len = part.Length;
-            Array.Reverse(part, 0, len);
-            Buffer.BlockCopy(part, 0, blob, pos, len);
-            pos += len;
+            var mod = blob.AsSpan().Slice(20);
+            p.Modulus.AsSpan().CopyTo(mod);
+            mod.Reverse();
             return blob;
         }
     }

@@ -9,7 +9,7 @@
 //
 
 using Cecilia.PE;
-using Mono.Security.Cryptography;
+using Cecilia.Security.Cryptography;
 using System;
 using System.IO;
 using System.Reflection;

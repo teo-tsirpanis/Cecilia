@@ -14,3 +14,7 @@ indent_size = 2
 indent_style = space
 indent_size = 4
 file_header_template = This file is part of Cecilia.\nLicensed under the MIT License.
+
+# .NET Standard 2.0 does not support it.
+csharp_style_prefer_range_operator = false
+csharp_style_var_when_type_is_apparent=false:silent
