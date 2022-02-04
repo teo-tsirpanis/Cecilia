@@ -1,6 +1,7 @@
 // This file is part of Cecilia.
 // Licensed under the MIT License.
 
+#if !NET
 namespace System.Runtime.CompilerServices
 {
     internal sealed class CallerArgumentExpressionAttribute : Attribute
@@ -8,3 +9,4 @@ namespace System.Runtime.CompilerServices
         public CallerArgumentExpressionAttribute(string expression) { }
     }
 }
+#endif
