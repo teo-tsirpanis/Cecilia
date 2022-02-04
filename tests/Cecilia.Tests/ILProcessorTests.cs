@@ -1,5 +1,4 @@
 using Cecilia.Cil;
-using Cecilia.Pdb;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
@@ -90,10 +89,6 @@ namespace Cecilia.Tests
         }
 
         [TestCase(RoundtripType.None, false, false, false)]
-        [TestCase(RoundtripType.Pdb, false, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, true)]
-        [TestCase(RoundtripType.Pdb, true, true, false)]
         [TestCase(RoundtripType.PortablePdb, false, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, true)]
@@ -116,10 +111,6 @@ namespace Cecilia.Tests
         }
 
         [TestCase(RoundtripType.None, false, false, false)]
-        [TestCase(RoundtripType.Pdb, false, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, true)]
-        [TestCase(RoundtripType.Pdb, true, true, false)]
         [TestCase(RoundtripType.PortablePdb, false, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, true)]
@@ -142,10 +133,6 @@ namespace Cecilia.Tests
         }
 
         [TestCase(RoundtripType.None, false, false, false)]
-        [TestCase(RoundtripType.Pdb, false, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, true)]
-        [TestCase(RoundtripType.Pdb, true, true, false)]
         [TestCase(RoundtripType.PortablePdb, false, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, true)]
@@ -168,10 +155,6 @@ namespace Cecilia.Tests
         }
 
         [TestCase(RoundtripType.None, false, false, false)]
-        [TestCase(RoundtripType.Pdb, false, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, false)]
-        [TestCase(RoundtripType.Pdb, true, false, true)]
-        [TestCase(RoundtripType.Pdb, true, true, false)]
         [TestCase(RoundtripType.PortablePdb, false, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, false)]
         [TestCase(RoundtripType.PortablePdb, true, false, true)]
@@ -338,7 +321,6 @@ namespace Cecilia.Tests
         public enum RoundtripType
         {
             None,
-            Pdb,
             PortablePdb
         }
 
@@ -387,17 +369,7 @@ namespace Cecilia.Tests
             if (File.Exists(file))
                 File.Delete(file);
 
-            ISymbolWriterProvider symbolWriterProvider;
-            switch (roundtripType)
-            {
-                case RoundtripType.Pdb when Platform.HasNativePdbSupport:
-                    symbolWriterProvider = new PdbWriterProvider();
-                    break;
-                case RoundtripType.PortablePdb:
-                default:
-                    symbolWriterProvider = new PortablePdbWriterProvider();
-                    break;
-            }
+            ISymbolWriterProvider symbolWriterProvider = new PortablePdbWriterProvider();
 
             module.Write(file, new WriterParameters
             {
@@ -405,17 +377,7 @@ namespace Cecilia.Tests
             });
             module.Dispose();
 
-            ISymbolReaderProvider symbolReaderProvider;
-            switch (roundtripType)
-            {
-                case RoundtripType.Pdb when Platform.HasNativePdbSupport:
-                    symbolReaderProvider = new PdbReaderProvider();
-                    break;
-                case RoundtripType.PortablePdb:
-                default:
-                    symbolReaderProvider = new PortablePdbReaderProvider();
-                    break;
-            }
+            ISymbolReaderProvider symbolReaderProvider = new PortablePdbReaderProvider();
 
             return ModuleDefinition.ReadModule(file, new ReaderParameters
             {

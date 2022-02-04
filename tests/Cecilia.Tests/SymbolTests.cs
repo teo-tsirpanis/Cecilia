@@ -1,25 +1,12 @@
 
 using Cecilia.Cil;
-using Cecilia.Pdb;
 using NUnit.Framework;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class SymbolTests : BaseTestFixture
     {
-
-        [Test]
-        public void DefaultPdb()
-        {
-            TestModule("libpdb.dll", module =>
-            {
-                Assert.IsTrue(module.HasSymbols);
-                Assert.AreEqual(typeof(NativePdbReader), module.SymbolReader.GetType());
-            }, readOnly: !Platform.HasNativePdbSupport, symbolReaderProvider: typeof(DefaultSymbolReaderProvider), symbolWriterProvider: typeof(DefaultSymbolWriterProvider));
-        }
-
         [Test]
         public void DefaultPortablePdb()
         {
@@ -72,26 +59,6 @@ namespace Cecilia.Tests
                     Assert.IsNotNull(module.SymbolReader);
                     Assert.IsTrue(module.HasSymbols);
                     Assert.AreEqual(typeof(PortablePdbReader), module.SymbolReader.GetType());
-                }
-            }
-        }
-
-        [Test]
-        public void DefaultPdbStream()
-        {
-            using (var symbolStream = GetResourceStream("libpdb.pdb"))
-            {
-                var parameters = new ReaderParameters
-                {
-                    SymbolReaderProvider = new NativePdbReaderProvider(),
-                    SymbolStream = symbolStream,
-                };
-
-                using (var module = GetResourceModule("libpdb.dll", parameters))
-                {
-                    Assert.IsNotNull(module.SymbolReader);
-                    Assert.IsTrue(module.HasSymbols);
-                    Assert.AreEqual(typeof(NativePdbReader), module.SymbolReader.GetType());
                 }
             }
         }

@@ -1,5 +1,4 @@
 using Cecilia.Cil;
-using Cecilia.Pdb;
 using Cecilia.PE;
 using NUnit.Framework;
 using System;
@@ -396,7 +395,7 @@ namespace Cecilia.Tests
             var parameters = new ReaderParameters
             {
                 ReadSymbols = true,
-                SymbolReaderProvider = new PdbReaderProvider()
+                SymbolReaderProvider = new EmbeddedPortablePdbReaderProvider()
             };
 
             var module = ModuleDefinition.ReadModule(new MemoryStream(bytes), parameters);

@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using SR = System.Reflection;
 
 namespace Cecilia.Cil
 {
@@ -808,7 +807,6 @@ namespace Cecilia.Cil
 
     public sealed class MethodDebugInformation : DebugInformation
     {
-
         internal MethodDefinition method;
         internal Collection<SequencePoint> sequence_points;
         internal ScopeDebugInformation scope;
@@ -951,7 +949,6 @@ namespace Cecilia.Cil
 
     public interface ISymbolReader : IDisposable
     {
-
         ISymbolWriterProvider GetWriterProvider();
         bool ProcessDebugHeader(ImageDebugHeader header);
         MethodDebugInformation Read(MethodDefinition method);
@@ -965,34 +962,27 @@ namespace Cecilia.Cil
 
     public sealed class SymbolsNotFoundException : FileNotFoundException
     {
-
-        public SymbolsNotFoundException(string message) : base(message)
-        {
-        }
+        public SymbolsNotFoundException(string message) : base(message) { }
     }
 
     public sealed class SymbolsNotMatchingException : InvalidOperationException
     {
-
-        public SymbolsNotMatchingException(string message) : base(message)
-        {
-        }
+        public SymbolsNotMatchingException(string message) : base(message) { }
     }
 
     public class DefaultSymbolReaderProvider : ISymbolReaderProvider
     {
+        private readonly bool throw_if_no_symbol;
 
-        readonly bool throw_if_no_symbol;
-
-        public DefaultSymbolReaderProvider()
-            : this(throwIfNoSymbol: true)
-        {
-        }
+        public DefaultSymbolReaderProvider() : this(throwIfNoSymbol: true) { }
 
         public DefaultSymbolReaderProvider(bool throwIfNoSymbol)
         {
             throw_if_no_symbol = throwIfNoSymbol;
         }
+
+        private static void ThrowNonPortablePdbNotSupported() =>
+            throw new NotSupportedException("Cecilia does not support readong non-portable PDB symbol files");
 
         public ISymbolReader GetSymbolReader(ModuleDefinition module, string fileName)
         {
@@ -1009,36 +999,23 @@ namespace Cecilia.Cil
 
             var pdb_file_name = Mixin.GetPdbFileName(fileName);
 
-            if (File.Exists(pdb_file_name))
+            try
             {
-                if (Mixin.IsPortablePdb(Mixin.GetPdbFileName(fileName)))
+                if (Mixin.IsPortablePdb(pdb_file_name))
                     return new PortablePdbReaderProvider().GetSymbolReader(module, fileName);
 
-                try
-                {
-                    return SymbolProvider.GetReaderProvider(SymbolKind.NativePdb).GetSymbolReader(module, fileName);
-                }
-                catch (Exception)
-                {
-                    // We might not include support for native pdbs.
-                }
+                ThrowNonPortablePdbNotSupported();
+            }
+            catch (FileNotFoundException)
+            {
+                // We will fail below.
             }
 
-            var mdb_file_name = Mixin.GetMdbFileName(fileName);
-            if (File.Exists(mdb_file_name))
-            {
-                try
-                {
-                    return SymbolProvider.GetReaderProvider(SymbolKind.Mdb).GetSymbolReader(module, fileName);
-                }
-                catch (Exception)
-                {
-                    // We might not include support for mdbs.
-                }
-            }
+            // We used to check for MDB files here, but Cecilia does not support them.
+            // If there is one, we will completely ignore it instead of failing.
 
             if (throw_if_no_symbol)
-                throw new SymbolsNotFoundException(string.Format("No symbol found for file: {0}", fileName));
+                throw new SymbolsNotFoundException($"No symbol found for file: {fileName}");
 
             return null;
         }
@@ -1089,14 +1066,7 @@ namespace Cecilia.Cil
 
             if (isNativePdb)
             {
-                try
-                {
-                    return SymbolProvider.GetReaderProvider(SymbolKind.NativePdb).GetSymbolReader(module, symbolStream);
-                }
-                catch (Exception)
-                {
-                    // We might not include support for native pdbs.
-                }
+                ThrowNonPortablePdbNotSupported();
             }
 
             const long mdbHeader = 0x45e82623fd7fa614;
@@ -1106,119 +1076,18 @@ namespace Cecilia.Cil
 
             if (longHeader == mdbHeader)
             {
-                try
-                {
-                    return SymbolProvider.GetReaderProvider(SymbolKind.Mdb).GetSymbolReader(module, symbolStream);
-                }
-                catch (Exception)
-                {
-                    // We might not include support for mdbs.
-                }
+                throw new NotSupportedException("Cecilia does not support reading MDB symbol files.");
             }
 
             if (throw_if_no_symbol)
-                throw new SymbolsNotFoundException(string.Format("No symbols found in stream"));
+                throw new SymbolsNotFoundException("No symbols found in stream.");
 
             return null;
-        }
-    }
-
-    enum SymbolKind
-    {
-        NativePdb,
-        PortablePdb,
-        EmbeddedPortablePdb,
-        Mdb,
-    }
-
-    static class SymbolProvider
-    {
-
-        static SR.AssemblyName GetSymbolAssemblyName(SymbolKind kind)
-        {
-            if (kind == SymbolKind.PortablePdb)
-                throw new ArgumentException();
-
-            var suffix = GetSymbolNamespace(kind);
-
-            var cecilia_name = typeof(SymbolProvider).Assembly.GetName();
-
-            var name = new SR.AssemblyName
-            {
-                Name = cecilia_name.Name + "." + suffix,
-                Version = cecilia_name.Version,
-                CultureInfo = cecilia_name.CultureInfo
-            };
-
-            name.SetPublicKeyToken(cecilia_name.GetPublicKeyToken());
-
-            return name;
-        }
-
-        static Type GetSymbolType(SymbolKind kind, string fullname)
-        {
-            var type = Type.GetType(fullname);
-            if (type != null)
-                return type;
-
-            var assembly_name = GetSymbolAssemblyName(kind);
-
-            type = Type.GetType(fullname + ", " + assembly_name.FullName);
-            if (type != null)
-                return type;
-
-            try
-            {
-                var assembly = SR.Assembly.Load(assembly_name);
-                if (assembly != null)
-                    return assembly.GetType(fullname);
-            }
-            catch (FileNotFoundException)
-            {
-            }
-            catch (FileLoadException)
-            {
-            }
-
-            return null;
-        }
-
-        public static ISymbolReaderProvider GetReaderProvider(SymbolKind kind)
-        {
-            if (kind == SymbolKind.PortablePdb)
-                return new PortablePdbReaderProvider();
-            if (kind == SymbolKind.EmbeddedPortablePdb)
-                return new EmbeddedPortablePdbReaderProvider();
-
-            var provider_name = GetSymbolTypeName(kind, "ReaderProvider");
-            var type = GetSymbolType(kind, provider_name);
-            if (type == null)
-                throw new TypeLoadException("Could not find symbol provider type " + provider_name);
-
-            return (ISymbolReaderProvider)Activator.CreateInstance(type);
-        }
-
-        static string GetSymbolTypeName(SymbolKind kind, string name)
-        {
-            return "Cecilia" + "." + GetSymbolNamespace(kind) + "." + kind + name;
-        }
-
-        static string GetSymbolNamespace(SymbolKind kind)
-        {
-            if (kind == SymbolKind.PortablePdb || kind == SymbolKind.EmbeddedPortablePdb)
-                return "Cil";
-            if (kind == SymbolKind.NativePdb)
-                return "Pdb";
-            if (kind == SymbolKind.Mdb)
-                return "Mdb";
-
-            throw new ArgumentException();
         }
     }
 
     public interface ISymbolWriter : IDisposable
     {
-
         ISymbolReaderProvider GetReaderProvider();
         ImageDebugHeader GetDebugHeader();
         void Write(MethodDebugInformation info);
@@ -1227,14 +1096,12 @@ namespace Cecilia.Cil
 
     public interface ISymbolWriterProvider
     {
-
         ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName);
         ISymbolWriter GetSymbolWriter(ModuleDefinition module, Stream symbolStream);
     }
 
     public class DefaultSymbolWriterProvider : ISymbolWriterProvider
     {
-
         public ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName)
         {
             var reader = module.SymbolReader;
@@ -1312,15 +1179,10 @@ namespace Cecilia
             return Path.ChangeExtension(assemblyFileName, ".pdb");
         }
 
-        public static string GetMdbFileName(string assemblyFileName)
-        {
-            return assemblyFileName + ".mdb";
-        }
-
         public static bool IsPortablePdb(string fileName)
         {
-            using (var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                return IsPortablePdb(file);
+            using var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return IsPortablePdb(file);
         }
 
         public static bool IsPortablePdb(Stream stream)
