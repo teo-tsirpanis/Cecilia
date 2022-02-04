@@ -10,6 +10,7 @@
 
 using Cecilia.Metadata;
 using Cecilia.PE;
+using Cecilia.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -11,6 +11,7 @@
 using Cecilia.Cil;
 using Cecilia.Metadata;
 using Cecilia.PE;
+using Cecilia.Security.Cryptography;
 using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;

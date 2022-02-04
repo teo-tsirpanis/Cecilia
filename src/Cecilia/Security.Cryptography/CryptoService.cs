@@ -9,13 +9,12 @@
 //
 
 using Cecilia.PE;
-using Cecilia.Security.Cryptography;
 using System;
 using System.Buffers.Binary;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Cecilia
+namespace Cecilia.Security.Cryptography
 {
     // Most of this code has been adapted
     // from Jeroen Frijters' fantastic work
