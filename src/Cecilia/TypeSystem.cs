@@ -199,12 +199,6 @@ namespace Cecilia
             }
         }
 
-        [Obsolete("Use CoreLibrary")]
-        public IMetadataScope Corlib
-        {
-            get { return CoreLibrary; }
-        }
-
         public IMetadataScope CoreLibrary
         {
             get

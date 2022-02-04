@@ -375,12 +375,6 @@ namespace Cecilia
             set { characteristics = value; }
         }
 
-        [Obsolete("Use FileName")]
-        public string FullyQualifiedName
-        {
-            get { return file_name; }
-        }
-
         public string FileName
         {
             get { return file_name; }
@@ -854,42 +848,16 @@ namespace Cecilia
             if (context.Module != module)
                 throw new ArgumentException();
         }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public TypeReference Import(Type type)
-        {
-            return ImportReference(type, null);
-        }
-
         public TypeReference ImportReference(Type type)
         {
             return ImportReference(type, null);
         }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public TypeReference Import(Type type, IGenericParameterProvider context)
-        {
-            return ImportReference(type, context);
-        }
-
         public TypeReference ImportReference(Type type, IGenericParameterProvider context)
         {
             Mixin.CheckNotNull(type);
             CheckContext(context, this);
 
             return ReflectionImporter.ImportReference(type, context);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public FieldReference Import(SR.FieldInfo field)
-        {
-            return ImportReference(field, null);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public FieldReference Import(SR.FieldInfo field, IGenericParameterProvider context)
-        {
-            return ImportReference(field, context);
         }
 
         public FieldReference ImportReference(SR.FieldInfo field)
@@ -905,18 +873,6 @@ namespace Cecilia
             return ReflectionImporter.ImportReference(field, context);
         }
 
-        [Obsolete("Use ImportReference", error: false)]
-        public MethodReference Import(SR.MethodBase method)
-        {
-            return ImportReference(method, null);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public MethodReference Import(SR.MethodBase method, IGenericParameterProvider context)
-        {
-            return ImportReference(method, context);
-        }
-
         public MethodReference ImportReference(SR.MethodBase method)
         {
             return ImportReference(method, null);
@@ -928,18 +884,6 @@ namespace Cecilia
             CheckContext(context, this);
 
             return ReflectionImporter.ImportReference(method, context);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public TypeReference Import(TypeReference type)
-        {
-            return ImportReference(type, null);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public TypeReference Import(TypeReference type, IGenericParameterProvider context)
-        {
-            return ImportReference(type, context);
         }
 
         public TypeReference ImportReference(TypeReference type)
@@ -959,18 +903,6 @@ namespace Cecilia
             return MetadataImporter.ImportReference(type, context);
         }
 
-        [Obsolete("Use ImportReference", error: false)]
-        public FieldReference Import(FieldReference field)
-        {
-            return ImportReference(field, null);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public FieldReference Import(FieldReference field, IGenericParameterProvider context)
-        {
-            return ImportReference(field, context);
-        }
-
         public FieldReference ImportReference(FieldReference field)
         {
             return ImportReference(field, null);
@@ -986,18 +918,6 @@ namespace Cecilia
             CheckContext(context, this);
 
             return MetadataImporter.ImportReference(field, context);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public MethodReference Import(MethodReference method)
-        {
-            return ImportReference(method, null);
-        }
-
-        [Obsolete("Use ImportReference", error: false)]
-        public MethodReference Import(MethodReference method, IGenericParameterProvider context)
-        {
-            return ImportReference(method, context);
         }
 
         public MethodReference ImportReference(MethodReference method)
