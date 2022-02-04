@@ -35,20 +35,6 @@ namespace Cecilia.Security.Cryptography
 {
     internal static class CryptoConvert
     {
-#if NETSTANDARD
-        static private Span<T> TrimStart<T>(this Span<T> span, T element) where T: IEquatable<T>
-        {
-            for (int i = 0; i < span.Length; i++)
-            {
-                if (!span[i].Equals(element))
-                {
-                    return span.Slice(i);
-                }
-            }
-            return default;
-        }
-#endif
-
         static RSA FromCapiPrivateKeyBlob(ReadOnlySpan<byte> blob)
         {
             var rsap = new RSAParameters();
@@ -69,10 +55,7 @@ namespace Cecilia.Security.Cryptography
                 int bitLen = BinaryPrimitives.ReadInt32LittleEndian(blob.Slice(12));
 
                 // DWORD public exponent
-                Span<byte> exp = stackalloc byte[4];
-                blob.Slice(16, 4).CopyTo(exp);
-                exp.Reverse();
-                rsap.Exponent = exp.TrimStart<byte>(0).ToArray();
+                rsap.Exponent = new byte[] { blob[19], blob[18], blob[17], blob[16] };
 
                 int pos = 20;
                 // BYTE modulus[rsapubkey.bitlen/8];
@@ -150,7 +133,7 @@ namespace Cecilia.Security.Cryptography
                 // DWORD public exponent
                 var rsap = new RSAParameters
                 {
-                    Exponent = new byte[3] { blob[18], blob[17], blob[16] }
+                    Exponent = new byte[] { blob[19], blob[18], blob[17], blob[16] }
                 };
 
                 // BYTE modulus[rsapubkey.bitlen/8];
@@ -191,11 +174,15 @@ namespace Cecilia.Security.Cryptography
             throw new CryptographicException("Unknown blob format.");
         }
 
-        static public byte[] ToCapiPublicKeyBlob(RSA rsa)
+        public static int GetCapiPublicKeyBlobLength(in RSAParameters parameters) =>
+            20 + parameters.Modulus.Length;
+
+        static public void WriteCapiPublicKeyBlob(in RSAParameters parameters, Span<byte> blob)
         {
-            RSAParameters p = rsa.ExportParameters(false);
-            int keyLength = p.Modulus.Length; // in bytes
-            var blob = new byte[20 + keyLength];
+            if (blob.Length < GetCapiPublicKeyBlobLength(parameters))
+                throw new ArgumentException("Destination is too short.", nameof(blob));
+
+            int keyLength = parameters.Modulus.Length; // in bytes
 
             blob[0] = 0x06; // Type - PUBLICKEYBLOB (0x06)
             blob[1] = 0x02; // Version - Always CUR_BLOB_VERSION (0x02)
@@ -206,17 +193,16 @@ namespace Cecilia.Security.Cryptography
             blob[10] = 0x41;
             blob[11] = 0x31;
 
-            BinaryPrimitives.WriteInt32LittleEndian(blob.AsSpan(12), keyLength * 8);
+            BinaryPrimitives.WriteInt32LittleEndian(blob.Slice(12), keyLength * 8);
 
             // public exponent (DWORD)
-            var exp = new Span<byte>(blob, 16, 4);
-            p.Exponent.AsSpan().CopyTo(exp);
+            Span<byte> exp = blob.Slice(16, 4);
+            parameters.Exponent.AsSpan().CopyTo(exp);
             exp.Reverse();
             // modulus
-            var mod = blob.AsSpan().Slice(20);
-            p.Modulus.AsSpan().CopyTo(mod);
+            var mod = blob.Slice(20);
+            parameters.Modulus.AsSpan().CopyTo(mod);
             mod.Reverse();
-            return blob;
         }
     }
 }

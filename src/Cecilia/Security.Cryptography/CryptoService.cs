@@ -11,9 +11,8 @@
 using Cecilia.PE;
 using Cecilia.Security.Cryptography;
 using System;
+using System.Buffers.Binary;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Security.Cryptography;
 
 namespace Cecilia
@@ -23,15 +22,15 @@ namespace Cecilia
     // from Jeroen Frijters' fantastic work
     // in IKVM.Reflection.Emit. Thanks!
 
-    static class CryptoService
+    internal static class CryptoService
     {
 
         public static byte[] GetPublicKey(WriterParameters parameters)
         {
-            var rsa = parameters.StrongNameKeyPair.GetRSA();
-            var cspBlob = CryptoConvert.ToCapiPublicKeyBlob(rsa);
-            var publicKey = new byte[12 + cspBlob.Length];
-            Buffer.BlockCopy(cspBlob, 0, publicKey, 12, cspBlob.Length);
+            var rsaParams = parameters.StrongNameKeyPair.GetRSA().ExportParameters(false);
+            var cspBlobLength = CryptoConvert.GetCapiPublicKeyBlobLength(in rsaParams);
+            var publicKey = new byte[12 + cspBlobLength];
+            CryptoConvert.WriteCapiPublicKeyBlob(in rsaParams, publicKey.AsSpan(12));
             // The first 12 bytes are documented at:
             // http://msdn.microsoft.com/library/en-us/cprefadd/html/grfungethashfromfile.asp
             // ALG_ID - Signature
@@ -40,10 +39,7 @@ namespace Cecilia
             publicKey[4] = 4;
             publicKey[5] = 128;
             // Length of Public Key (in bytes)
-            publicKey[8] = (byte)(cspBlob.Length >> 0);
-            publicKey[9] = (byte)(cspBlob.Length >> 8);
-            publicKey[10] = (byte)(cspBlob.Length >> 16);
-            publicKey[11] = (byte)(cspBlob.Length >> 24);
+            BinaryPrimitives.WriteInt32LittleEndian(publicKey.AsSpan(8), cspBlobLength);
             return publicKey;
         }
 

@@ -115,10 +115,10 @@ namespace Cecilia
             {
                 if (_publicKey == null)
                 {
-                    RSA rsa = GetRSA();
+                    RSAParameters parameters = GetRSA().ExportParameters(false);
+                    int keyBlobLength = CryptoConvert.GetCapiPublicKeyBlobLength(in parameters);
 
-                    byte[] blob = CryptoConvert.ToCapiPublicKeyBlob(rsa);
-                    _publicKey = new byte[blob.Length + 12];
+                    _publicKey = new byte[keyBlobLength + 12];
                     // The first 12 bytes are documented at:
                     // http://msdn.microsoft.com/library/en-us/cprefadd/html/grfungethashfromfile.asp
                     // ALG_ID - Signature
@@ -132,13 +132,12 @@ namespace Cecilia
                     _publicKey[6] = 0x00;
                     _publicKey[7] = 0x00;
                     // Length of Public Key (in bytes)
-                    int lastPart = blob.Length;
-                    _publicKey[8] = (byte)(lastPart % 256);
-                    _publicKey[9] = (byte)(lastPart / 256); // just in case
+                    _publicKey[8] = (byte)(keyBlobLength % 256);
+                    _publicKey[9] = (byte)(keyBlobLength / 256); // just in case
                     _publicKey[10] = 0x00;
                     _publicKey[11] = 0x00;
 
-                    Buffer.BlockCopy(blob, 0, _publicKey, 12, blob.Length);
+                    CryptoConvert.WriteCapiPublicKeyBlob(in parameters, _publicKey.AsSpan(12));
                 }
                 return _publicKey;
             }
