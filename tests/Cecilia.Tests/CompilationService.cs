@@ -46,11 +46,6 @@ namespace Cecilia.Tests
             get { return Environment.OSVersion.Platform == PlatformID.Win32NT; }
         }
 
-        public static bool HasNativePdbSupport
-        {
-            get { return OnWindows && !OnMono; }
-        }
-
         static Type TryGetType(string assemblyQualifiedName)
         {
             try

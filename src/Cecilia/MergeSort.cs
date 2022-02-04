@@ -10,55 +10,37 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-namespace Mono
+namespace Cecilia
 {
-
-    class MergeSort<T>
+    internal static class MergeSort
     {
-        private readonly T[] elements;
-        private readonly T[] buffer;
-        private readonly IComparer<T> comparer;
-
-        private MergeSort(T[] elements, IComparer<T> comparer)
+        public static void Sort<T>(Span<T> elements, IComparer<T> comparer)
         {
-            this.elements = elements;
-            this.buffer = new T[elements.Length];
-            Array.Copy(this.elements, this.buffer, elements.Length);
-            this.comparer = comparer;
+            var buffer = new T[elements.Length];
+            elements.CopyTo(buffer);
+            TopDownSplitMerge(buffer, elements, comparer);
         }
 
-        public static void Sort(T[] source, IComparer<T> comparer)
+        private static void TopDownSplitMerge<T>(Span<T> a, Span<T> b, IComparer<T> comparer)
         {
-            Sort(source, 0, source.Length, comparer);
-        }
-
-        public static void Sort(T[] source, int start, int length, IComparer<T> comparer)
-        {
-            new MergeSort<T>(source, comparer).Sort(start, length);
-        }
-
-        private void Sort(int start, int length)
-        {
-            TopDownSplitMerge(this.buffer, this.elements, start, length);
-        }
-
-        private void TopDownSplitMerge(T[] a, T[] b, int start, int end)
-        {
-            if (end - start < 2)
+            Debug.Assert(a.Length == b.Length);
+            if (a.Length < 2)
                 return;
 
-            int middle = (end + start) / 2;
-            TopDownSplitMerge(b, a, start, middle);
-            TopDownSplitMerge(b, a, middle, end);
-            TopDownMerge(a, b, start, middle, end);
+            int middle = a.Length / 2;
+            TopDownSplitMerge(b.Slice(0, middle), a.Slice(0, middle), comparer);
+            TopDownSplitMerge(b.Slice(middle), a.Slice(middle), comparer);
+            TopDownMerge(a, b, middle, comparer);
         }
 
-        private void TopDownMerge(T[] a, T[] b, int start, int middle, int end)
+        private static void TopDownMerge<T>(ReadOnlySpan<T> a, Span<T> b, int middle, IComparer<T> comparer)
         {
-            for (int i = start, j = middle, k = start; k < end; k++)
+            Debug.Assert(a.Length == b.Length);
+            for (int i = 0, j = middle, k = 0; k < a.Length; k++)
             {
-                if (i < middle && (j >= end || comparer.Compare(a[i], a[j]) <= 0))
+                if (i < middle && (j >= a.Length || comparer.Compare(a[i], a[j]) <= 0))
                 {
                     b[k] = a[i++];
                 }

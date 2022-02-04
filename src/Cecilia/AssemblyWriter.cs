@@ -11,7 +11,6 @@
 using Cecilia.Cil;
 using Cecilia.Metadata;
 using Cecilia.PE;
-using Mono;
 using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;
@@ -254,7 +253,7 @@ namespace Cecilia
 
         public sealed override void Sort()
         {
-            MergeSort<TRow>.Sort(rows, 0, this.length, this);
+            MergeSort.Sort(rows.AsSpan(0, length), this);
         }
 
         protected static int Compare(uint x, uint y)
