@@ -219,7 +219,7 @@ namespace Cecilia
         internal GenericParameter(int position, GenericParameterType type, ModuleDefinition module)
             : base(string.Empty, string.Empty)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
 
             this.position = position;
             this.type = type;

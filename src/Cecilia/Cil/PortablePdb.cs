@@ -25,7 +25,7 @@ namespace Cecilia.Cil
 
         public ISymbolReader GetSymbolReader(ModuleDefinition module, string fileName)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
             Mixin.CheckNotNullOrEmpty(fileName);
 
             var file = File.OpenRead(Mixin.GetPdbFileName(fileName));
@@ -34,7 +34,7 @@ namespace Cecilia.Cil
 
         public ISymbolReader GetSymbolReader(ModuleDefinition module, Stream symbolStream)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
             Mixin.CheckNotNull(symbolStream);
 
             return GetSymbolReader(module, Disposable.NotOwned(symbolStream), symbolStream.GetFileName());
@@ -169,7 +169,7 @@ namespace Cecilia.Cil
 
         public ISymbolReader GetSymbolReader(ModuleDefinition module, string fileName)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
 
             var header = module.GetDebugHeader();
             var entry = header.GetEmbeddedPortablePdbEntry();
@@ -237,7 +237,7 @@ namespace Cecilia.Cil
     {
         public ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
             Mixin.CheckNotNullOrEmpty(fileName);
 
             var file = File.Open(Mixin.GetPdbFileName(fileName), FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -246,7 +246,7 @@ namespace Cecilia.Cil
 
         public ISymbolWriter GetSymbolWriter(ModuleDefinition module, Stream symbolStream)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
             Mixin.CheckNotNull(symbolStream);
 
             // In order to compute the PDB checksum, the stream we're writing to needs to be able to
@@ -499,7 +499,7 @@ namespace Cecilia.Cil
 
         public ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName)
         {
-            Mixin.CheckModule(module);
+            Mixin.CheckNotNull(module);
             Mixin.CheckNotNullOrEmpty(fileName);
 
             var stream = new MemoryStream();
