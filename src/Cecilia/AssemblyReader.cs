@@ -657,7 +657,7 @@ namespace Cecilia
             InitializeAssemblyReferences();
 
             var references = new Collection<AssemblyNameReference>(metadata.AssemblyReferences);
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 module.Projections.AddVirtualReferences(references);
 
             return references;
@@ -891,7 +891,7 @@ namespace Cecilia
                 types[i] = ReadType(i + 1);
             }
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
             {
                 for (uint i = 0; i < length; i++)
                 {
@@ -1104,7 +1104,7 @@ namespace Cecilia
 
             type = ReadTypeDefinition(rid);
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 WindowsRuntimeProjections.Project(type);
 
             return type;
@@ -1204,7 +1204,7 @@ namespace Cecilia
 
             MetadataSystem.TryProcessPrimitiveTypeReference(type);
 
-            if (type.Module.IsWindowsMetadata())
+            if (type.Module.IsWindowsMetadata)
                 WindowsRuntimeProjections.Project(type);
 
             return type;
@@ -1364,7 +1364,7 @@ namespace Cecilia
 
             fields.Add(field);
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 WindowsRuntimeProjections.Project(field);
         }
 
@@ -1882,7 +1882,7 @@ namespace Cecilia
                 base.position = position;
             }
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 WindowsRuntimeProjections.Project(method);
         }
 
@@ -2626,7 +2626,7 @@ namespace Cecilia
 
             metadata.RemoveCustomAttributeRange(owner);
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 foreach (var custom_attribute in custom_attributes)
                     WindowsRuntimeProjections.Project(owner, custom_attribute);
 

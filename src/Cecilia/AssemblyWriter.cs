@@ -1232,7 +1232,7 @@ namespace Cecilia
             var references = module.AssemblyReferences;
             var table = GetTable<AssemblyRefTable>(Table.AssemblyRef);
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 module.Projections.RemoveVirtualReferences(references);
 
             for (int i = 0; i < references.Count; i++)
@@ -1259,7 +1259,7 @@ namespace Cecilia
                 reference.token = new MetadataToken(TokenType.AssemblyRef, rid);
             }
 
-            if (module.IsWindowsMetadata())
+            if (module.IsWindowsMetadata)
                 module.Projections.AddVirtualReferences(references);
         }
 

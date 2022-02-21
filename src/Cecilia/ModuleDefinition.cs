@@ -326,6 +326,8 @@ namespace Cecilia
             set { metadata_kind = value; }
         }
 
+        internal bool IsWindowsMetadata => metadata_kind != MetadataKind.Ecma335;
+
         internal WindowsRuntimeProjections Projections
         {
             get
@@ -1215,7 +1217,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static void CheckNotNull(object x, [CallerArgumentExpression("x")] string expression = "")
         {
             if (x == null)
@@ -1294,11 +1295,6 @@ namespace Cecilia
                 default:
                     return "v4.0.30319";
             }
-        }
-
-        public static bool IsWindowsMetadata(this ModuleDefinition module)
-        {
-            return module.MetadataKind != MetadataKind.Ecma335;
         }
     }
 }
