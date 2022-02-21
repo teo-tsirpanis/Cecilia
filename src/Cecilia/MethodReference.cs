@@ -202,26 +202,4 @@ namespace Cecilia
             return module.Resolve(this);
         }
     }
-
-    static partial class Mixin
-    {
-
-        public static bool IsVarArg(this IMethodSignature self)
-        {
-            return self.CallingConvention == MethodCallingConvention.VarArg;
-        }
-
-        public static int GetSentinelPosition(this IMethodSignature self)
-        {
-            if (!self.HasParameters)
-                return -1;
-
-            var parameters = self.Parameters;
-            for (int i = 0; i < parameters.Count; i++)
-                if (parameters[i].ParameterType.IsSentinel)
-                    return i;
-
-            return -1;
-        }
-    }
 }

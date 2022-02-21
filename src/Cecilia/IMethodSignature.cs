@@ -13,10 +13,8 @@ using System.Text;
 
 namespace Cecilia
 {
-
     public interface IMethodSignature : IMetadataTokenProvider
     {
-
         bool HasThis { get; set; }
         bool ExplicitThis { get; set; }
         MethodCallingConvention CallingConvention { get; set; }
@@ -27,9 +25,8 @@ namespace Cecilia
         MethodReturnType MethodReturnType { get; }
     }
 
-    static partial class Mixin
+    static partial class MethodSignatureExtensions
     {
-
         public static bool HasImplicitThis(this IMethodSignature self)
         {
             return self.HasThis && !self.ExplicitThis;
@@ -37,7 +34,7 @@ namespace Cecilia
 
         public static void MethodSignatureFullName(this IMethodSignature self, StringBuilder builder)
         {
-            builder.Append("(");
+            builder.Append('(');
 
             if (self.HasParameters)
             {
@@ -46,7 +43,7 @@ namespace Cecilia
                 {
                     var parameter = parameters[i];
                     if (i > 0)
-                        builder.Append(",");
+                        builder.Append(',');
 
                     if (parameter.ParameterType.IsSentinel)
                         builder.Append("...,");
@@ -55,7 +52,25 @@ namespace Cecilia
                 }
             }
 
-            builder.Append(")");
+            builder.Append(')');
+        }
+
+        public static bool IsVarArg(this IMethodSignature self)
+        {
+            return self.CallingConvention == MethodCallingConvention.VarArg;
+        }
+
+        public static int GetSentinelPosition(this IMethodSignature self)
+        {
+            if (!self.HasParameters)
+                return -1;
+
+            var parameters = self.Parameters;
+            for (int i = 0; i < parameters.Count; i++)
+                if (parameters[i].ParameterType.IsSentinel)
+                    return i;
+
+            return -1;
         }
     }
 }
