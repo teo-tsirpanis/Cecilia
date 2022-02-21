@@ -254,7 +254,7 @@ namespace Cecilia
 
         public sealed override void Sort()
         {
-            MergeSort.Sort(rows.AsSpan(0, length), this);
+            StableSort.Sort(rows.AsSpan(0, length), this);
         }
 
         protected static int Compare(uint x, uint y)

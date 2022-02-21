@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace Cecilia
 {
-    internal static class MergeSort
+    internal static class StableSort
     {
         public static void Sort<T>(Span<T> elements, IComparer<T> comparer)
         {
