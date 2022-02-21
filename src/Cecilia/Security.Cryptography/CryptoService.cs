@@ -23,7 +23,9 @@ namespace Cecilia.Security.Cryptography
     {
         public static byte[] GetPublicKey(WriterParameters parameters)
         {
-            var rsaParams = parameters.StrongNameKeyPair.GetRSA().ExportParameters(false);
+            RSAParameters rsaParams;
+            using (RSA rsa = parameters.StrongNameKeyPair.CreateRSA())
+                rsaParams = rsa.ExportParameters(false);
             var cspBlobLength = CryptoConvert.GetCapiPublicKeyBlobLength(in rsaParams);
             var publicKey = new byte[12 + cspBlobLength];
             CryptoConvert.WriteCapiPublicKeyBlob(in rsaParams, publicKey.AsSpan(12));
@@ -53,7 +55,7 @@ namespace Cecilia.Security.Cryptography
 
         static byte[] CreateStrongName(WriterParameters parameters, byte[] hash)
         {
-            var rsa = parameters.StrongNameKeyPair.GetRSA();
+            using var rsa = parameters.StrongNameKeyPair.CreateRSA();
             byte[] signature = rsa.SignHash(hash, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
             Array.Reverse(signature);
 
@@ -76,7 +78,7 @@ namespace Cecilia.Security.Cryptography
                 + (strong_name_directory.VirtualAddress - text.VirtualAddress));
             var strong_name_length = (int)strong_name_directory.Size;
 
-            var sha1 = SHA1.Create();
+            using var sha1 = SHA1.Create();
             var buffer = new byte[buffer_size];
             using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))
             {
@@ -116,7 +118,7 @@ namespace Cecilia.Security.Cryptography
         {
             const int buffer_size = 8192;
 
-            var sha1 = SHA1.Create();
+            using var sha1 = SHA1.Create();
             var buffer = new byte[buffer_size];
 
             using (var crypto_stream = new CryptoStream(Stream.Null, sha1, CryptoStreamMode.Write))

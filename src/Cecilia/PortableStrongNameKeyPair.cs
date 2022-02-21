@@ -32,9 +32,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using Cecilia.Security.Cryptography;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -44,20 +45,15 @@ namespace Cecilia
     {
         private static readonly byte[] s_ecmaKey = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0 };
 
-        private byte[] _publicKey;
+        private byte[]? _publicKey;
 
-        private readonly RSA _rsa;
-
-        public PortableStrongNameKeyPair(ReadOnlySpan<byte> keyPair)
-        {
-            LoadKey(keyPair, out _rsa);
-        }
+        private readonly Func<RSA>? _rsaFactory;
 
         public PortableStrongNameKeyPair(byte[] keyPairArray)
         {
             Mixin.CheckNotNull(keyPairArray);
 
-            LoadKey(keyPairArray, out _rsa);
+            LoadKey(keyPairArray, out _rsaFactory);
         }
 
         public PortableStrongNameKeyPair(FileStream keyPairFile)
@@ -66,7 +62,7 @@ namespace Cecilia
 
             byte[] input = new byte[keyPairFile.Length];
             keyPairFile.Read(input, 0, input.Length);
-            LoadKey(input, out _rsa);
+            LoadKey(input, out _rsaFactory);
         }
 
 #if NET
@@ -80,32 +76,30 @@ namespace Cecilia
             {
                 KeyContainerName = keyPairContainer
             };
-            _rsa = new RSACryptoServiceProvider(csp);
+            _rsaFactory = () => new RSACryptoServiceProvider(csp);
         }
 
-        // Warning: the returned instance must not be disposed.
-        internal RSA GetRSA()
+        internal RSA CreateRSA()
         {
             // ECMA "key" is valid but doesn't produce a RSA instance
-            if (ReferenceEquals(_publicKey, s_ecmaKey))
+            if (_rsaFactory is null)
                 throw new InvalidOperationException("Cannot use the ECMA Standard Public Key for signing.");
-            Debug.Assert(_rsa != null);
-            return _rsa;
+            return _rsaFactory();
         }
 
-        private void LoadKey(ReadOnlySpan<byte> key, out RSA rsa)
+        private void LoadKey(byte[] key, out Func<RSA>? rsaFactory)
         {
             // check for ECMA key
-            if (key.SequenceEqual(s_ecmaKey))
+            if (key.AsSpan().SequenceEqual(s_ecmaKey))
             {
                 // We reuse the array to save an allocation.
                 // If the PublicKey array is ever exposed, we must clone s_ecmaKey.
                 _publicKey = s_ecmaKey;
-                rsa = null;
+                rsaFactory = null;
             }
             else
             {
-                rsa = CryptoConvert.FromCapiKeyBlob(key);
+                rsaFactory = () => CryptoConvert.FromCapiKeyBlob(key);
             }
         }
 
@@ -115,7 +109,10 @@ namespace Cecilia
             {
                 if (_publicKey == null)
                 {
-                    RSAParameters parameters = GetRSA().ExportParameters(false);
+                    RSAParameters parameters;
+                    using (RSA rsa = CreateRSA())
+                        parameters = rsa.ExportParameters(false);
+
                     int keyBlobLength = CryptoConvert.GetCapiPublicKeyBlobLength(in parameters);
 
                     _publicKey = new byte[keyBlobLength + 12];
