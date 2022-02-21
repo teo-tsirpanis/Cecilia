@@ -20,7 +20,7 @@ namespace Cecilia
 
         internal IMethodSignature method;
 
-        object constant = Mixin.NotResolved;
+        object constant = ConstantResolver.NotResolved;
         Collection<CustomAttribute> custom_attributes;
         MarshalInfo marshal_info;
 
@@ -52,9 +52,9 @@ namespace Cecilia
             {
                 this.ResolveConstant(ref constant, parameter_type.Module);
 
-                return constant != Mixin.NoValue;
+                return constant != ConstantResolver.NoValue;
             }
-            set { if (!value) constant = Mixin.NoValue; }
+            set { if (!value) constant = ConstantResolver.NoValue; }
         }
 
         public object Constant

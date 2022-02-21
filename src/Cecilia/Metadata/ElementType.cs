@@ -54,4 +54,16 @@ namespace Cecilia.Metadata
         Boxed = 0x51,
         Enum = 0x55
     }
+
+    internal static class ElementTypeExtensions
+    {
+        public static bool IsPrimitive(this ElementType self) => self is
+            ElementType.Boolean or ElementType.Char
+            or ElementType.I or ElementType.U
+            or ElementType.I1 or ElementType.U1
+            or ElementType.I2 or ElementType.U2
+            or ElementType.I4 or ElementType.U4
+            or ElementType.I8 or ElementType.U8
+            or ElementType.R4 or ElementType.R8;
+    }
 }

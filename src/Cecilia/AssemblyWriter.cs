@@ -1446,7 +1446,7 @@ namespace Cecilia
             if (type.IsDefinition)
                 return type.token;
 
-            if (type.IsTypeSpecification())
+            if (type.IsTypeSpecification)
                 return GetTypeSpecToken(type);
 
             return GetTypeRefToken(type);

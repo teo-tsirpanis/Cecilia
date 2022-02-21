@@ -198,7 +198,7 @@ namespace Cecilia
                 if (fullname != null)
                     return fullname;
 
-                var new_fullname = this.TypeFullName();
+                var new_fullname = this.TypeFullName;
 
                 if (IsNested)
                     new_fullname = DeclaringType.FullName + "/" + new_fullname;
@@ -319,75 +319,32 @@ namespace Cecilia
 
             return module.Resolve(this);
         }
-    }
 
-    static partial class Mixin
-    {
+        internal string TypeFullName =>
+            string.IsNullOrEmpty(Namespace)
+                ? Name
+                : Namespace + '.' + Name;
 
-        public static bool IsPrimitive(this ElementType self)
+        internal bool IsTypeOf(string @namespace, string name) => Name == name && Namespace == @namespace;
+
+        internal bool IsTypeSpecification => etype is
+            ElementType.Array
+            or ElementType.ByRef
+            or ElementType.CModOpt
+            or ElementType.CModReqD
+            or ElementType.FnPtr
+            or ElementType.GenericInst
+            or ElementType.MVar
+            or ElementType.Pinned
+            or ElementType.SzArray
+            or ElementType.Sentinel
+            or ElementType.Var;
+
+        internal TypeDefinition CheckedResolve()
         {
-            switch (self)
-            {
-                case ElementType.Boolean:
-                case ElementType.Char:
-                case ElementType.I:
-                case ElementType.U:
-                case ElementType.I1:
-                case ElementType.U1:
-                case ElementType.I2:
-                case ElementType.U2:
-                case ElementType.I4:
-                case ElementType.U4:
-                case ElementType.I8:
-                case ElementType.U8:
-                case ElementType.R4:
-                case ElementType.R8:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static string TypeFullName(this TypeReference self)
-        {
-            return string.IsNullOrEmpty(self.Namespace)
-                ? self.Name
-                : self.Namespace + '.' + self.Name;
-        }
-
-        public static bool IsTypeOf(this TypeReference self, string @namespace, string name)
-        {
-            return self.Name == name
-                && self.Namespace == @namespace;
-        }
-
-        public static bool IsTypeSpecification(this TypeReference type)
-        {
-            switch (type.etype)
-            {
-                case ElementType.Array:
-                case ElementType.ByRef:
-                case ElementType.CModOpt:
-                case ElementType.CModReqD:
-                case ElementType.FnPtr:
-                case ElementType.GenericInst:
-                case ElementType.MVar:
-                case ElementType.Pinned:
-                case ElementType.Ptr:
-                case ElementType.SzArray:
-                case ElementType.Sentinel:
-                case ElementType.Var:
-                    return true;
-            }
-
-            return false;
-        }
-
-        public static TypeDefinition CheckedResolve(this TypeReference self)
-        {
-            var type = self.Resolve();
+            var type = Resolve();
             if (type == null)
-                throw new ResolutionException(self);
+                throw new ResolutionException(this);
 
             return type;
         }

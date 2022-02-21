@@ -124,10 +124,8 @@ namespace Cecilia
 
         public static AssemblyDefinition CreateAssembly(AssemblyNameDefinition assemblyName, string moduleName, ModuleParameters parameters)
         {
-            if (assemblyName == null)
-                throw new ArgumentNullException("assemblyName");
-            if (moduleName == null)
-                throw new ArgumentNullException("moduleName");
+            Mixin.CheckNotNull(assemblyName);
+            Mixin.CheckNotNull(moduleName);
             Mixin.CheckNotNull(parameters);
             if (parameters.Kind == ModuleKind.NetModule)
                 throw new ArgumentException("kind");

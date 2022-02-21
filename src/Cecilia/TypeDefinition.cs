@@ -704,7 +704,7 @@ namespace Cecilia
             {
                 var nested_type = nested_types[i];
 
-                if (nested_type.TypeFullName() == fullname)
+                if (nested_type.TypeFullName == fullname)
                     return nested_type;
             }
 

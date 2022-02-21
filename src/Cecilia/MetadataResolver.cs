@@ -164,7 +164,7 @@ namespace Cecilia
             if (declaring_type == null)
                 return null;
 
-            return declaring_type.GetNestedType(type.TypeFullName());
+            return declaring_type.GetNestedType(type.TypeFullName);
         }
 
         public virtual FieldDefinition Resolve(FieldReference field)
@@ -383,7 +383,7 @@ namespace Cecilia
             if (a.IsGenericParameter)
                 return AreSame((GenericParameter)a, (GenericParameter)b);
 
-            if (a.IsTypeSpecification())
+            if (a.IsTypeSpecification)
                 return AreSame((TypeSpecification)a, (TypeSpecification)b);
 
             if (a.Name != b.Name || a.Namespace != b.Namespace)

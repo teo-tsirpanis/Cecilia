@@ -18,11 +18,10 @@ namespace Cecilia
         object Constant { get; set; }
     }
 
-    static partial class Mixin
+    internal static class ConstantResolver
     {
-
-        internal static object NoValue = new object();
-        internal static object NotResolved = new object();
+        internal static object NoValue = new();
+        internal static object NotResolved = new();
 
         public static void ResolveConstant(
             this IConstantProvider self,
@@ -31,18 +30,18 @@ namespace Cecilia
         {
             if (module == null)
             {
-                constant = Mixin.NoValue;
+                constant = NoValue;
                 return;
             }
 
             lock (module.SyncRoot)
             {
-                if (constant != Mixin.NotResolved)
+                if (constant != NotResolved)
                     return;
                 if (module.HasImage())
                     constant = module.Read(self, (provider, reader) => reader.ReadConstant(provider));
                 else
-                    constant = Mixin.NoValue;
+                    constant = NoValue;
             }
         }
     }

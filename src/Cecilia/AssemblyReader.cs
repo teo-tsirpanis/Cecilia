@@ -2543,7 +2543,7 @@ namespace Cecilia
 
             Row<ElementType, uint> row;
             if (!metadata.Constants.TryGetValue(owner.MetadataToken, out row))
-                return Mixin.NoValue;
+                return ConstantResolver.NoValue;
 
             metadata.Constants.Remove(owner.MetadataToken);
 

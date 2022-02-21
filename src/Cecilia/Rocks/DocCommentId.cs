@@ -143,7 +143,7 @@ namespace Cecilia.Rocks
 
         void WriteGenericInstanceTypeSignature(GenericInstanceType type)
         {
-            if (type.ElementType.IsTypeSpecification())
+            if (type.ElementType.IsTypeSpecification)
                 throw new NotSupportedException();
 
             GenericTypeOptions options = new GenericTypeOptions

@@ -283,7 +283,7 @@ namespace Mono.Collections.Generic
             if (new_size < size)
                 throw new ArgumentOutOfRangeException();
 
-            items = items.Resize(new_size);
+            Array.Resize(ref items, new_size);
         }
 
         int IList.Add(object value)

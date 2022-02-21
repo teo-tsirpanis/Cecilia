@@ -513,7 +513,7 @@ namespace Cecilia
 
         TypeReference ImportType(TypeReference type, ImportGenericContext context)
         {
-            if (type.IsTypeSpecification())
+            if (type.IsTypeSpecification)
                 return ImportTypeSpecification(type, context);
 
             var reference = new TypeReference(

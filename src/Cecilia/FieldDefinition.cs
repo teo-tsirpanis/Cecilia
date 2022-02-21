@@ -25,7 +25,7 @@ namespace Cecilia
         internal int rva = Mixin.NotResolvedMarker;
         byte[] initial_value;
 
-        object constant = Mixin.NotResolved;
+        object constant = ConstantResolver.NotResolved;
 
         MarshalInfo marshal_info;
 
@@ -150,9 +150,9 @@ namespace Cecilia
             {
                 this.ResolveConstant(ref constant, Module);
 
-                return constant != Mixin.NoValue;
+                return constant != ConstantResolver.NoValue;
             }
-            set { if (!value) constant = Mixin.NoValue; }
+            set { if (!value) constant = ConstantResolver.NoValue; }
         }
 
         public object Constant

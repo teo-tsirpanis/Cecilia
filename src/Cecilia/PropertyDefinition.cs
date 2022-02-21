@@ -27,7 +27,7 @@ namespace Cecilia
         internal MethodDefinition set_method;
         internal Collection<MethodDefinition> other_methods;
 
-        object constant = Mixin.NotResolved;
+        object constant = ConstantResolver.NotResolved;
 
         public PropertyAttributes Attributes
         {
@@ -177,9 +177,9 @@ namespace Cecilia
             {
                 this.ResolveConstant(ref constant, Module);
 
-                return constant != Mixin.NoValue;
+                return constant != ConstantResolver.NoValue;
             }
-            set { if (!value) constant = Mixin.NoValue; }
+            set { if (!value) constant = ConstantResolver.NoValue; }
         }
 
         public object Constant

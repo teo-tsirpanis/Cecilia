@@ -466,7 +466,7 @@ namespace Cecilia
             if (!fq_name)
                 return;
 
-            if (type.IsTypeSpecification())
+            if (type.IsTypeSpecification)
                 AppendTypeSpecification((TypeSpecification)type, name);
 
             if (RequiresFullyQualifiedName(type, top_level))
@@ -492,7 +492,7 @@ namespace Cecilia
 
         static void AppendTypeSpecification(TypeSpecification type, StringBuilder name)
         {
-            if (type.ElementType.IsTypeSpecification())
+            if (type.ElementType.IsTypeSpecification)
                 AppendTypeSpecification((TypeSpecification)type.ElementType, name);
 
             switch (type.etype)
