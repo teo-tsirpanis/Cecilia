@@ -98,8 +98,7 @@ namespace Cecilia
 
         public void WriteTypeSignature(TypeReference type)
         {
-            if (type == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(type);
 
             var etype = type.etype;
 
@@ -392,8 +391,7 @@ namespace Cecilia
 
         void WritePrimitiveValue(object value)
         {
-            if (value == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(value);
 
             switch (Type.GetTypeCode(value.GetType()))
             {

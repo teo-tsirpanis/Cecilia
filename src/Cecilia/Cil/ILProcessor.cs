@@ -203,28 +203,24 @@ namespace Cecilia.Cil
 
         public void InsertBefore(Instruction target, Instruction instruction)
         {
-            if (target == null)
-                throw new ArgumentNullException("target");
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(target);
+            Mixin.CheckNotNull(instruction);
 
             var index = instructions.IndexOf(target);
             if (index == -1)
-                throw new ArgumentOutOfRangeException("target");
+                throw new ArgumentOutOfRangeException(nameof(target));
 
             instructions.Insert(index, instruction);
         }
 
         public void InsertAfter(Instruction target, Instruction instruction)
         {
-            if (target == null)
-                throw new ArgumentNullException("target");
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(target);
+            Mixin.CheckNotNull(instruction);
 
             var index = instructions.IndexOf(target);
             if (index == -1)
-                throw new ArgumentOutOfRangeException("target");
+                throw new ArgumentOutOfRangeException(nameof(target));
 
             instructions.Insert(index + 1, instruction);
         }
@@ -232,27 +228,23 @@ namespace Cecilia.Cil
         public void InsertAfter(int index, Instruction instruction)
         {
             if (index < 0 || index >= instructions.Count)
-                throw new ArgumentOutOfRangeException("index");
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+                throw new ArgumentOutOfRangeException(nameof(index));
+            Mixin.CheckNotNull(instruction);
 
             instructions.Insert(index + 1, instruction);
         }
 
         public void Append(Instruction instruction)
         {
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(instruction);
 
             instructions.Add(instruction);
         }
 
         public void Replace(Instruction target, Instruction instruction)
         {
-            if (target == null)
-                throw new ArgumentNullException("target");
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(target);
+            Mixin.CheckNotNull(instruction);
 
             InsertAfter(target, instruction);
             Remove(target);
@@ -260,8 +252,7 @@ namespace Cecilia.Cil
 
         public void Replace(int index, Instruction instruction)
         {
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(instruction);
 
             InsertAfter(index, instruction);
             RemoveAt(index);
@@ -269,17 +260,16 @@ namespace Cecilia.Cil
 
         public void Remove(Instruction instruction)
         {
-            if (instruction == null)
-                throw new ArgumentNullException("instruction");
+            Mixin.CheckNotNull(instruction);
 
             if (!instructions.Remove(instruction))
-                throw new ArgumentOutOfRangeException("instruction");
+                throw new ArgumentOutOfRangeException(nameof(instruction));
         }
 
         public void RemoveAt(int index)
         {
             if (index < 0 || index >= instructions.Count)
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             instructions.RemoveAt(index);
         }

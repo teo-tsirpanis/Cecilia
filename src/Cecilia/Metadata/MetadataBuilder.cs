@@ -2268,8 +2268,7 @@ namespace Cecilia.Metadata
 
         public MetadataToken LookupToken(IMetadataTokenProvider provider)
         {
-            if (provider == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(provider);
 
             if (metadata_builder != null)
                 return metadata_builder.LookupToken(provider);

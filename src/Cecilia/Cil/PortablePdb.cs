@@ -202,8 +202,7 @@ namespace Cecilia.Cil
 
         internal EmbeddedPortablePdbReader(PortablePdbReader reader)
         {
-            if (reader == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(reader);
 
             this.reader = reader;
         }

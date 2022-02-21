@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Cecilia;
 
 namespace Mono.Collections.Generic
 {
@@ -52,16 +53,14 @@ namespace Mono.Collections.Generic
 
         public ReadOnlyCollection(T[] array)
         {
-            if (array == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(array);
 
             Initialize(array, array.Length);
         }
 
         public ReadOnlyCollection(Collection<T> collection)
         {
-            if (collection == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(collection);
 
             Initialize(collection.items, collection.size);
         }

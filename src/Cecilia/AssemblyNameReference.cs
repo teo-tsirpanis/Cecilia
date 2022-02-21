@@ -194,8 +194,7 @@ namespace Cecilia
 
         public static AssemblyNameReference Parse(string fullName)
         {
-            if (fullName == null)
-                throw new ArgumentNullException("fullName");
+            Mixin.CheckNotNull(fullName);
             if (fullName.Length == 0)
                 throw new ArgumentException("Name can not be empty");
 

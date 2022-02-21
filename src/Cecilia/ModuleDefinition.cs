@@ -1220,9 +1220,7 @@ namespace Cecilia
 
         public static void CheckNotNullOrEmpty(string x, [CallerArgumentExpression("x")] string expression = "")
         {
-            if (x is null)
-                throw new ArgumentNullException(expression);
-            if (x.Length == 0)
+            if (x == null || x.Length == 0)
                 throw new ArgumentNullException(expression);
         }
 

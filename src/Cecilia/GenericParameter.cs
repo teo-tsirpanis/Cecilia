@@ -203,8 +203,7 @@ namespace Cecilia
         public GenericParameter(string name, IGenericParameterProvider owner)
             : base(string.Empty, name)
         {
-            if (owner == null)
-                throw new ArgumentNullException();
+            Mixin.CheckNotNull(owner);
 
             this.position = -1;
             this.owner = owner;

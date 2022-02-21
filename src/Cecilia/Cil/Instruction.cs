@@ -260,8 +260,7 @@ namespace Cecilia.Cil
 
         public static Instruction Create(OpCode opcode, Instruction target)
         {
-            if (target == null)
-                throw new ArgumentNullException("target");
+            Mixin.CheckNotNull(target);
             if (opcode.OperandType != OperandType.InlineBrTarget &&
                 opcode.OperandType != OperandType.ShortInlineBrTarget)
                 throw new ArgumentException("opcode");
