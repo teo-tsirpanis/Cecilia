@@ -8,6 +8,7 @@
 // Licensed under the MIT/X11 license.
 //
 
+using Cecilia.Metadata;
 using System;
 using System.IO;
 

@@ -9,6 +9,7 @@
 //
 
 using Cecilia.Cil;
+using Cecilia.Metadata;
 using Mono.Collections.Generic;
 using System;
 
