@@ -48,7 +48,7 @@ namespace Cecilia
         }
 
         public AssemblyResolutionException(AssemblyNameReference reference, Exception innerException)
-            : base(string.Format("Failed to resolve assembly: '{0}'", reference), innerException)
+            : base($"Failed to resolve assembly: '{reference}'", innerException)
         {
             this.reference = reference;
         }

@@ -182,7 +182,7 @@ namespace Cecilia
             }
 
             if (typeReference is TypeSpecification)
-                throw new NotSupportedException(string.Format("The type {0} cannot be resolved correctly.", typeReference.FullName));
+                throw new NotSupportedException($"The type {typeReference.FullName} cannot be resolved correctly.");
 
             return typeReference;
         }

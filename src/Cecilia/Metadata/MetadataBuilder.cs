@@ -2261,9 +2261,9 @@ namespace Cecilia.Metadata
             return signature;
         }
 
-        static Exception CreateForeignMemberException(MemberReference member)
+        static void ThrowForeignMemberException(MemberReference member)
         {
-            return new ArgumentException(string.Format("Member '{0}' is declared in another module and needs to be imported", member));
+            throw new ArgumentException($"Member '{member}' is declared in another module and needs to be imported");
         }
 
         public MetadataToken LookupToken(IMetadataTokenProvider provider)
@@ -2276,7 +2276,7 @@ namespace Cecilia.Metadata
 
             var member = provider as MemberReference;
             if (member == null || member.Module != module)
-                throw CreateForeignMemberException(member);
+                ThrowForeignMemberException(member);
 
             var token = provider.MetadataToken;
 

@@ -89,9 +89,6 @@ namespace Cecilia
             return one.token != other.token;
         }
 
-        public override string ToString()
-        {
-            return string.Format("[{0}:0x{1}]", TokenType, RID.ToString("x4"));
-        }
+        public override string ToString() => $"[{TokenType}:0x{RID:x4}]";
     }
 }

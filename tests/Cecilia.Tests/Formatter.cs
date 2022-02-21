@@ -185,7 +185,7 @@ namespace Cecilia.Tests
             switch (handler_type)
             {
                 case ExceptionHandlerType.Catch:
-                    return string.Format("{0} {1}", type, handler.CatchType.FullName);
+                    return $"{type} {handler.CatchType.FullName}";
                 case ExceptionHandlerType.Filter:
                     throw new NotImplementedException();
                 default:
