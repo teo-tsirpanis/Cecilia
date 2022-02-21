@@ -12,6 +12,7 @@ using Cecilia.Cil;
 using Cecilia.PE;
 using Mono.Collections.Generic;
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -1181,25 +1182,31 @@ namespace Cecilia
 
         public static bool IsPortablePdb(string fileName)
         {
-            using var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            return IsPortablePdb(file);
-        }
-
-        public static bool IsPortablePdb(Stream stream)
-        {
             const uint ppdb_signature = 0x424a5342;
 
-            if (stream.Length < 4) return false;
-            var position = stream.Position;
-            try
-            {
-                var reader = new BinaryReader(stream);
-                return reader.ReadUInt32() == ppdb_signature;
-            }
-            finally
-            {
-                stream.Position = position;
-            }
+#if NET
+            using var file = File.OpenHandle(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+#else
+            using var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 1);
+#endif
+
+#if NETSTANDARD2_0
+            byte[] buffer = new byte[sizeof(uint)];
+#else
+            Span<byte> buffer = stackalloc byte[sizeof(uint)];
+#endif
+
+            int bytesRead =
+#if NET
+                RandomAccess.Read(file, buffer, 0);
+#elif NETSTANDARD2_1
+                file.Read(buffer);
+#else
+                file.Read(buffer, 0, buffer.Length);
+#endif
+
+            return bytesRead == sizeof(uint)
+                && BinaryPrimitives.ReadUInt32LittleEndian(buffer) == ppdb_signature;
         }
     }
 }
