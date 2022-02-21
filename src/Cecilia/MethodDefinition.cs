@@ -209,7 +209,7 @@ namespace Cecilia
         {
             get
             {
-                Mixin.Read(Body);
+                _ = Body;
 
                 if (debug_info == null)
                 {
@@ -301,7 +301,7 @@ namespace Cecilia
         {
             get
             {
-                Mixin.Read(Body);
+                _ = Body;
 
                 return !custom_infos.IsNullOrEmpty();
             }
@@ -311,7 +311,7 @@ namespace Cecilia
         {
             get
             {
-                Mixin.Read(Body);
+                _ = Body;
 
                 if (custom_infos == null)
                     Interlocked.CompareExchange(ref custom_infos, new Collection<CustomDebugInformation>(), null);

@@ -1300,18 +1300,5 @@ namespace Cecilia
         {
             return module.MetadataKind != MetadataKind.Ecma335;
         }
-
-        public static byte[] ReadAll(this Stream self)
-        {
-            var memory = new MemoryStream((int)self.Length);
-
-            self.CopyTo(memory);
-
-            return memory.ToArray();
-        }
-
-        public static void Read(object o)
-        {
-        }
     }
 }

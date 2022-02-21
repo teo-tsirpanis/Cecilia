@@ -215,7 +215,7 @@ namespace Cecilia
                 if (virtual_references == null)
                 {
                     // force module to read its assembly references. that will in turn initialize virtual_references
-                    Mixin.Read(module.AssemblyReferences);
+                    _ = module.AssemblyReferences;
                 }
 
                 return virtual_references;

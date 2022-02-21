@@ -179,15 +179,15 @@ namespace Cecilia
             this.resolve_attributes = resolve_attributes;
 
             if (module.HasAssemblyReferences)
-                Mixin.Read(module.AssemblyReferences);
+                _ = module.AssemblyReferences;
             if (module.HasResources)
-                Mixin.Read(module.Resources);
+                _ = module.Resources;
             if (module.HasModuleReferences)
-                Mixin.Read(module.ModuleReferences);
+                _ = module.ModuleReferences;
             if (module.HasTypes)
                 ReadTypes(module.Types);
             if (module.HasExportedTypes)
-                Mixin.Read(module.ExportedTypes);
+                _ = module.ExportedTypes;
 
             ReadCustomAttributes(module);
 
@@ -216,7 +216,7 @@ namespace Cecilia
                 ReadTypes(type.NestedTypes);
 
             if (type.HasLayoutInfo)
-                Mixin.Read(type.ClassSize);
+                _ = type.ClassSize;
 
             if (type.HasFields)
                 ReadFields(type);
@@ -282,7 +282,7 @@ namespace Cecilia
             {
                 var security_declaration = security_declarations[i];
 
-                Mixin.Read(security_declaration.SecurityAttributes);
+                _ = security_declaration.SecurityAttributes;
             }
         }
 
@@ -300,7 +300,7 @@ namespace Cecilia
             {
                 var custom_attribute = custom_attributes[i];
 
-                Mixin.Read(custom_attribute.ConstructorArguments);
+                _ = custom_attribute.ConstructorArguments;
             }
         }
 
@@ -313,16 +313,16 @@ namespace Cecilia
                 var field = fields[i];
 
                 if (field.HasConstant)
-                    Mixin.Read(field.Constant);
+                    _ = field.Constant;
 
                 if (field.HasLayoutInfo)
-                    Mixin.Read(field.Offset);
+                    _ = field.Offset;
 
                 if (field.RVA > 0)
-                    Mixin.Read(field.InitialValue);
+                    _ = field.InitialValue;
 
                 if (field.HasMarshalInfo)
-                    Mixin.Read(field.MarshalInfo);
+                    _ = field.MarshalInfo;
 
                 ReadCustomAttributes(field);
             }
@@ -342,20 +342,20 @@ namespace Cecilia
                     ReadParameters(method);
 
                 if (method.HasOverrides)
-                    Mixin.Read(method.Overrides);
+                    _ = method.Overrides;
 
                 if (method.IsPInvokeImpl)
-                    Mixin.Read(method.PInvokeInfo);
+                    _ = method.PInvokeInfo;
 
                 ReadSecurityDeclarations(method);
                 ReadCustomAttributes(method);
 
                 var return_type = method.MethodReturnType;
                 if (return_type.HasConstant)
-                    Mixin.Read(return_type.Constant);
+                    _ = return_type.Constant;
 
                 if (return_type.HasMarshalInfo)
-                    Mixin.Read(return_type.MarshalInfo);
+                    _ = return_type.MarshalInfo;
 
                 ReadCustomAttributes(return_type);
             }
@@ -370,10 +370,10 @@ namespace Cecilia
                 var parameter = parameters[i];
 
                 if (parameter.HasConstant)
-                    Mixin.Read(parameter.Constant);
+                    _ = parameter.Constant;
 
                 if (parameter.HasMarshalInfo)
-                    Mixin.Read(parameter.MarshalInfo);
+                    _ = parameter.MarshalInfo;
 
                 ReadCustomAttributes(parameter);
             }
@@ -387,10 +387,10 @@ namespace Cecilia
             {
                 var property = properties[i];
 
-                Mixin.Read(property.GetMethod);
+                _ = property.GetMethod;
 
                 if (property.HasConstant)
-                    Mixin.Read(property.Constant);
+                    _ = property.Constant;
 
                 ReadCustomAttributes(property);
             }
@@ -404,7 +404,7 @@ namespace Cecilia
             {
                 var @event = events[i];
 
-                Mixin.Read(@event.AddMethod);
+                _ = @event.AddMethod;
 
                 ReadCustomAttributes(@event);
             }
@@ -866,8 +866,8 @@ namespace Cecilia
             {
                 var type = types[i];
 
-                Mixin.Read(type.Fields);
-                Mixin.Read(type.Methods);
+                _ = type.Fields;
+                _ = type.Methods;
             }
         }
 
@@ -2324,7 +2324,7 @@ namespace Cecilia
             if (type == null)
                 return null;
 
-            Mixin.Read(type.Fields);
+            _ = type.Fields;
 
             return metadata.GetFieldDefinition(rid);
         }
@@ -2346,7 +2346,7 @@ namespace Cecilia
             if (type == null)
                 return null;
 
-            Mixin.Read(type.Methods);
+            _ = type.Methods;
 
             return metadata.GetMethodDefinition(rid);
         }
