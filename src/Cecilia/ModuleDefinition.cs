@@ -1261,40 +1261,5 @@ namespace Cecilia
 
             return Path.GetFullPath(file_stream.Name);
         }
-
-        public static TargetRuntime ParseRuntime(this string self)
-        {
-            if (string.IsNullOrEmpty(self))
-                return TargetRuntime.Net_4_0;
-
-            switch (self[1])
-            {
-                case '1':
-                    return self[3] == '0'
-                        ? TargetRuntime.Net_1_0
-                        : TargetRuntime.Net_1_1;
-                case '2':
-                    return TargetRuntime.Net_2_0;
-                case '4':
-                default:
-                    return TargetRuntime.Net_4_0;
-            }
-        }
-
-        public static string RuntimeVersionString(this TargetRuntime runtime)
-        {
-            switch (runtime)
-            {
-                case TargetRuntime.Net_1_0:
-                    return "v1.0.3705";
-                case TargetRuntime.Net_1_1:
-                    return "v1.1.4322";
-                case TargetRuntime.Net_2_0:
-                    return "v2.0.50727";
-                case TargetRuntime.Net_4_0:
-                default:
-                    return "v4.0.30319";
-            }
-        }
     }
 }

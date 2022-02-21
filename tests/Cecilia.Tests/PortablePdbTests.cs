@@ -1160,7 +1160,7 @@ class Program
             Array.Copy(image.PdbHeap.data, 0, pdbId, 0, 20);
 
             pdbStream.Seek(0, SeekOrigin.Begin);
-            byte[] rawBytes = pdbStream.ReadAll();
+            byte[] rawBytes = ReadAll(pdbStream);
 
             var bytes = new byte[rawBytes.Length];
 
@@ -1173,6 +1173,15 @@ class Program
 
             var sha256 = SHA256.Create();
             pdbChecksum = sha256.ComputeHash(bytes);
+
+            static byte[] ReadAll(Stream self)
+            {
+                var memory = new MemoryStream((int)self.Length);
+
+                self.CopyTo(memory);
+
+                return memory.ToArray();
+            }
         }
 
         static void GetCodeViewPdbId(ModuleDefinition module, out byte[] pdbId)
