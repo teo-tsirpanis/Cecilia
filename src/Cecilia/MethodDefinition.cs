@@ -16,10 +16,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia
 {
-
     public sealed class MethodDefinition : MethodReference, IMemberDefinition, ISecurityDeclarationProvider, ICustomDebugInformationProvider
     {
-
         ushort attributes;
         ushort impl_attributes;
         internal volatile bool sem_attrs_ready;
@@ -602,7 +600,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static ParameterDefinition GetParameter(this MethodBody self, int index)
         {
             var method = self.method;

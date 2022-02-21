@@ -8,11 +8,9 @@ using SR = System.Reflection;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ImportReflectionTests : BaseTestFixture
     {
-
         [Test]
         public void ImportString()
         {

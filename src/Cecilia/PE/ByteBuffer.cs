@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia.PE
 {
-
     class ByteBuffer
     {
-
         internal byte[] buffer;
         internal int length;
         internal int position;

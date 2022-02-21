@@ -10,7 +10,6 @@
 
 namespace Cecilia
 {
-
     public enum NativeType
     {
         None = 0x66,

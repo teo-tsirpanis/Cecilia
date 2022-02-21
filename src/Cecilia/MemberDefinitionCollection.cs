@@ -13,10 +13,8 @@ using System;
 
 namespace Cecilia
 {
-
     sealed class MemberDefinitionCollection<T> : Collection<T> where T : IMemberDefinition
     {
-
         TypeDefinition container;
 
         internal MemberDefinitionCollection(TypeDefinition container)

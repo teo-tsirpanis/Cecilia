@@ -21,7 +21,6 @@ using SR = System.Reflection;
 
 namespace Cecilia
 {
-
     public enum ReadingMode
     {
         Immediate = 1,
@@ -30,7 +29,6 @@ namespace Cecilia
 
     public sealed class ReaderParameters
     {
-
         ReadingMode reading_mode;
         internal IAssemblyResolver assembly_resolver;
         internal IMetadataResolver metadata_resolver;
@@ -130,7 +128,6 @@ namespace Cecilia
 
     public sealed class ModuleParameters
     {
-
         ModuleKind kind;
         TargetRuntime runtime;
         uint? timestamp;
@@ -203,7 +200,6 @@ namespace Cecilia
 
     public sealed class WriterParameters
     {
-
         uint? timestamp;
         Stream symbol_stream;
         ISymbolWriterProvider symbol_writer_provider;
@@ -263,7 +259,6 @@ namespace Cecilia
 
     public sealed class ModuleDefinition : ModuleReference, ICustomAttributeProvider, ICustomDebugInformationProvider, IDisposable
     {
-
         internal Image Image;
         internal MetadataSystem MetadataSystem;
         internal ReadingMode ReadingMode;

@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     static class Disposable
     {
-
         public static Disposable<T> Owned<T>(T value) where T : class, IDisposable
         {
             return new Disposable<T>(value, owned: true);
@@ -29,7 +27,6 @@ namespace Cecilia
 
     struct Disposable<T> : IDisposable where T : class, IDisposable
     {
-
         internal readonly T value;
         readonly bool owned;
 

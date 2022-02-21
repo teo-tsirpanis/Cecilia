@@ -9,11 +9,9 @@ using SR = System.Reflection;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ImportCecilTests : BaseTestFixture
     {
-
         [Test]
         public void ImportStringByRef()
         {

@@ -14,7 +14,6 @@ using System;
 
 namespace Cecilia.Rocks
 {
-
 #if INSIDE_ROCKS
     public
 #endif
@@ -43,7 +42,6 @@ namespace Cecilia.Rocks
 #endif
     static class ILParser
     {
-
         class ParseContext
         {
             public CodeReader Code { get; set; }

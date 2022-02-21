@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public abstract class MemberReference : IMetadataTokenProvider
     {
-
         string name;
         TypeReference declaring_type;
 

@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public abstract class TypeSpecification : TypeReference
     {
-
         readonly TypeReference element_type;
 
         public TypeReference ElementType

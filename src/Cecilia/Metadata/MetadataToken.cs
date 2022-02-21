@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public struct MetadataToken : IEquatable<MetadataToken>
     {
-
         readonly uint token;
 
         public uint RID

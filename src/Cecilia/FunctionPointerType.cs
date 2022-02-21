@@ -15,10 +15,8 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public sealed class FunctionPointerType : TypeSpecification, IMethodSignature
     {
-
         readonly MethodReference function;
 
         public bool HasThis

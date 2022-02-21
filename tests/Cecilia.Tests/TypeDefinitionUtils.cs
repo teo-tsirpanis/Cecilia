@@ -4,10 +4,8 @@ using System.Linq;
 
 namespace Cecilia
 {
-
     public static class TypeDefinitionUtils
     {
-
         public static TypeReference TypeDefinitionForGeneric(
             Type genericType, AssemblyDefinition genericAssemblyDefinition,
             Type paramterType, AssemblyDefinition parameterAssemblyDefinition)

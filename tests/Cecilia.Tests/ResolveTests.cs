@@ -7,11 +7,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ResolveTests : BaseTestFixture
     {
-
         [Test]
         public void StringEmpty()
         {
@@ -102,7 +100,6 @@ namespace Cecilia.Tests
 
         class CustomResolver : DefaultAssemblyResolver
         {
-
             public void Register(AssemblyDefinition assembly)
             {
                 this.RegisterAssembly(assembly);

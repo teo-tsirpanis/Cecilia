@@ -12,10 +12,8 @@ using Mono.Collections.Generic;
 
 namespace Cecilia
 {
-
     public abstract class PropertyReference : MemberReference
     {
-
         TypeReference property_type;
 
         public TypeReference PropertyType

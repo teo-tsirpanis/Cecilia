@@ -6,11 +6,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ModuleTests : BaseTestFixture
     {
-
         [Test]
         public void CreateModuleEscapesAssemblyName()
         {

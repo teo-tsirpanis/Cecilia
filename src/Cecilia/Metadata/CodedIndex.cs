@@ -10,7 +10,6 @@
 
 namespace Cecilia.Metadata
 {
-
     enum CodedIndex
     {
         TypeDefOrRef,

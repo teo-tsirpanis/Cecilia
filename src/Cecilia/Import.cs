@@ -16,7 +16,6 @@ using SR = System.Reflection;
 
 namespace Cecilia
 {
-
     public interface IMetadataImporterProvider
     {
         IMetadataImporter GetMetadataImporter(ModuleDefinition module);
@@ -45,7 +44,6 @@ namespace Cecilia
 
     struct ImportGenericContext
     {
-
         Collection<IGenericParameterProvider> stack;
 
         public bool IsEmpty { get { return stack == null; } }
@@ -131,7 +129,6 @@ namespace Cecilia
 
     public class DefaultReflectionImporter : IReflectionImporter
     {
-
         readonly protected ModuleDefinition module;
 
         public DefaultReflectionImporter(ModuleDefinition module)
@@ -501,7 +498,6 @@ namespace Cecilia
 
     public class DefaultMetadataImporter : IMetadataImporter
     {
-
         readonly protected ModuleDefinition module;
 
         public DefaultMetadataImporter(ModuleDefinition module)

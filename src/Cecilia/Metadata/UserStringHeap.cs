@@ -10,10 +10,8 @@
 
 namespace Cecilia.Metadata
 {
-
     sealed class UserStringHeap : StringHeap
     {
-
         public UserStringHeap(byte[] data)
             : base(data)
         {

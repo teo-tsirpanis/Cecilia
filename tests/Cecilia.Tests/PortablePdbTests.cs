@@ -10,11 +10,9 @@ using System.Text;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class PortablePdbTests : BaseTestFixture
     {
-
         [Test]
         public void SequencePoints()
         {
@@ -654,7 +652,6 @@ class Program
 
         public sealed class SymbolWriterProvider : ISymbolWriterProvider
         {
-
             readonly DefaultSymbolWriterProvider writer_provider = new DefaultSymbolWriterProvider();
 
             public ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName)
@@ -670,7 +667,6 @@ class Program
 
         public sealed class SymbolWriter : ISymbolWriter
         {
-
             readonly ISymbolWriter symbol_writer;
 
             public SymbolWriter(ISymbolWriter symbolWriter)

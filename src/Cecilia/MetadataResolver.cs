@@ -13,7 +13,6 @@ using System;
 
 namespace Cecilia
 {
-
     public interface IAssemblyResolver : IDisposable
     {
         AssemblyDefinition Resolve(AssemblyNameReference name);
@@ -29,7 +28,6 @@ namespace Cecilia
 
     public sealed class ResolutionException : Exception
     {
-
         readonly MemberReference member;
 
         public MemberReference Member
@@ -74,7 +72,6 @@ namespace Cecilia
 
     public class MetadataResolver : IMetadataResolver
     {
-
         readonly IAssemblyResolver assembly_resolver;
 
         public IAssemblyResolver AssemblyResolver

@@ -15,10 +15,8 @@ using System.IO;
 
 namespace Cecilia.PE
 {
-
     sealed class ImageReader : BinaryStreamReader
     {
-
         readonly Image image;
 
         DataDirectory cli;

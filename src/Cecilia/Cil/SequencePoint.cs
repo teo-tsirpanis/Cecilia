@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia.Cil
 {
-
     public sealed class SequencePoint
     {
-
         internal InstructionOffset offset;
         Document document;
 

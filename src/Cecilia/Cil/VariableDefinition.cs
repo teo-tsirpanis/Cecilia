@@ -10,10 +10,8 @@
 
 namespace Cecilia.Cil
 {
-
     public sealed class VariableDefinition : VariableReference
     {
-
         public bool IsPinned
         {
             get { return variable_type.IsPinned; }

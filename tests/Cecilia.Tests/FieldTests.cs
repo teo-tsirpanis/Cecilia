@@ -5,11 +5,9 @@ using System.IO;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class FieldTests : BaseTestFixture
     {
-
         [Test]
         public void TypeDefField()
         {
@@ -157,7 +155,6 @@ namespace Cecilia.Tests
         {
             TestIL("FieldRVAAlignment.il", ilmodule =>
             {
-
                 var path = Path.GetTempFileName();
 
                 ilmodule.Write(path);

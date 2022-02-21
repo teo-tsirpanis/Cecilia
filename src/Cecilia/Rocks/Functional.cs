@@ -13,10 +13,8 @@ using System.Collections.Generic;
 
 namespace Cecilia.Rocks
 {
-
     static class Functional
     {
-
         public static System.Func<A, R> Y<A, R>(System.Func<System.Func<A, R>, System.Func<A, R>> f)
         {
             System.Func<A, R> g = null;

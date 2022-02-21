@@ -13,13 +13,10 @@ using System;
 
 namespace Cecilia
 {
-
     public abstract class TypeSystem
     {
-
         sealed class CoreTypeSystem : TypeSystem
         {
-
             public CoreTypeSystem(ModuleDefinition module)
                 : base(module)
             {
@@ -83,7 +80,6 @@ namespace Cecilia
 
         sealed class CommonTypeSystem : TypeSystem
         {
-
             AssemblyNameReference core_library;
 
             public CommonTypeSystem(ModuleDefinition module)
@@ -304,7 +300,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public const string mscorlib = "mscorlib";
         public const string system_runtime = "System.Runtime";
         public const string system_private_corelib = "System.Private.CoreLib";

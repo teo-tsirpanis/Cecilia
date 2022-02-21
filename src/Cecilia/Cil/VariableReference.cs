@@ -10,10 +10,8 @@
 
 namespace Cecilia.Cil
 {
-
     public abstract class VariableReference
     {
-
         internal int index = -1;
         protected TypeReference variable_type;
 

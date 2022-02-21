@@ -15,7 +15,6 @@ using System.Text;
 
 namespace Cecilia.Rocks
 {
-
     public class DocCommentId
     {
         IMemberDefinition commentMember;

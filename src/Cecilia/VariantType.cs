@@ -10,7 +10,6 @@
 
 namespace Cecilia
 {
-
     public enum VariantType
     {
         None = 0,

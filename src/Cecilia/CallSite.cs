@@ -14,10 +14,8 @@ using System.Text;
 
 namespace Cecilia
 {
-
     public sealed class CallSite : IMethodSignature
     {
-
         readonly MethodReference signature;
 
         public bool HasThis

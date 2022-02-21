@@ -10,17 +10,14 @@
 
 namespace Cecilia
 {
-
     public interface IMarshalInfoProvider : IMetadataTokenProvider
     {
-
         bool HasMarshalInfo { get; }
         MarshalInfo MarshalInfo { get; set; }
     }
 
     static partial class Mixin
     {
-
         public static bool GetHasMarshalInfo(
             this IMarshalInfoProvider self,
             ModuleDefinition module)

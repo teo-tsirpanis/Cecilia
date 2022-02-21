@@ -16,10 +16,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public class AssemblyNameReference : IMetadataScope
     {
-
         string name;
         string culture;
         Version version;
@@ -283,7 +281,6 @@ namespace Cecilia
 
     partial class Mixin
     {
-
         public static Version ZeroVersion = new Version(0, 0, 0, 0);
 
         public static Version CheckVersion(Version version)

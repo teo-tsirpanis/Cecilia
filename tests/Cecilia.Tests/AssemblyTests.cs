@@ -4,11 +4,9 @@ using System;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class AssemblyTests : BaseTestFixture
     {
-
         [Test]
         public void Name()
         {

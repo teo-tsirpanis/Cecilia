@@ -12,7 +12,6 @@ using System;
 
 namespace Cecilia.Cil
 {
-
     public enum FlowControl
     {
         Branch,
@@ -95,7 +94,6 @@ namespace Cecilia.Cil
 
     public struct OpCode : IEquatable<OpCode>
     {
-
         readonly byte op1;
         readonly byte op2;
         readonly byte code;
@@ -215,7 +213,6 @@ namespace Cecilia.Cil
 
     static class OpCodeNames
     {
-
         internal static readonly string[] names;
 
         static OpCodeNames()

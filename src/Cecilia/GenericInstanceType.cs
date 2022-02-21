@@ -16,10 +16,8 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public sealed class GenericInstanceType : TypeSpecification, IGenericInstance, IGenericContext
     {
-
         Collection<TypeReference> arguments;
 
         public bool HasGenericArguments

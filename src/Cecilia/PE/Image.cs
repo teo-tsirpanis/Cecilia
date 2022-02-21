@@ -16,10 +16,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia.PE
 {
-
     sealed class Image : IDisposable
     {
-
         public Disposable<Stream> Stream;
         public string FileName;
 

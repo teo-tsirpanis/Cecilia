@@ -12,7 +12,6 @@ using System;
 
 namespace Cecilia.Cil
 {
-
     public enum DocumentType
     {
         Other,
@@ -52,7 +51,6 @@ namespace Cecilia.Cil
 
     public sealed class Document : DebugInformation
     {
-
         string url;
 
         Guid type;

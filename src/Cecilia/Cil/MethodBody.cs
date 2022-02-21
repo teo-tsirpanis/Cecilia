@@ -14,10 +14,8 @@ using System.Threading;
 
 namespace Cecilia.Cil
 {
-
     public sealed class MethodBody
     {
-
         readonly internal MethodDefinition method;
 
         internal ParameterDefinition this_parameter;
@@ -151,7 +149,6 @@ namespace Cecilia.Cil
 
     sealed class VariableDefinitionCollection : Collection<VariableDefinition>
     {
-
         readonly MethodDefinition method;
 
         internal VariableDefinitionCollection(MethodDefinition method)
@@ -233,7 +230,6 @@ namespace Cecilia.Cil
 
     class InstructionCollection : Collection<Instruction>
     {
-
         readonly MethodDefinition method;
 
         internal InstructionCollection(MethodDefinition method)

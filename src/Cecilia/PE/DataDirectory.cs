@@ -12,10 +12,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia.PE
 {
-
     struct DataDirectory
     {
-
         public readonly RVA VirtualAddress;
         public readonly uint Size;
 

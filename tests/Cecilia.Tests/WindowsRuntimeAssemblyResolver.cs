@@ -7,7 +7,6 @@ using Microsoft.Win32;
 
 namespace Cecilia.Tests {
 	public class WindowsRuntimeAssemblyResolver : DefaultAssemblyResolver {
-
 		readonly Dictionary<string, AssemblyDefinition> assemblies = new Dictionary<string, AssemblyDefinition> ();
 
 		public static WindowsRuntimeAssemblyResolver CreateInstance ()

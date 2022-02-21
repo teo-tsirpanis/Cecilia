@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class AssemblyDefinition : ICustomAttributeProvider, ISecurityDeclarationProvider, IDisposable
     {
-
         AssemblyNameDefinition name;
 
         internal ModuleDefinition main_module;

@@ -14,10 +14,8 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public sealed class PinnedType : TypeSpecification
     {
-
         public override bool IsValueType
         {
             get { return false; }

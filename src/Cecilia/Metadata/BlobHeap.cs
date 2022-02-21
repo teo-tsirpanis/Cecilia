@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia.Metadata
 {
-
     sealed class BlobHeap : Heap
     {
-
         public BlobHeap(byte[] data)
             : base(data)
         {

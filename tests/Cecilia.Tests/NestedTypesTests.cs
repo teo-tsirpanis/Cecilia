@@ -3,11 +3,9 @@ using NUnit.Framework;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class NestedTypesTests : BaseTestFixture
     {
-
         [Test]
         public void NestedTypes()
         {

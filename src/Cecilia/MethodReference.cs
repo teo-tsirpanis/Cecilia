@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public class MethodReference : MemberReference, IMethodSignature, IGenericParameterProvider, IGenericContext
     {
-
         internal ParameterDefinitionCollection parameters;
         MethodReturnType return_type;
 

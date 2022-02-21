@@ -14,13 +14,11 @@ using System.Linq;
 
 namespace Cecilia.Rocks
 {
-
 #if INSIDE_ROCKS
     public
 #endif
     static class TypeDefinitionRocks
     {
-
         public static IEnumerable<MethodDefinition> GetConstructors(this TypeDefinition self)
         {
             if (self == null)

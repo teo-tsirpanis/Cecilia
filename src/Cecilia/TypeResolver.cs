@@ -20,7 +20,6 @@ namespace Cecilia
 
         public TypeResolver()
         {
-
         }
 
         public TypeResolver(GenericInstanceType typeDefinitionContext)

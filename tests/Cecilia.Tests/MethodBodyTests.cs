@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class MethodBodyTests : BaseTestFixture
     {
-
         [Test]
         public void MultiplyMethod()
         {

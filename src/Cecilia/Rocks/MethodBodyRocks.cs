@@ -13,13 +13,11 @@ using System;
 
 namespace Cecilia.Rocks
 {
-
 #if INSIDE_ROCKS
     public
 #endif
     static class MethodBodyRocks
     {
-
         public static void SimplifyMacros(this MethodBody self)
         {
             if (self == null)

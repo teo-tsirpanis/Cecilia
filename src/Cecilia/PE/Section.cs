@@ -12,7 +12,6 @@ using RVA = System.UInt32;
 
 namespace Cecilia.PE
 {
-
     sealed class Section
     {
         public string Name;

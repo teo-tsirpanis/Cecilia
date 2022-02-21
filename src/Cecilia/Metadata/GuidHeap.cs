@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia.Metadata
 {
-
     sealed class GuidHeap : Heap
     {
-
         public GuidHeap(byte[] data)
             : base(data)
         {

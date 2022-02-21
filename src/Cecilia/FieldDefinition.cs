@@ -13,10 +13,8 @@ using System;
 
 namespace Cecilia
 {
-
     public sealed class FieldDefinition : FieldReference, IMemberDefinition, IConstantProvider, IMarshalInfoProvider
     {
-
         ushort attributes;
         Collection<CustomAttribute> custom_attributes;
 
@@ -319,7 +317,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public const int NotResolvedMarker = -2;
         public const int NoDataMarker = -1;
     }

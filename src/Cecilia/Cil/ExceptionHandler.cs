@@ -10,7 +10,6 @@
 
 namespace Cecilia.Cil
 {
-
     public enum ExceptionHandlerType
     {
         Catch = 0,
@@ -21,7 +20,6 @@ namespace Cecilia.Cil
 
     public sealed class ExceptionHandler
     {
-
         Instruction try_start;
         Instruction try_end;
         Instruction filter_start;

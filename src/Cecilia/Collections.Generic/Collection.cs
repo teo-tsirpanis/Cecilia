@@ -15,10 +15,8 @@ using System.Collections.Generic;
 
 namespace Mono.Collections.Generic
 {
-
     public class Collection<T> : IList<T>, IList
     {
-
         internal T[] items;
         internal int size;
         int version;
@@ -389,7 +387,6 @@ namespace Mono.Collections.Generic
 
         public struct Enumerator : IEnumerator<T>, IDisposable
         {
-
             Collection<T> collection;
             T current;
 

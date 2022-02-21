@@ -10,7 +10,6 @@
 
 namespace Cecilia
 {
-
     public enum ResourceType
     {
         Linked,
@@ -20,7 +19,6 @@ namespace Cecilia
 
     public abstract class Resource
     {
-
         string name;
         uint attributes;
 

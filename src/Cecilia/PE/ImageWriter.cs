@@ -16,10 +16,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia.PE
 {
-
     sealed class ImageWriter : BinaryStreamWriter
     {
-
         readonly ModuleDefinition module;
         readonly MetadataBuilder metadata;
         readonly TextMap text_map;

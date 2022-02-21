@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public sealed class PInvokeInfo
     {
-
         ushort attributes;
         string entry_point;
         ModuleReference module;

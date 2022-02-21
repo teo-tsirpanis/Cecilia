@@ -15,7 +15,6 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public enum MetadataType : byte
     {
         Void = ElementType.Void,
@@ -53,7 +52,6 @@ namespace Cecilia
 
     public class TypeReference : MemberReference, IGenericParameterProvider, IGenericContext
     {
-
         string @namespace;
         bool value_type;
         internal IMetadataScope scope;

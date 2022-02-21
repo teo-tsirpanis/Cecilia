@@ -3,11 +3,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class MethodTests : BaseTestFixture
     {
-
         [Test]
         public void AbstractMethod()
         {

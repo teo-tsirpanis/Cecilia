@@ -14,10 +14,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class GenericInstanceMethod : MethodSpecification, IGenericInstance, IGenericContext
     {
-
         Collection<TypeReference> arguments;
 
         public bool HasGenericArguments

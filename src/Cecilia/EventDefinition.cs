@@ -13,10 +13,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class EventDefinition : EventReference, IMemberDefinition
     {
-
         ushort attributes;
 
         Collection<CustomAttribute> custom_attributes;

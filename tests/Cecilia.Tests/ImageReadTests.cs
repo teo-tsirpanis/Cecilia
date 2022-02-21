@@ -6,11 +6,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ImageReadTests : BaseTestFixture
     {
-
         [Test]
         public void ImageSections()
         {

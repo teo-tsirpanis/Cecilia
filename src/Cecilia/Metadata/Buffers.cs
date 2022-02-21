@@ -16,10 +16,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia.Metadata
 {
-
     sealed class TableHeapBuffer : HeapBuffer
     {
-
         readonly ModuleDefinition module;
         readonly MetadataBuilder metadata;
 
@@ -250,7 +248,6 @@ namespace Cecilia.Metadata
 
     sealed class ResourceBuffer : ByteBuffer
     {
-
         public ResourceBuffer()
             : base(0)
         {
@@ -267,7 +264,6 @@ namespace Cecilia.Metadata
 
     sealed class DataBuffer : ByteBuffer
     {
-
         int buffer_align = 4;
 
         public DataBuffer()
@@ -299,7 +295,6 @@ namespace Cecilia.Metadata
 
     abstract class HeapBuffer : ByteBuffer
     {
-
         public bool IsLarge
         {
             get { return base.length > 65535; }
@@ -315,7 +310,6 @@ namespace Cecilia.Metadata
 
     sealed class GuidHeapBuffer : HeapBuffer
     {
-
         readonly Dictionary<Guid, uint> guids = new Dictionary<Guid, uint>();
 
         public override bool IsEmpty
@@ -348,7 +342,6 @@ namespace Cecilia.Metadata
 
     class StringHeapBuffer : HeapBuffer
     {
-
         protected Dictionary<string, uint> strings = new Dictionary<string, uint>(StringComparer.Ordinal);
 
         public sealed override bool IsEmpty
@@ -429,7 +422,6 @@ namespace Cecilia.Metadata
         // that are a suffix of it.  
         private class SuffixSort : IComparer<KeyValuePair<string, uint>>
         {
-
             public int Compare(KeyValuePair<string, uint> xPair, KeyValuePair<string, uint> yPair)
             {
                 var x = xPair.Key;
@@ -455,7 +447,6 @@ namespace Cecilia.Metadata
 
     sealed class BlobHeapBuffer : HeapBuffer
     {
-
         readonly Dictionary<ByteBuffer, uint> blobs = new Dictionary<ByteBuffer, uint>(new ByteBufferEqualityComparer());
 
         public override bool IsEmpty
@@ -490,7 +481,6 @@ namespace Cecilia.Metadata
 
     sealed class UserStringHeapBuffer : StringHeapBuffer
     {
-
         public override uint GetStringIndex(string @string)
         {
             uint index;
@@ -525,7 +515,6 @@ namespace Cecilia.Metadata
                         || @char == 0x27
                         || @char == 0x2d)
                     {
-
                         special = 1;
                     }
                 }
@@ -537,7 +526,6 @@ namespace Cecilia.Metadata
 
     sealed class PdbHeapBuffer : HeapBuffer
     {
-
         public override bool IsEmpty
         {
             get { return false; }

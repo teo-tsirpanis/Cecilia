@@ -3,11 +3,9 @@ using NUnit.Framework;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class EventTests : BaseTestFixture
     {
-
         [Test]
         public void AbstractMethod()
         {

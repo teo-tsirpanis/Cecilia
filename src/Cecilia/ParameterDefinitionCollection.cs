@@ -12,10 +12,8 @@ using Mono.Collections.Generic;
 
 namespace Cecilia
 {
-
     sealed class ParameterDefinitionCollection : Collection<ParameterDefinition>
     {
-
         readonly IMethodSignature method;
 
         internal ParameterDefinitionCollection(IMethodSignature method)

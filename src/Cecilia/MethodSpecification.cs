@@ -13,10 +13,8 @@ using System;
 
 namespace Cecilia
 {
-
     public abstract class MethodSpecification : MethodReference
     {
-
         readonly MethodReference method;
 
         public MethodReference ElementMethod

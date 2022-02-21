@@ -13,10 +13,8 @@ using System.Text;
 
 namespace Cecilia.Cil
 {
-
     public sealed class Instruction
     {
-
         internal int offset;
         internal OpCode opcode;
         internal object operand;

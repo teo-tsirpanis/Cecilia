@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Mono.Collections.Generic
 {
-
     public sealed class ReadOnlyCollection<T> : Collection<T>, ICollection<T>, IList
     {
-
         static ReadOnlyCollection<T> empty;
 
         public static ReadOnlyCollection<T> Empty

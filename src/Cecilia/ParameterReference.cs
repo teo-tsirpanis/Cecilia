@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public abstract class ParameterReference : IMetadataTokenProvider
     {
-
         string name;
         internal int index = -1;
         protected TypeReference parameter_type;

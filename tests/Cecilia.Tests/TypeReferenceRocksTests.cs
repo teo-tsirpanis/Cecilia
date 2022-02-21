@@ -4,11 +4,9 @@ using System;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class TypeReferenceRocksTests
     {
-
         [Test]
         public void MakeArrayType()
         {

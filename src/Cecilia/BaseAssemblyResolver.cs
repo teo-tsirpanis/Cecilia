@@ -16,12 +16,10 @@ using System.Text;
 
 namespace Cecilia
 {
-
     public delegate AssemblyDefinition AssemblyResolveEventHandler(object sender, AssemblyNameReference reference);
 
     public sealed class AssemblyResolveEventArgs : EventArgs
     {
-
         readonly AssemblyNameReference reference;
 
         public AssemblyNameReference AssemblyReference
@@ -37,7 +35,6 @@ namespace Cecilia
 
     public sealed class AssemblyResolutionException : FileNotFoundException
     {
-
         readonly AssemblyNameReference reference;
 
         public AssemblyNameReference AssemblyReference
@@ -59,7 +56,6 @@ namespace Cecilia
 
     public abstract class BaseAssemblyResolver : IAssemblyResolver
     {
-
         static readonly bool on_mono = Type.GetType("Mono.Runtime") != null;
 
         static readonly bool on_coreclr = Type.GetType("System.Runtime.Loader.AssemblyLoadContext") != null;

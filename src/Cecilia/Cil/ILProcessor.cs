@@ -13,10 +13,8 @@ using System;
 
 namespace Cecilia.Cil
 {
-
     public sealed class ILProcessor
     {
-
         readonly MethodBody body;
         readonly Collection<Instruction> instructions;
 

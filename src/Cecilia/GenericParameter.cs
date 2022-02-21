@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class GenericParameter : TypeReference, ICustomAttributeProvider
     {
-
         internal int position;
         internal GenericParameterType type;
         internal IGenericParameterProvider owner;
@@ -249,7 +247,6 @@ namespace Cecilia
 
     sealed class GenericParameterCollection : Collection<GenericParameter>
     {
-
         readonly IGenericParameterProvider owner;
 
         internal GenericParameterCollection(IGenericParameterProvider owner)
@@ -301,7 +298,6 @@ namespace Cecilia
 
     public sealed class GenericParameterConstraint : ICustomAttributeProvider
     {
-
         internal GenericParameter generic_parameter;
         internal MetadataToken token;
 

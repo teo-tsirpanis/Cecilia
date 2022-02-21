@@ -3,11 +3,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class TypeParserTests : BaseTestFixture
     {
-
         [Test]
         public void SimpleStringReference()
         {

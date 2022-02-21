@@ -13,10 +13,8 @@ using System.IO;
 
 namespace Cecilia
 {
-
     public sealed class EmbeddedResource : Resource
     {
-
         readonly MetadataReader reader;
 
         uint? offset;

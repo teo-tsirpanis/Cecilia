@@ -12,10 +12,8 @@ using RID = System.UInt32;
 
 namespace Cecilia.Metadata
 {
-
     sealed class PdbHeap : Heap
     {
-
         public byte[] Id;
         public RID EntryPoint;
         public long TypeSystemTables;

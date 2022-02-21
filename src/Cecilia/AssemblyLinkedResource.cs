@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public sealed class AssemblyLinkedResource : Resource
     {
-
         AssemblyNameReference reference;
 
         public AssemblyNameReference Assembly

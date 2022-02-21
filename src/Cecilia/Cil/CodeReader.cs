@@ -14,10 +14,8 @@ using System;
 
 namespace Cecilia.Cil
 {
-
     sealed class CodeReader : BinaryStreamReader
     {
-
         readonly internal MetadataReader reader;
 
         int start;

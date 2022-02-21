@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public sealed class AssemblyNameDefinition : AssemblyNameReference
     {
-
         public override byte[] Hash
         {
             get { return Array.Empty<byte>(); }

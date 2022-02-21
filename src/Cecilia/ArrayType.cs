@@ -16,10 +16,8 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public struct ArrayDimension
     {
-
         int? lower_bound;
         int? upper_bound;
 
@@ -56,7 +54,6 @@ namespace Cecilia
 
     public sealed class ArrayType : TypeSpecification
     {
-
         Collection<ArrayDimension> dimensions;
 
         public Collection<ArrayDimension> Dimensions

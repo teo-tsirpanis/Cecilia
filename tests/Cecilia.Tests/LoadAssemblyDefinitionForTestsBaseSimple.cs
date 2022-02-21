@@ -2,10 +2,8 @@
 
 namespace Cecilia.Tests
 {
-
     public class LoadAssemblyDefinitionForTestsBaseSimple
     {
-
         protected AssemblyDefinition _assembly;
         protected AssemblyDefinition _mscorlib;
 

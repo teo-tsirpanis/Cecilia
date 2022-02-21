@@ -14,10 +14,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class PropertyDefinition : PropertyReference, IMemberDefinition, IConstantProvider
     {
-
         bool? has_this;
         ushort attributes;
 

@@ -14,7 +14,6 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public interface IModifierType
     {
         TypeReference ModifierType { get; }
@@ -23,7 +22,6 @@ namespace Cecilia
 
     public sealed class OptionalModifierType : TypeSpecification, IModifierType
     {
-
         TypeReference modifier_type;
 
         public TypeReference ModifierType
@@ -75,7 +73,6 @@ namespace Cecilia
 
     public sealed class RequiredModifierType : TypeSpecification, IModifierType
     {
-
         TypeReference modifier_type;
 
         public TypeReference ModifierType

@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class MethodReferenceComparerTests : LoadAssemblyDefinitionForTestsBaseSimple
     {
-
         private TypeDefinition _class1;
         private TypeDefinition _class2;
 
@@ -102,12 +100,10 @@ namespace Cecilia.Tests
 
         class GenericClass<T>
         {
-
         }
 
         class Class1
         {
-
             void MethodWithNoParametersOrReturn() { }
             void GenericMethodWithNoParametersOrReturn<T>() { }
             static void StaticMethodWithNoParametersOrReturn() { }
@@ -123,7 +119,6 @@ namespace Cecilia.Tests
 
         class Class2
         {
-
             void MethodWithNoParametersOrReturn() { }
             void GenericMethodWithNoParametersOrReturn<T>() { }
             static void StaticMethodWithNoParametersOrReturn() { }

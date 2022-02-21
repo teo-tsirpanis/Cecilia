@@ -15,7 +15,6 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public enum SecurityAction : ushort
     {
         Request = 1,
@@ -37,7 +36,6 @@ namespace Cecilia
 
     public interface ISecurityDeclarationProvider : IMetadataTokenProvider
     {
-
         bool HasSecurityDeclarations { get; }
         Collection<SecurityDeclaration> SecurityDeclarations { get; }
     }
@@ -45,7 +43,6 @@ namespace Cecilia
     [DebuggerDisplay("{AttributeType}")]
     public sealed class SecurityAttribute : ICustomAttribute
     {
-
         TypeReference attribute_type;
 
         internal Collection<CustomAttributeNamedArgument> fields;
@@ -107,7 +104,6 @@ namespace Cecilia
 
     public sealed class SecurityDeclaration
     {
-
         readonly internal uint signature;
         byte[] blob;
         readonly ModuleDefinition module;
@@ -188,7 +184,6 @@ namespace Cecilia
 
             lock (module.SyncRoot)
             {
-
                 if (resolved)
                     return;
 
@@ -200,7 +195,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static bool GetHasSecurityDeclarations(
             this ISecurityDeclarationProvider self,
             ModuleDefinition module)

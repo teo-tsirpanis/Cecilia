@@ -7,11 +7,9 @@ using System.Text;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class SecurityDeclarationTests : BaseTestFixture
     {
-
         [Test]
         public void XmlSecurityDeclaration()
         {

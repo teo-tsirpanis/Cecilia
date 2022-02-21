@@ -12,10 +12,8 @@ using System.IO;
 
 namespace Cecilia.PE
 {
-
     class BinaryStreamReader : BinaryReader
     {
-
         public int Position
         {
             get { return (int)BaseStream.Position; }

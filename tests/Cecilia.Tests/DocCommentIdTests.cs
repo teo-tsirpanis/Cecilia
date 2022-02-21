@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace N
 {
-
     /// <summary>
     /// ID string generated is "T:N.X". 
     /// </summary>
@@ -189,11 +188,9 @@ namespace N
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class DocCommentIdTests
     {
-
         [Test]
         public void TypeDef()
         {

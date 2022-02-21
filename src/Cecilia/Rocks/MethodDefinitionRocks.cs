@@ -12,13 +12,11 @@ using System;
 
 namespace Cecilia.Rocks
 {
-
 #if INSIDE_ROCKS
     public
 #endif
     static class MethodDefinitionRocks
     {
-
         public static MethodDefinition GetBaseMethod(this MethodDefinition self)
         {
             if (self == null)

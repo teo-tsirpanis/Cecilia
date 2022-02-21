@@ -15,12 +15,10 @@ using System.Collections.Generic;
 
 namespace Cecilia
 {
-
     using Slot = Row<string, string>;
 
     sealed class TypeDefinitionCollection : Collection<TypeDefinition>
     {
-
         readonly ModuleDefinition container;
         readonly Dictionary<Slot, TypeDefinition> name_cache;
 

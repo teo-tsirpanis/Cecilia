@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public struct CustomAttributeArgument
     {
-
         readonly TypeReference type;
         readonly object value;
 
@@ -42,7 +40,6 @@ namespace Cecilia
 
     public struct CustomAttributeNamedArgument
     {
-
         readonly string name;
         readonly CustomAttributeArgument argument;
 
@@ -66,7 +63,6 @@ namespace Cecilia
 
     public interface ICustomAttribute
     {
-
         TypeReference AttributeType { get; }
 
         bool HasFields { get; }
@@ -80,7 +76,6 @@ namespace Cecilia
     [DebuggerDisplay("{AttributeType}")]
     public sealed class CustomAttribute : ICustomAttribute
     {
-
         internal CustomAttributeValueProjection projection;
         readonly internal uint signature;
         internal bool resolved;

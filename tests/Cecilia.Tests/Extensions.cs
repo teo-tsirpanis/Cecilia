@@ -5,10 +5,8 @@ using SR = System.Reflection;
 
 namespace Cecilia.Tests
 {
-
     public static class Extensions
     {
-
         public static MethodDefinition GetMethod(this TypeDefinition self, string name)
         {
             return self.Methods.Where(m => m.Name == name).First();

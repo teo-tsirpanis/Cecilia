@@ -8,10 +8,8 @@ using System.Linq;
 using System.Text;
 
 namespace Cecilia.Tests {
-
 	[TestFixture]
 	public abstract class BaseWindowsRuntimeProjectionsTests : BaseTestFixture {
-
 		protected abstract string ModuleName { get; }
 		protected abstract MetadataKind ExpectedMetadataKind { get; }
 		protected abstract string [] ManagedClassTypeNames { get; }
@@ -98,7 +96,6 @@ namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class ManagedWindowsRuntimeProjectionsTests : BaseWindowsRuntimeProjectionsTests {
-
 		protected override string ModuleName { get { return "ManagedWinmd.winmd"; } }
 
 		protected override MetadataKind ExpectedMetadataKind { get { return MetadataKind.ManagedWindowsMetadata; } }
@@ -153,7 +150,6 @@ namespace Cecilia.Tests {
 
 	[TestFixture]
 	public class NativeWindowsRuntimeProjectionsTests : BaseWindowsRuntimeProjectionsTests {
-
 		protected override string ModuleName { get { return "NativeWinmd.winmd"; } }
 
 		protected override MetadataKind ExpectedMetadataKind { get { return MetadataKind.WindowsMetadata; } }

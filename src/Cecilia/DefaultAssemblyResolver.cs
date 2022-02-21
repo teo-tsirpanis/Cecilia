@@ -13,10 +13,8 @@ using System.Collections.Generic;
 
 namespace Cecilia
 {
-
     public class DefaultAssemblyResolver : BaseAssemblyResolver
     {
-
         readonly IDictionary<string, AssemblyDefinition> cache;
 
         public DefaultAssemblyResolver()

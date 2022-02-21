@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public sealed class LinkedResource : Resource
     {
-
         internal byte[] hash;
         string file;
 

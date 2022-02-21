@@ -10,10 +10,8 @@
 
 namespace Cecilia.Metadata
 {
-
     abstract class Heap
     {
-
         public int IndexSize;
 
         readonly internal byte[] data;

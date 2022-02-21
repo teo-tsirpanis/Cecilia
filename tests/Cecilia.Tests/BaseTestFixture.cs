@@ -7,10 +7,8 @@ using System.Reflection;
 
 namespace Cecilia.Tests
 {
-
     public abstract class BaseTestFixture
     {
-
         protected static void IgnoreOnMono()
         {
             if (Platform.OnMono)
@@ -137,7 +135,6 @@ namespace Cecilia.Tests
 
     abstract class TestCase
     {
-
         public readonly bool Verify;
         public readonly bool ReadOnly;
         public readonly Type SymbolReaderProvider;
@@ -162,7 +159,6 @@ namespace Cecilia.Tests
 
     class ModuleTestCase : TestCase
     {
-
         public readonly string Module;
 
         public ModuleTestCase(string module, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
@@ -179,7 +175,6 @@ namespace Cecilia.Tests
 
     class CSharpTestCase : TestCase
     {
-
         public readonly string File;
 
         public CSharpTestCase(string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
@@ -199,7 +194,6 @@ namespace Cecilia.Tests
 
     class ILTestCase : TestCase
     {
-
         public readonly string File;
 
         public ILTestCase(string file, Action<ModuleDefinition> test, bool verify, bool readOnly, Type symbolReaderProvider, Type symbolWriterProvider, IAssemblyResolver assemblyResolver, bool applyWindowsRuntimeProjections)
@@ -219,7 +213,6 @@ namespace Cecilia.Tests
 
     class TestRunner : IDisposable
     {
-
         readonly TestCase test_case;
         readonly TestCaseType type;
 

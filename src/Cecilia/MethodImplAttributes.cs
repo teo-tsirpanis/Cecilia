@@ -12,7 +12,6 @@ using System;
 
 namespace Cecilia
 {
-
     [Flags]
     public enum MethodImplAttributes : ushort
     {

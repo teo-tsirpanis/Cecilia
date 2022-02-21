@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class TypeDefinition : TypeReference, IMemberDefinition, ISecurityDeclarationProvider
     {
-
         uint attributes;
         TypeReference base_type;
         internal Range fields_range;
@@ -678,7 +676,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static TypeReference GetEnumUnderlyingType(this TypeDefinition self)
         {
             var fields = self.Fields;

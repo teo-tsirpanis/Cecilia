@@ -20,7 +20,6 @@ namespace Cecilia
 
     internal static class TargetRuntimeExtensions
     {
-
         public static TargetRuntime ParseRuntime(this string self)
         {
             if (string.IsNullOrEmpty(self))

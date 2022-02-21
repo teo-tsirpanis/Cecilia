@@ -6,14 +6,11 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class TypeDefinitionRocksTests
     {
-
         class Foo
         {
-
             static Foo()
             {
             }

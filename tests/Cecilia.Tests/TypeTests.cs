@@ -4,11 +4,9 @@ using System.Linq;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class TypeTests : BaseTestFixture
     {
-
         [Test]
         public void TypeLayout()
         {

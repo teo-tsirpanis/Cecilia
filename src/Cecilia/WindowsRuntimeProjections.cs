@@ -15,10 +15,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     sealed class TypeDefinitionProjection
     {
-
         public readonly TypeAttributes Attributes;
         public readonly string Name;
         public readonly TypeDefinitionTreatment Treatment;
@@ -37,7 +35,6 @@ namespace Cecilia
 
     sealed class TypeReferenceProjection
     {
-
         public readonly string Name;
         public readonly string Namespace;
         public readonly IMetadataScope Scope;
@@ -54,7 +51,6 @@ namespace Cecilia
 
     sealed class MethodDefinitionProjection
     {
-
         public readonly MethodAttributes Attributes;
         public readonly MethodImplAttributes ImplAttributes;
         public readonly string Name;
@@ -71,7 +67,6 @@ namespace Cecilia
 
     sealed class FieldDefinitionProjection
     {
-
         public readonly FieldAttributes Attributes;
         public readonly FieldDefinitionTreatment Treatment;
 
@@ -84,7 +79,6 @@ namespace Cecilia
 
     sealed class CustomAttributeValueProjection
     {
-
         public readonly AttributeTargets Targets;
         public readonly CustomAttributeValueTreatment Treatment;
 
@@ -97,10 +91,8 @@ namespace Cecilia
 
     sealed class WindowsRuntimeProjections
     {
-
         struct ProjectionInfo
         {
-
             public readonly string WinRTNamespace;
             public readonly string ClrNamespace;
             public readonly string ClrName;

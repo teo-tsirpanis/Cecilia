@@ -12,10 +12,8 @@ using System.Collections.Generic;
 
 namespace Cecilia.PE
 {
-
     sealed class ByteBufferEqualityComparer : IEqualityComparer<ByteBuffer>
     {
-
         public bool Equals(ByteBuffer x, ByteBuffer y)
         {
             if (x.length != y.length)

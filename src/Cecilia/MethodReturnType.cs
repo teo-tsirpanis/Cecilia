@@ -13,10 +13,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public sealed class MethodReturnType : IConstantProvider, ICustomAttributeProvider, IMarshalInfoProvider
     {
-
         internal IMethodSignature method;
         internal ParameterDefinition parameter;
         TypeReference return_type;

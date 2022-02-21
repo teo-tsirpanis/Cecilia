@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public class ModuleReference : IMetadataScope
     {
-
         string name;
 
         internal MetadataToken token;

@@ -12,7 +12,6 @@ using System;
 
 namespace Cecilia
 {
-
     public enum ModuleKind
     {
         Dll,

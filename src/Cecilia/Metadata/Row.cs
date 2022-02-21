@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 namespace Cecilia.Metadata
 {
-
     struct Row<T1, T2>
     {
         internal T1 Col1;
@@ -121,7 +120,6 @@ namespace Cecilia.Metadata
 
     sealed class RowEqualityComparer : IEqualityComparer<Row<string, string>>, IEqualityComparer<Row<uint, uint>>, IEqualityComparer<Row<uint, uint, uint>>
     {
-
         public bool Equals(Row<string, string> x, Row<string, string> y)
         {
             return x.Col1 == y.Col1

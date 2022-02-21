@@ -12,7 +12,6 @@ using RVA = System.UInt32;
 
 namespace Cecilia.PE
 {
-
     enum TextSegment
     {
         ImportAddressTable,
@@ -40,7 +39,6 @@ namespace Cecilia.PE
 
     sealed class TextMap
     {
-
         readonly Range[] map = new Range[17 /*Enum.GetValues (typeof (TextSegment)).Length*/];
 
         public void AddMap(TextSegment segment, int length)

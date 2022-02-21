@@ -10,7 +10,6 @@
 
 namespace Cecilia
 {
-
     public enum MethodCallingConvention : byte
     {
         Default = 0x0,

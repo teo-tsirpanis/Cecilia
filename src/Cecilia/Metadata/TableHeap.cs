@@ -10,7 +10,6 @@
 
 namespace Cecilia.Metadata
 {
-
     enum Table : byte
     {
         Module = 0x00,
@@ -83,7 +82,6 @@ namespace Cecilia.Metadata
 
     sealed class TableHeap : Heap
     {
-
         public long Valid;
         public long Sorted;
 

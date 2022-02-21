@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public abstract class EventReference : MemberReference
     {
-
         TypeReference event_type;
 
         public TypeReference EventType

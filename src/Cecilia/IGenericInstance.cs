@@ -13,17 +13,14 @@ using System.Text;
 
 namespace Cecilia
 {
-
     public interface IGenericInstance : IMetadataTokenProvider
     {
-
         bool HasGenericArguments { get; }
         Collection<TypeReference> GenericArguments { get; }
     }
 
     static partial class Mixin
     {
-
         public static bool ContainsGenericParameter(this IGenericInstance self)
         {
             var arguments = self.GenericArguments;

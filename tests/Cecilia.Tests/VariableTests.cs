@@ -4,11 +4,9 @@ using NUnit.Framework;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class VariableTests : BaseTestFixture
     {
-
         [Test]
         public void AddVariableIndex()
         {

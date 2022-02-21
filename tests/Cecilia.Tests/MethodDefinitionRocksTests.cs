@@ -4,11 +4,9 @@ using NUnit.Framework;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class MethodDefinitionRocksTests : BaseTestFixture
     {
-
         abstract class Foo
         {
             public abstract void DoFoo();

@@ -4,10 +4,8 @@ using System.IO;
 
 namespace Cecilia.Tests
 {
-
     public static class Formatter
     {
-
         public static string FormatInstruction(Instruction instruction)
         {
             var writer = new StringWriter();

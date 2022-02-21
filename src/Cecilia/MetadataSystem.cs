@@ -17,7 +17,6 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     struct Range
     {
         public uint Start;
@@ -32,7 +31,6 @@ namespace Cecilia
 
     sealed class MetadataSystem
     {
-
         internal AssemblyNameReference[] AssemblyReferences;
         internal ModuleReference[] ModuleReferences;
 

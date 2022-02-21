@@ -10,10 +10,8 @@
 
 namespace Cecilia
 {
-
     public sealed class ExportedType : IMetadataTokenProvider
     {
-
         string @namespace;
         string name;
         uint attributes;

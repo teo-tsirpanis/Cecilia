@@ -13,10 +13,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public interface IGenericParameterProvider : IMetadataTokenProvider
     {
-
         bool HasGenericParameters { get; }
         bool IsDefinition { get; }
         ModuleDefinition Module { get; }
@@ -32,7 +30,6 @@ namespace Cecilia
 
     interface IGenericContext
     {
-
         bool IsDefinition { get; }
         IGenericParameterProvider Type { get; }
         IGenericParameterProvider Method { get; }
@@ -40,7 +37,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static bool GetHasGenericParameters(
             this IGenericParameterProvider self,
             ModuleDefinition module)

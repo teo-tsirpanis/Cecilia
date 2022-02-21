@@ -10,7 +10,6 @@
 
 namespace Cecilia.Metadata
 {
-
     enum ElementType : byte
     {
         None = 0x00,

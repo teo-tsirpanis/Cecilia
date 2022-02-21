@@ -14,10 +14,8 @@ using MD = Cecilia.Metadata;
 
 namespace Cecilia
 {
-
     public sealed class PointerType : TypeSpecification
     {
-
         public override string Name
         {
             get { return base.Name + "*"; }

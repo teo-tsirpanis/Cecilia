@@ -4,11 +4,9 @@ using System.Collections.Generic;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class TypeReferenceComparisonTests : LoadAssemblyDefinitionForTestsBaseSimple
     {
-
         [SetUp]
         public void SetUp()
         {

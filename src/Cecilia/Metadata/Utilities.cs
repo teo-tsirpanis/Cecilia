@@ -13,10 +13,8 @@ using System;
 
 namespace Cecilia
 {
-
     static partial class Mixin
     {
-
         public const int TableCount = 58;
         public const int CodedIndexCount = 14;
 

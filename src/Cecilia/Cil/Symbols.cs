@@ -20,7 +20,6 @@ using System.Threading;
 
 namespace Cecilia.Cil
 {
-
     [StructLayout(LayoutKind.Sequential)]
     public struct ImageDebugDirectory
     {
@@ -46,7 +45,6 @@ namespace Cecilia.Cil
 
     public sealed class ImageDebugHeader
     {
-
         readonly ImageDebugHeaderEntry[] entries;
 
         public bool HasEntries
@@ -77,7 +75,6 @@ namespace Cecilia.Cil
 
     public sealed class ImageDebugHeaderEntry
     {
-
         ImageDebugDirectory directory;
         readonly byte[] data;
 
@@ -101,7 +98,6 @@ namespace Cecilia.Cil
 
     public sealed class ScopeDebugInformation : DebugInformation
     {
-
         internal InstructionOffset start;
         internal InstructionOffset end;
         internal ImportDebugInformation import;
@@ -213,7 +209,6 @@ namespace Cecilia.Cil
 
     public struct InstructionOffset
     {
-
         readonly Instruction instruction;
         readonly int? offset;
 
@@ -302,7 +297,6 @@ namespace Cecilia.Cil
 
     public abstract class DebugInformation : ICustomDebugInformationProvider
     {
-
         internal MetadataToken token;
         internal Collection<CustomDebugInformation> custom_infos;
 
@@ -335,7 +329,6 @@ namespace Cecilia.Cil
 
     public sealed class VariableDebugInformation : DebugInformation
     {
-
         string name;
         ushort attributes;
         internal VariableIndex index;
@@ -387,7 +380,6 @@ namespace Cecilia.Cil
 
     public sealed class ConstantDebugInformation : DebugInformation
     {
-
         string name;
         TypeReference constant_type;
         object value;
@@ -437,7 +429,6 @@ namespace Cecilia.Cil
 
     public sealed class ImportTarget
     {
-
         internal ImportTargetKind kind;
 
         internal string @namespace;
@@ -483,7 +474,6 @@ namespace Cecilia.Cil
 
     public sealed class ImportDebugInformation : DebugInformation
     {
-
         internal ImportDebugInformation parent;
         internal Collection<ImportTarget> targets;
 
@@ -534,7 +524,6 @@ namespace Cecilia.Cil
 
     public abstract class CustomDebugInformation : DebugInformation
     {
-
         Guid identifier;
 
         public Guid Identifier
@@ -553,7 +542,6 @@ namespace Cecilia.Cil
 
     public sealed class BinaryCustomDebugInformation : CustomDebugInformation
     {
-
         byte[] data;
 
         public byte[] Data
@@ -576,7 +564,6 @@ namespace Cecilia.Cil
 
     public sealed class AsyncMethodBodyDebugInformation : CustomDebugInformation
     {
-
         internal InstructionOffset catch_handler;
         internal Collection<InstructionOffset> yields;
         internal Collection<InstructionOffset> resumes;
@@ -643,7 +630,6 @@ namespace Cecilia.Cil
 
     public sealed class StateMachineScope
     {
-
         internal InstructionOffset start;
         internal InstructionOffset end;
 
@@ -674,7 +660,6 @@ namespace Cecilia.Cil
 
     public sealed class StateMachineScopeDebugInformation : CustomDebugInformation
     {
-
         internal Collection<StateMachineScope> scopes;
 
         public Collection<StateMachineScope> Scopes
@@ -697,7 +682,6 @@ namespace Cecilia.Cil
 
     public sealed class EmbeddedSourceDebugInformation : CustomDebugInformation
     {
-
         internal uint index;
         internal MetadataReader debug_reader;
         internal bool resolved;
@@ -783,7 +767,6 @@ namespace Cecilia.Cil
 
     public sealed class SourceLinkDebugInformation : CustomDebugInformation
     {
-
         internal string content;
 
         public string Content
@@ -1124,10 +1107,8 @@ namespace Cecilia.Cil
 
 namespace Cecilia
 {
-
     static partial class Mixin
     {
-
         public static ImageDebugHeaderEntry GetCodeViewEntry(this ImageDebugHeader header)
         {
             return GetEntry(header, ImageDebugType.CodeView);

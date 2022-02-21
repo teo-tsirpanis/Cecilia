@@ -14,10 +14,8 @@ using System.Text;
 
 namespace Cecilia
 {
-
     class TypeParser
     {
-
         class Type
         {
             public const int Ptr = -1;

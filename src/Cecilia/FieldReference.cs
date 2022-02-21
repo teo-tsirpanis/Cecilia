@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public class FieldReference : MemberReference
     {
-
         TypeReference field_type;
 
         public TypeReference FieldType

@@ -3,11 +3,9 @@ using System;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class ParameterTests : BaseTestFixture
     {
-
         [Test]
         public void MarshalAsI4()
         {

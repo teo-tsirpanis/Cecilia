@@ -10,7 +10,6 @@
 
 namespace Cecilia.Cil
 {
-
     public enum Code
     {
         Nop,

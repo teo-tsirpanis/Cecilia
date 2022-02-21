@@ -12,13 +12,11 @@ using System;
 
 namespace Cecilia.Rocks
 {
-
 #if INSIDE_ROCKS
     public
 #endif
     static class TypeReferenceRocks
     {
-
         public static ArrayType MakeArrayType(this TypeReference self)
         {
             return new ArrayType(self);

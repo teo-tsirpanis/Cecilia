@@ -19,10 +19,8 @@ using System.Security.Cryptography;
 
 namespace Cecilia.Cil
 {
-
     public sealed class PortablePdbReaderProvider : ISymbolReaderProvider
     {
-
         public ISymbolReader GetSymbolReader(ModuleDefinition module, string fileName)
         {
             Mixin.CheckNotNull(module);
@@ -48,7 +46,6 @@ namespace Cecilia.Cil
 
     public sealed class PortablePdbReader : ISymbolReader
     {
-
         readonly Image image;
         readonly ModuleDefinition module;
         readonly MetadataReader reader;
@@ -166,7 +163,6 @@ namespace Cecilia.Cil
 
     public sealed class EmbeddedPortablePdbReaderProvider : ISymbolReaderProvider
     {
-
         public ISymbolReader GetSymbolReader(ModuleDefinition module, string fileName)
         {
             Mixin.CheckNotNull(module);
@@ -266,7 +262,6 @@ namespace Cecilia.Cil
 
     public sealed class PortablePdbWriter : ISymbolWriter
     {
-
         readonly MetadataBuilder pdb_metadata;
         readonly ModuleDefinition module;
         readonly ImageWriter writer;
@@ -496,7 +491,6 @@ namespace Cecilia.Cil
 
     public sealed class EmbeddedPortablePdbWriterProvider : ISymbolWriterProvider
     {
-
         public ISymbolWriter GetSymbolWriter(ModuleDefinition module, string fileName)
         {
             Mixin.CheckNotNull(module);
@@ -515,7 +509,6 @@ namespace Cecilia.Cil
 
     public sealed class EmbeddedPortablePdbWriter : ISymbolWriter
     {
-
         readonly Stream stream;
         readonly PortablePdbWriter writer;
 
@@ -584,7 +577,6 @@ namespace Cecilia.Cil
 
     static class PdbGuidMapping
     {
-
         static readonly Dictionary<Guid, DocumentLanguage> guid_language = new Dictionary<Guid, DocumentLanguage>();
         static readonly Dictionary<DocumentLanguage, Guid> language_guid = new Dictionary<DocumentLanguage, Guid>();
 

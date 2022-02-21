@@ -27,7 +27,6 @@ using StringIndex = System.UInt32;
 
 namespace Cecilia
 {
-
     using AssemblyRefRow = Row<ushort, ushort, ushort, ushort, AssemblyAttributes, uint, uint, uint, uint>;
     using AssemblyRow = Row<AssemblyHashAlgorithm, ushort, ushort, ushort, ushort, AssemblyAttributes, uint, uint, uint>;
     using ClassLayoutRow = Row<ushort, uint, RID>;
@@ -70,7 +69,6 @@ namespace Cecilia
 
     static class ModuleWriter
     {
-
         public static void WriteModule(ModuleDefinition module, Disposable<Stream> stream, WriterParameters parameters)
         {
             using (stream)
@@ -190,7 +188,6 @@ namespace Cecilia
 
     abstract class MetadataTable
     {
-
         public abstract int Length { get; }
 
         public bool IsLarge
@@ -204,7 +201,6 @@ namespace Cecilia
 
     abstract class OneRowTable<TRow> : MetadataTable where TRow : struct
     {
-
         internal TRow row;
 
         public sealed override int Length
@@ -219,7 +215,6 @@ namespace Cecilia
 
     abstract class MetadataTable<TRow> : MetadataTable where TRow : struct
     {
-
         internal TRow[] rows = new TRow[2];
         internal int length;
 
@@ -251,7 +246,6 @@ namespace Cecilia
 
     abstract class SortedTable<TRow> : MetadataTable<TRow>, IComparer<TRow> where TRow : struct
     {
-
         public sealed override void Sort()
         {
             StableSort.Sort(rows.AsSpan(0, length), this);
@@ -267,7 +261,6 @@ namespace Cecilia
 
     sealed class ModuleTable : OneRowTable<ModuleRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             buffer.WriteUInt16(0);      // Generation
@@ -280,7 +273,6 @@ namespace Cecilia
 
     sealed class TypeRefTable : MetadataTable<TypeRefRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -295,7 +287,6 @@ namespace Cecilia
 
     sealed class TypeDefTable : MetadataTable<TypeDefRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -313,7 +304,6 @@ namespace Cecilia
 
     sealed class FieldTable : MetadataTable<FieldRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -327,7 +317,6 @@ namespace Cecilia
 
     sealed class MethodTable : MetadataTable<MethodRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -344,7 +333,6 @@ namespace Cecilia
 
     sealed class ParamTable : MetadataTable<ParamRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -358,7 +346,6 @@ namespace Cecilia
 
     sealed class InterfaceImplTable : MetadataTable<InterfaceImplRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -376,7 +363,6 @@ namespace Cecilia
 
     sealed class MemberRefTable : MetadataTable<MemberRefRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -390,7 +376,6 @@ namespace Cecilia
 
     sealed class ConstantTable : SortedTable<ConstantRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -409,7 +394,6 @@ namespace Cecilia
 
     sealed class CustomAttributeTable : SortedTable<CustomAttributeRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -428,7 +412,6 @@ namespace Cecilia
 
     sealed class FieldMarshalTable : SortedTable<FieldMarshalRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -446,7 +429,6 @@ namespace Cecilia
 
     sealed class DeclSecurityTable : SortedTable<DeclSecurityRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -465,7 +447,6 @@ namespace Cecilia
 
     sealed class ClassLayoutTable : SortedTable<ClassLayoutRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -484,7 +465,6 @@ namespace Cecilia
 
     sealed class FieldLayoutTable : SortedTable<FieldLayoutRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -502,7 +482,6 @@ namespace Cecilia
 
     sealed class StandAloneSigTable : MetadataTable<uint>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -512,7 +491,6 @@ namespace Cecilia
 
     sealed class EventMapTable : MetadataTable<EventMapRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -525,7 +503,6 @@ namespace Cecilia
 
     sealed class EventTable : MetadataTable<EventRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -539,7 +516,6 @@ namespace Cecilia
 
     sealed class PropertyMapTable : MetadataTable<PropertyMapRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -552,7 +528,6 @@ namespace Cecilia
 
     sealed class PropertyTable : MetadataTable<PropertyRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -566,7 +541,6 @@ namespace Cecilia
 
     sealed class MethodSemanticsTable : SortedTable<MethodSemanticsRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -585,7 +559,6 @@ namespace Cecilia
 
     sealed class MethodImplTable : MetadataTable<MethodImplRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -599,7 +572,6 @@ namespace Cecilia
 
     sealed class ModuleRefTable : MetadataTable<uint>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -609,7 +581,6 @@ namespace Cecilia
 
     sealed class TypeSpecTable : MetadataTable<uint>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -619,7 +590,6 @@ namespace Cecilia
 
     sealed class ImplMapTable : SortedTable<ImplMapRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -639,7 +609,6 @@ namespace Cecilia
 
     sealed class FieldRVATable : SortedTable<FieldRVARow>
     {
-
         internal int position;
 
         public override void Write(TableHeapBuffer buffer)
@@ -660,7 +629,6 @@ namespace Cecilia
 
     sealed class AssemblyTable : OneRowTable<AssemblyRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             buffer.WriteUInt32((uint)row.Col1); // AssemblyHashAlgorithm
@@ -677,7 +645,6 @@ namespace Cecilia
 
     sealed class AssemblyRefTable : MetadataTable<AssemblyRefRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -697,7 +664,6 @@ namespace Cecilia
 
     sealed class FileTable : MetadataTable<FileRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -711,7 +677,6 @@ namespace Cecilia
 
     sealed class ExportedTypeTable : MetadataTable<ExportedTypeRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -727,7 +692,6 @@ namespace Cecilia
 
     sealed class ManifestResourceTable : MetadataTable<ManifestResourceRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -742,7 +706,6 @@ namespace Cecilia
 
     sealed class NestedClassTable : SortedTable<NestedClassRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -760,7 +723,6 @@ namespace Cecilia
 
     sealed class GenericParamTable : MetadataTable<GenericParamRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -775,7 +737,6 @@ namespace Cecilia
 
     sealed class MethodSpecTable : MetadataTable<MethodSpecRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -788,7 +749,6 @@ namespace Cecilia
 
     sealed class GenericParamConstraintTable : MetadataTable<GenericParamConstraintRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -801,7 +761,6 @@ namespace Cecilia
 
     sealed class DocumentTable : MetadataTable<DocumentRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -816,7 +775,6 @@ namespace Cecilia
 
     sealed class MethodDebugInformationTable : MetadataTable<MethodDebugInformationRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -829,7 +787,6 @@ namespace Cecilia
 
     sealed class LocalScopeTable : MetadataTable<LocalScopeRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -846,7 +803,6 @@ namespace Cecilia
 
     sealed class LocalVariableTable : MetadataTable<LocalVariableRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -860,7 +816,6 @@ namespace Cecilia
 
     sealed class LocalConstantTable : MetadataTable<LocalConstantRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -873,7 +828,6 @@ namespace Cecilia
 
     sealed class ImportScopeTable : MetadataTable<ImportScopeRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -886,7 +840,6 @@ namespace Cecilia
 
     sealed class StateMachineMethodTable : MetadataTable<StateMachineMethodRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -899,7 +852,6 @@ namespace Cecilia
 
     sealed class CustomDebugInformationTable : SortedTable<CustomDebugInformationRow>
     {
-
         public override void Write(TableHeapBuffer buffer)
         {
             for (int i = 0; i < length; i++)
@@ -918,7 +870,6 @@ namespace Cecilia
 
     sealed class MetadataBuilder
     {
-
         readonly internal ModuleDefinition module;
         readonly internal ISymbolWriterProvider symbol_writer_provider;
         internal ISymbolWriter symbol_writer;
@@ -1592,7 +1543,6 @@ namespace Cecilia
 
         sealed class GenericParameterComparer : IComparer<GenericParameter>
         {
-
             public int Compare(GenericParameter a, GenericParameter b)
             {
                 var a_owner = MakeCodedRID(a.Owner, CodedIndex.TypeOrMethodDef);
@@ -2763,7 +2713,6 @@ namespace Cecilia
 
     sealed class SignatureWriter : ByteBuffer
     {
-
         readonly MetadataBuilder metadata;
 
         public SignatureWriter(MetadataBuilder metadata)
@@ -3464,7 +3413,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static bool TryGetUniqueDocument(this MethodDebugInformation info, out Document document)
         {
             document = info.SequencePoints[0].Document;

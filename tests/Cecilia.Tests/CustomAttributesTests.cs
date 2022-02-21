@@ -9,11 +9,9 @@ using System.Text;
 
 namespace Cecilia.Tests
 {
-
     [TestFixture]
     public class CustomAttributesTests : BaseTestFixture
     {
-
         [Test]
         public void StringArgumentOnType()
         {

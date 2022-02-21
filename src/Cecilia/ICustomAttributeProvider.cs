@@ -13,10 +13,8 @@ using System.Threading;
 
 namespace Cecilia
 {
-
     public interface ICustomAttributeProvider : IMetadataTokenProvider
     {
-
         Collection<CustomAttribute> CustomAttributes { get; }
 
         bool HasCustomAttributes { get; }
@@ -24,7 +22,6 @@ namespace Cecilia
 
     static partial class Mixin
     {
-
         public static bool GetHasCustomAttributes(
             this ICustomAttributeProvider self,
             ModuleDefinition module)

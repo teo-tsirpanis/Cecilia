@@ -17,10 +17,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia.Cil
 {
-
     sealed class CodeWriter : ByteBuffer
     {
-
         readonly RVA code_base;
         internal readonly MetadataBuilder metadata;
         readonly Dictionary<uint, MetadataToken> standalone_signatures;

@@ -10,7 +10,6 @@
 
 namespace Cecilia
 {
-
     public enum TokenType : uint
     {
         Module = 0x00000000,

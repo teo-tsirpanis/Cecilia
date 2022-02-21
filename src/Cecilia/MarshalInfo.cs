@@ -12,10 +12,8 @@ using System;
 
 namespace Cecilia
 {
-
     public class MarshalInfo
     {
-
         internal NativeType native;
 
         public NativeType NativeType
@@ -32,7 +30,6 @@ namespace Cecilia
 
     public sealed class ArrayMarshalInfo : MarshalInfo
     {
-
         internal NativeType element_type;
         internal int size_parameter_index;
         internal int size;
@@ -74,7 +71,6 @@ namespace Cecilia
 
     public sealed class CustomMarshalInfo : MarshalInfo
     {
-
         internal Guid guid;
         internal string unmanaged_type;
         internal TypeReference managed_type;
@@ -112,7 +108,6 @@ namespace Cecilia
 
     public sealed class SafeArrayMarshalInfo : MarshalInfo
     {
-
         internal VariantType element_type;
 
         public VariantType ElementType
@@ -130,7 +125,6 @@ namespace Cecilia
 
     public sealed class FixedArrayMarshalInfo : MarshalInfo
     {
-
         internal NativeType element_type;
         internal int size;
 
@@ -155,7 +149,6 @@ namespace Cecilia
 
     public sealed class FixedSysStringMarshalInfo : MarshalInfo
     {
-
         internal int size;
 
         public int Size

@@ -21,10 +21,8 @@ using RVA = System.UInt32;
 
 namespace Cecilia
 {
-
     abstract class ModuleReader
     {
-
         readonly protected ModuleDefinition module;
 
         protected ModuleReader(Image image, ReadingMode mode)
@@ -157,7 +155,6 @@ namespace Cecilia
 
     sealed class ImmediateModuleReader : ModuleReader
     {
-
         bool resolve_attributes;
 
         public ImmediateModuleReader(Image image)
@@ -447,7 +444,6 @@ namespace Cecilia
 
     sealed class DeferredModuleReader : ModuleReader
     {
-
         public DeferredModuleReader(Image image)
             : base(image, ReadingMode.Deferred)
         {
@@ -465,7 +461,6 @@ namespace Cecilia
 
     sealed class MetadataReader : ByteBuffer
     {
-
         readonly internal Image image;
         readonly internal ModuleDefinition module;
         readonly internal MetadataSystem metadata;
@@ -3423,7 +3418,6 @@ namespace Cecilia
 
     sealed class SignatureReader : ByteBuffer
     {
-
         readonly MetadataReader reader;
         readonly internal uint start, sig_length;
 

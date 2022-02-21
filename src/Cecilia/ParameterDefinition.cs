@@ -12,10 +12,8 @@ using Mono.Collections.Generic;
 
 namespace Cecilia
 {
-
     public sealed class ParameterDefinition : ParameterReference, ICustomAttributeProvider, IConstantProvider, IMarshalInfoProvider
     {
-
         ushort attributes;
 
         internal IMethodSignature method;

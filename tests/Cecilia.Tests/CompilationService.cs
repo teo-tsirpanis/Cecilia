@@ -15,7 +15,6 @@ using System.CodeDom.Compiler;
 
 namespace Cecilia.Tests
 {
-
     struct CompilationResult
     {
         internal DateTime source_write_time;
@@ -30,7 +29,6 @@ namespace Cecilia.Tests
 
     public static class Platform
     {
-
         public static bool OnMono
         {
             get { return TryGetType("Mono.Runtime") != null; }
@@ -156,7 +154,6 @@ namespace Cecilia.Tests
 
     class RoslynCompilationService : CompilationService
     {
-
         public static readonly RoslynCompilationService Instance = new RoslynCompilationService();
 
         protected override string CompileFile(string name)
@@ -217,7 +214,6 @@ namespace Cecilia.Tests
 #else
 
 	class CodeDomCompilationService : CompilationService {
-
 		public static readonly CodeDomCompilationService Instance = new CodeDomCompilationService ();
 
 		protected override string CompileFile (string name)
@@ -274,10 +270,8 @@ namespace Cecilia.Tests
 
     class ShellService
     {
-
         public class ProcessOutput
         {
-
             public int ExitCode;
             public string StdOut;
             public string StdErr;

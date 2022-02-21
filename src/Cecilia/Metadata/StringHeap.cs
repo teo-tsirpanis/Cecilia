@@ -13,10 +13,8 @@ using System.Text;
 
 namespace Cecilia.Metadata
 {
-
     class StringHeap : Heap
     {
-
         readonly Dictionary<uint, string> strings = new Dictionary<uint, string>();
 
         public StringHeap(byte[] data)
