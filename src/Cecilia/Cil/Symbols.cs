@@ -930,6 +930,20 @@ namespace Cecilia.Cil
             name = unique_name;
             return has_name;
         }
+
+        internal bool TryGetUniqueDocument(out Document document)
+        {
+            document = SequencePoints[0].Document;
+
+            for (int i = 1; i < SequencePoints.Count; i++)
+            {
+                var sequence_point = SequencePoints[i];
+                if (sequence_point.Document != document)
+                    return false;
+            }
+
+            return true;
+        }
     }
 
     public interface ISymbolReader : IDisposable
