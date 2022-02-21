@@ -12,6 +12,7 @@ using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Cecilia
@@ -56,9 +57,18 @@ namespace Cecilia
 
     public abstract class BaseAssemblyResolver : IAssemblyResolver
     {
-        static readonly bool on_mono = Type.GetType("Mono.Runtime") != null;
+        static readonly bool on_mono;
 
-        static readonly bool on_coreclr = Type.GetType("System.Runtime.Loader.AssemblyLoadContext") != null;
+        static readonly bool on_coreclr;
+
+        static BaseAssemblyResolver()
+        {
+            string fxDescription = RuntimeInformation.FrameworkDescription;
+            on_mono = fxDescription.StartsWith("Mono", StringComparison.Ordinal);
+            on_coreclr =
+                (fxDescription.StartsWith(".NET", StringComparison.Ordinal) && !fxDescription.StartsWith(".NET Framework", StringComparison.Ordinal))
+                || fxDescription.StartsWith(".NET Core", StringComparison.Ordinal);
+        }
 
         readonly Collection<string> directories;
 

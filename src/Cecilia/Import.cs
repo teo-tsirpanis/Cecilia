@@ -12,6 +12,9 @@ using Cecilia.Metadata;
 using Mono.Collections.Generic;
 using System;
 using System.Collections.Generic;
+#if NET
+using System.Diagnostics.CodeAnalysis;
+#endif
 using SR = System.Reflection;
 
 namespace Cecilia
@@ -370,11 +373,17 @@ namespace Cecilia
             }
         }
 
+#if NET
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "It is expected that produced assemblies will be trimmed along with their references.")]
+#endif
         static SR.FieldInfo ResolveFieldDefinition(SR.FieldInfo field)
         {
             return field.Module.ResolveField(field.MetadataToken);
         }
 
+#if NET
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "It is expected that produced assemblies will be trimmed along with their references.")]
+#endif
         static SR.MethodBase ResolveMethodDefinition(SR.MethodBase method)
         {
             return method.Module.ResolveMethod(method.MetadataToken);

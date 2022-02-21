@@ -9,6 +9,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/Cecilia</PackageProjectUrl>
     <PackageTags>assembly;assemblies;module;modules;il;cil;msil;bytecode;reflection;injection;cecil;mono;aop</PackageTags>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Buffers" Version="4.5.1" />
