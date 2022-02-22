@@ -10,6 +10,8 @@
 
 using Cecilia.Metadata;
 using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Cecilia
 {
@@ -681,6 +683,35 @@ namespace Cecilia
             }
 
             return max < (1 << (16 - bits)) ? 2 : 4;
+        }
+
+        public static void CheckNotNull(object x, [CallerArgumentExpression("x")] string expression = "")
+        {
+            if (x == null)
+                throw new ArgumentNullException(expression);
+        }
+
+        public static void CheckNotNullOrEmpty(string x, [CallerArgumentExpression("x")] string expression = "")
+        {
+            if (x == null || x.Length == 0)
+                throw new ArgumentNullException(expression);
+        }
+
+        public static void CheckWriteSeek(Stream stream)
+        {
+            if (!stream.CanWrite || !stream.CanSeek)
+                throw new ArgumentException("Stream must be writable and seekable.", nameof(stream));
+        }
+
+        public static void CheckReadSeek(Stream stream)
+        {
+            if (!stream.CanRead || !stream.CanSeek)
+                throw new ArgumentException("Stream must be readable and seekable.", nameof(stream));
+        }
+
+        public static uint GetTimestamp()
+        {
+            return (uint)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
         }
     }
 }
