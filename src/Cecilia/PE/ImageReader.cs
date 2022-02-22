@@ -244,8 +244,7 @@ namespace Cecilia.PE
                 section.Name = ReadZeroTerminatedString(8);
 
                 // VirtualSize		4
-                Advance(4);
-
+                section.VirtualSize = ReadUInt32();
                 // VirtualAddress	4
                 section.VirtualAddress = ReadUInt32();
                 // SizeOfRawData	4

@@ -95,7 +95,7 @@ namespace Cecilia.PE
             return ResolveVirtualAddressInSection(rva, section);
         }
 
-        public uint ResolveVirtualAddressInSection(RVA rva, Section section)
+        public static uint ResolveVirtualAddressInSection(RVA rva, Section section)
         {
             return rva + section.PointerToRawData - section.VirtualAddress;
         }
@@ -119,7 +119,7 @@ namespace Cecilia.PE
             for (int i = 0; i < sections.Length; i++)
             {
                 var section = sections[i];
-                if (rva >= section.VirtualAddress && rva < section.VirtualAddress + section.SizeOfRawData)
+                if (rva >= section.VirtualAddress && rva < section.VirtualAddress + section.VirtualSize)
                     return section;
             }
 
