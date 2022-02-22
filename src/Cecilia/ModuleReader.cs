@@ -62,17 +62,17 @@ namespace Cecilia
             var reader = CreateModuleReader(image, parameters.ReadingMode);
             var module = reader.module;
 
-            if (parameters.assembly_resolver != null)
-                module.assembly_resolver = Disposable.NotOwned(parameters.assembly_resolver);
+            if (parameters.AssemblyResolver is var assemblyResolver)
+                module.assembly_resolver = Disposable.NotOwned(assemblyResolver);
 
-            if (parameters.metadata_resolver != null)
-                module.metadata_resolver = parameters.metadata_resolver;
+            if (parameters.MetadataResolver is var metadataResolver)
+                module.metadata_resolver = metadataResolver;
 
-            if (parameters.metadata_importer_provider != null)
-                module.metadata_importer = parameters.metadata_importer_provider.GetMetadataImporter(module);
+            if (parameters.MetadataImporterProvider is var metadataImporterProvider)
+                module.metadata_importer = metadataImporterProvider.GetMetadataImporter(module);
 
-            if (parameters.reflection_importer_provider != null)
-                module.reflection_importer = parameters.reflection_importer_provider.GetReflectionImporter(module);
+            if (parameters.ReflectionImporterProvider is var reflectionImporterProvider)
+                module.reflection_importer = reflectionImporterProvider.GetReflectionImporter(module);
 
             GetMetadataKind(module, parameters);
 
